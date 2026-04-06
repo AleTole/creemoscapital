@@ -25,63 +25,59 @@ const VIDEOS_NOVATOS = [
 ];
 
 // ── VIDEOS DE ESTRATEGIA ───────────────────────────────────────
+// Agregá más videos acá — aparecen automáticamente como miniaturas
 const VIDEOS_ESTRATEGIA = [
-  { id: "ySxbg7pZ0b8", titulo: "No son líneas, son Zonas — Soportes y Resistencias · Estrategia C4" },
-  { id: "O-s8F1EYgZo", titulo: "Rompimiento sin volumen es sospechoso" },
-  { id: "OvhAA3B6oYo", titulo: "Tendencia NO es una línea inclinada — Tendencia · Estrategia C4" },
-  // Completar con los videos restantes de la playlist
-  // { id: "VIDEO_ID", titulo: "Título del video" },
+  { id: "O-s8F1EYgZo",   titulo: "Rompimiento sin volumen es sospechoso" },
+  { id: "SyskCkiNby8",   titulo: "Estrategia C4 — Video 2" },
+  { id: "ezvbivW95X4",   titulo: "Estrategia C4 — Video 3" },
+  { id: "mCSDxA4bjMA",   titulo: "Estrategia C4 — Video 4" },
+  { id: "l2HCP4BVG3s",   titulo: "Estrategia C4 — Video 5" },
+  { id: "7xrAUPnKfFc",   titulo: "Estrategia C4 — Video 6" },
+  { id: "OvhAA3B6oYo",   titulo: "Tendencia NO es una línea inclinada — Tendencia · Estrategia C4" },
+  { id: "ySxbg7pZ0b8",   titulo: "No son líneas, son Zonas — Soportes y Resistencias · Estrategia C4" },
 ];
 
-// ── IDEAS DE TRADING ───────────────────────────────────────────
-// direction: "LONG" | "SHORT"
-// status: "activa" | "objetivo" | "stop"
-const IDEAS_TRADING = [
-  {
-    activo: "BTC/USDT",
-    direccion: "LONG",
-    entrada: "62,500",
-    objetivo: "68,000",
-    stop: "60,800",
-    descripcion: "Ruptura de resistencia con volumen. Confluencia con media de 200 períodos.",
-    fecha: "2025-03-27",
-    status: "activa",
-  },
-  {
-    activo: "EUR/USD",
-    direccion: "SHORT",
-    entrada: "1.0820",
-    objetivo: "1.0720",
-    stop: "1.0870",
-    descripcion: "Rechazo en zona de oferta semanal. DXY mostrando fortaleza.",
-    fecha: "2025-03-26",
-    status: "activa",
-  },
-  {
-    activo: "GBP/JPY",
-    direccion: "LONG",
-    entrada: "191.50",
-    objetivo: "194.00",
-    stop: "190.20",
-    descripcion: "Tendencia alcista en H4. Retroceso a zona de demanda confirmada.",
-    fecha: "2025-03-25",
-    status: "objetivo",
-  },
-];
-
-// ── SESIONES EN VIVO ───────────────────────────────────────────
+// ── SESIONES DE MERCADO ────────────────────────────────────────
+// Horarios por zona horaria para cada sesión de mercado
 const SESIONES = [
-  { nombre: "Sesión NY",     horario: "21:00", emoji: "🇺🇸" },
-  { nombre: "Sesión Crypto", horario: "22:00", emoji: "₿"  },
-  { nombre: "Sesión Asia",   horario: "23:30", emoji: "🌏" },
-  { nombre: "Sesión Europa", horario: "01:00", emoji: "🇪🇺" },
+  {
+    nombre: "Sesión NY",
+    emoji: "🗽",
+    horarios: [
+      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "08:00 – 16:00" },
+      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "09:00 – 17:00" },
+      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "10:00 – 18:00" },
+      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "09:00 – 17:00" },
+      { banderas: ["🇪🇸"],       zona: "España",     hora: "15:00 – 23:00" },
+    ],
+  },
+  {
+    nombre: "Sesión Asia",
+    emoji: "🌏",
+    horarios: [
+      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "19:00 – 01:00" },
+      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "20:00 – 02:00" },
+      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "21:00 – 03:00" },
+      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "20:00 – 02:00" },
+      { banderas: ["🇪🇸"],       zona: "España",     hora: "02:00 – 08:00" },
+    ],
+  },
+  {
+    nombre: "Sesión Europa",
+    emoji: "🇪🇺",
+    horarios: [
+      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "01:00 – 07:00" },
+      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "02:00 – 08:00" },
+      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "03:00 – 09:00" },
+      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "02:00 – 08:00" },
+      { banderas: ["🇪🇸"],       zona: "España",     hora: "08:00 – 14:00" },
+    ],
+  },
 ];
 
 // ── MÚSICA ─────────────────────────────────────────────────────
-// Playlist de YouTube Music — se muestra como player en la sección Música
-const MUSICA_PLAYLIST_ID      = "PLsRZxCss4fXYvz8JclFZb_bKlJxXZGZ9j";
-const MUSICA_PRIMER_VIDEO_ID  = "6ZimHCukVzI";
+// Canal de YouTube Music — UCv4ma-yTMOqYYF_Ii5kv0zQ
+// La playlist de uploads es el channel ID con UC → UU
+const MUSICA_PLAYLIST_ID     = "UUv4ma-yTMOqYYF_Ii5kv0zQ";
+const MUSICA_PRIMER_VIDEO_ID = "videoseries";
 
-// ── ESTRATEGIA — playlist completa ─────────────────────────────
-const ESTRATEGIA_PLAYLIST_ID     = "PLsRZxCss4fXaLnBIAu3kFtt33hve3gz06";
-const ESTRATEGIA_PRIMER_VIDEO_ID = "O-s8F1EYgZo";

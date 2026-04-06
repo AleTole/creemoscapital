@@ -22,9 +22,19 @@ function renderSesiones() {
   if (!cont) return;
   cont.innerHTML = SESIONES.map(s => `
     <div class="sesion-card">
-      <span class="sesion-emoji">${s.emoji}</span>
-      <span class="sesion-nombre">${s.nombre}</span>
-      <span class="sesion-horario">${s.horario} hs</span>
+      <div class="sesion-header">
+        <span class="sesion-emoji">${s.emoji}</span>
+        <span class="sesion-nombre">${s.nombre}</span>
+      </div>
+      <div class="sesion-horarios">
+        ${s.horarios.map(h => `
+          <div class="sesion-tz">
+            <span class="sesion-tz-flags">${h.banderas.join('')}</span>
+            <span class="sesion-tz-zona">${h.zona}</span>
+            <span class="sesion-tz-hora">${h.hora}</span>
+          </div>
+        `).join('')}
+      </div>
     </div>
   `).join('');
 }
@@ -53,51 +63,154 @@ function renderVideos() {
   if (estrategia) estrategia.innerHTML = VIDEOS_ESTRATEGIA.map(videoCard).join('');
 }
 
-// ── IDEAS DE TRADING ──────────────────────────────────────────
-function ideaCard(idea) {
-  const isLong = idea.direccion === 'LONG';
-  const statusLabel = { activa: 'Activa', objetivo: '✓ Objetivo', stop: '✗ Stop' }[idea.status];
-  const statusClass = { activa: 'status-activa', objetivo: 'status-objetivo', stop: 'status-stop' }[idea.status];
-  return `
-    <div class="idea-card">
-      <div class="idea-header">
-        <span class="idea-activo">${idea.activo}</span>
-        <span class="idea-dir ${isLong ? 'long' : 'short'}">${idea.direccion}</span>
-      </div>
-      <p class="idea-desc">${idea.descripcion}</p>
-      <div class="idea-niveles">
-        <div class="nivel"><span class="nivel-label">Entrada</span><span class="nivel-val">${idea.entrada}</span></div>
-        <div class="nivel"><span class="nivel-label">Objetivo</span><span class="nivel-val target">${idea.objetivo}</span></div>
-        <div class="nivel"><span class="nivel-label">Stop</span><span class="nivel-val stop">${idea.stop}</span></div>
-      </div>
-      <div class="idea-footer">
-        <span class="idea-fecha">${idea.fecha}</span>
-        <span class="${statusClass}">${statusLabel}</span>
-      </div>
-    </div>
-  `;
+// ── CALENDARIO FOREX FACTORY ──────────────────────────────────
+const PAISES = {
+  USD: { nombre: 'EE.UU.',      bandera: '🇺🇸' },
+  EUR: { nombre: 'Eurozona',    bandera: '🇪🇺' },
+  GBP: { nombre: 'Reino Unido', bandera: '🇬🇧' },
+  JPY: { nombre: 'Japón',       bandera: '🇯🇵' },
+  CAD: { nombre: 'Canadá',      bandera: '🇨🇦' },
+  AUD: { nombre: 'Australia',   bandera: '🇦🇺' },
+  NZD: { nombre: 'N. Zelanda',  bandera: '🇳🇿' },
+  CHF: { nombre: 'Suiza',       bandera: '🇨🇭' },
+  CNY: { nombre: 'China',       bandera: '🇨🇳' },
+  SEK: { nombre: 'Suecia',      bandera: '🇸🇪' },
+  NOK: { nombre: 'Noruega',     bandera: '🇳🇴' },
+  MXN: { nombre: 'México',      bandera: '🇲🇽' },
+  BRL: { nombre: 'Brasil',      bandera: '🇧🇷' },
+  ALL: { nombre: 'Global',      bandera: '🌐'  },
+};
+
+const DIAS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+
+let _calEventos = [];
+let _calFiltro  = 'todos';
+
+function formatoHora(fechaStr) {
+  const d = new Date(fechaStr);
+  if (isNaN(d)) return '—';
+  return d.toLocaleTimeString('es', { hour: '2-digit', minute: '2-digit' });
 }
 
-function renderIdeas() {
-  const cont = document.getElementById('ideas-grid');
-  if (cont) cont.innerHTML = IDEAS_TRADING.map(ideaCard).join('');
+function formatoDia(fechaStr) {
+  const d = new Date(fechaStr);
+  return `${DIAS_ES[d.getDay()]} ${d.getDate()} ${MESES_ES[d.getMonth()]}`;
 }
 
-// ── PLAYERS DE YOUTUBE ────────────────────────────────────────
+function claseActual(actual, forecast, impact) {
+  if (!actual || actual === '') return 'pendiente';
+  const a = parseFloat(actual.replace(/[^0-9.\-]/g, ''));
+  const f = parseFloat((forecast || '').replace(/[^0-9.\-]/g, ''));
+  if (isNaN(a) || isNaN(f)) return 'igual';
+  if (impact === 'High') return a > f ? 'mejor' : a < f ? 'peor' : 'igual';
+  return a < f ? 'mejor' : a > f ? 'peor' : 'igual';
+}
+
+function renderCalendario() {
+  const cont = document.getElementById('ff-calendar');
+  if (!cont) return;
+
+  const filtrados = _calEventos.filter(e => {
+    if (_calFiltro === 'alto')  return e.impact === 'High';
+    if (_calFiltro === 'medio') return e.impact === 'Medium';
+    return e.impact === 'High' || e.impact === 'Medium';
+  });
+
+  if (filtrados.length === 0) {
+    cont.innerHTML = '<p class="text-center text-slate-600 text-sm py-10">Sin eventos para mostrar.</p>';
+    return;
+  }
+
+  // Agrupar por día
+  const porDia = {};
+  filtrados.forEach(e => {
+    const dia = formatoDia(e.date);
+    if (!porDia[dia]) porDia[dia] = [];
+    porDia[dia].push(e);
+  });
+
+  cont.innerHTML = Object.entries(porDia).map(([dia, eventos]) => `
+    <div class="cal-day-header">${dia}</div>
+    ${eventos.map(e => {
+      const code   = (e.currency || e.country || '').toUpperCase().trim();
+      const pais   = PAISES[code] || { nombre: code || '—', bandera: '🌐' };
+      const imp    = e.impact === 'High' ? 'alto' : e.impact === 'Medium' ? 'medio' : 'bajo';
+      const actual = e.actual || '';
+      const cls    = actual ? claseActual(actual, e.forecast, e.impact) : 'pendiente';
+      return `
+      <div class="cal-row">
+        <span class="cal-time">${formatoHora(e.date)}</span>
+        <span class="cal-pais" title="${pais.nombre}"><span class="cal-impacto"><span class="imp-${imp}"></span></span>${pais.bandera}</span>
+        <span class="cal-evento">${e.title}</span>
+        <span class="cal-num cal-forecast">${e.forecast || '—'}</span>
+        <span class="cal-num cal-prev">${e.previous || '—'}</span>
+        <span class="cal-num cal-actual ${cls}">${actual || '·'}</span>
+      </div>`;
+    }).join('')}
+  `).join('');
+}
+
+function filtrarCalendario(filtro) {
+  _calFiltro = filtro;
+  document.querySelectorAll('.cal-btn').forEach(b => b.classList.remove('cal-btn-active'));
+  document.getElementById(`btn-${filtro}`).classList.add('cal-btn-active');
+  renderCalendario();
+}
+
+async function cargarCalendario() {
+  const loading = document.getElementById('ff-calendar-loading');
+  const FF_URL  = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota';
+  const PROXIES = [
+    FF_URL,
+    `https://corsproxy.io/?url=${encodeURIComponent(FF_URL)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(FF_URL)}`,
+  ];
+  for (const url of PROXIES) {
+    try {
+      const res  = await fetch(url);
+      const data = await res.json();
+      if (!Array.isArray(data)) continue;
+      const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    _calEventos = data.filter(e => {
+      const fecha = new Date(e.date);
+      return fecha >= hoy && (e.impact === 'High' || e.impact === 'Medium' || e.impact === 'Low');
+    });
+      if (loading) loading.style.display = 'none';
+      renderCalendario();
+      return;
+    } catch (_) { continue; }
+  }
+  if (loading) loading.innerHTML = `
+    <div class="text-center py-4">
+      <p class="text-red-400 text-sm mb-3">No se pudo cargar el calendario.</p>
+      <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener"
+         class="text-sky-500 text-sm hover:underline">Ver calendario en Forex Factory →</a>
+    </div>`;
+}
+
+// ── MINI PLAYER ───────────────────────────────────────────────
+function toggleMiniPlayer() {
+  document.getElementById('mini-player').classList.toggle('collapsed');
+}
+
+// ── PLAYERS ───────────────────────────────────────────────────
 function renderPlayers() {
-  const musica = document.getElementById('iframe-musica');
-  if (musica)
-    musica.src = `https://www.youtube.com/embed/${MUSICA_PRIMER_VIDEO_ID}?list=${MUSICA_PLAYLIST_ID}&rel=0`;
+  const musicaSrc = `https://www.youtube.com/embed/${MUSICA_PRIMER_VIDEO_ID}?list=${MUSICA_PLAYLIST_ID}&rel=0&autoplay=0`;
 
-  const estrategia = document.getElementById('iframe-estrategia');
-  if (estrategia)
-    estrategia.src = `https://www.youtube.com/embed/${ESTRATEGIA_PRIMER_VIDEO_ID}?list=${ESTRATEGIA_PLAYLIST_ID}&rel=0`;
+  const musica = document.getElementById('iframe-musica');
+  if (musica) musica.src = musicaSrc;
+
+  const miniMusica = document.getElementById('iframe-mini-musica');
+  if (miniMusica) miniMusica.src = musicaSrc;
+
 }
 
 // ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderSesiones();
   renderVideos();
-  renderIdeas();
   renderPlayers();
+  cargarCalendario();
 });
