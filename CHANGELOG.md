@@ -4,6 +4,24 @@ Todas las versiones del sitio documentadas acá.
 
 ---
 
+## [v0.4.0] — 2026-04-06
+**Commit:** `2da3a15`
+
+### Sitio publicado en producción
+- Deploy exitoso en **creemoscapital.com** via Hostinger
+- WordPress anterior eliminado y reemplazado por el sitio estático
+
+### Fixes
+- Calendario económico: proxy PHP propio (`calendar-proxy.php`) para evitar bloqueos CORS
+- Campo `country` corregido (la API de FF usa `country`, no `currency`)
+- Banderas del calendario ahora se mapean correctamente
+- Eventos de tipo `Holiday` excluidos del calendario
+- Paleta de colores: cyan eléctrico `#00d4ff` + fondos azul moderno
+- Botones de YouTube en rojo
+- Rejilla del hero eliminada
+
+---
+
 ## [v0.3.0] — 2026-04-06
 **Commit:** `9c9b37d`
 
