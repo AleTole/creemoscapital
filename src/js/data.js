@@ -39,38 +39,43 @@ const VIDEOS_ESTRATEGIA = [
 
 // ── SESIONES DE MERCADO ────────────────────────────────────────
 // Horarios por zona horaria para cada sesión de mercado
+// banderas: códigos ISO 3166-1 alpha-2 en minúsculas (flagcdn.com)
+// Zonas horarias (UTC): COL/PER/ECU/VEN -5 | MEX -6 | CHL/ARG -3/-4 | ESP +2
 const SESIONES = [
   {
     nombre: "Sesión NY",
-    emoji: "🗽",
+    icono: "us",
     horarios: [
-      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "08:00 – 16:00" },
-      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "09:00 – 17:00" },
-      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "10:00 – 18:00" },
-      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "09:00 – 17:00" },
-      { banderas: ["🇪🇸"],       zona: "España",     hora: "15:00 – 23:00" },
+      { banderas: ["co","pe","ec"], zona: "COL / PER / ECU", hora: "08:00 – 16:00" },
+      { banderas: ["ve"],           zona: "Venezuela",        hora: "08:30 – 16:30" },
+      { banderas: ["mx"],           zona: "México (CDT)",     hora: "07:00 – 15:00" },
+      { banderas: ["cl","us"],       zona: "Chile / USA (EDT)", hora: "09:00 – 17:00" },
+      { banderas: ["ar"],            zona: "Argentina",         hora: "10:00 – 18:00" },
+      { banderas: ["es"],           zona: "España",           hora: "15:00 – 23:00" },
     ],
   },
   {
     nombre: "Sesión Asia",
-    emoji: "🌏",
+    icono: "jp",
     horarios: [
-      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "19:00 – 01:00" },
-      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "20:00 – 02:00" },
-      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "21:00 – 03:00" },
-      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "20:00 – 02:00" },
-      { banderas: ["🇪🇸"],       zona: "España",     hora: "02:00 – 08:00" },
+      { banderas: ["co","pe","ec"], zona: "COL / PER / ECU", hora: "19:00 – 01:00" },
+      { banderas: ["ve"],           zona: "Venezuela",        hora: "19:30 – 01:30" },
+      { banderas: ["mx"],           zona: "México (CDT)",     hora: "18:00 – 00:00" },
+      { banderas: ["cl","us"],       zona: "Chile / USA (EDT)", hora: "20:00 – 02:00" },
+      { banderas: ["ar"],            zona: "Argentina",         hora: "21:00 – 03:00" },
+      { banderas: ["es"],           zona: "España",           hora: "02:00 – 08:00" },
     ],
   },
   {
     nombre: "Sesión Europa",
-    emoji: "🇪🇺",
+    icono: "eu",
     horarios: [
-      { banderas: ["🇨🇴","🇵🇪"], zona: "COL / PER", hora: "01:00 – 07:00" },
-      { banderas: ["🇨🇱"],       zona: "Chile",      hora: "02:00 – 08:00" },
-      { banderas: ["🇦🇷"],       zona: "Argentina",  hora: "03:00 – 09:00" },
-      { banderas: ["🇺🇸"],       zona: "USA (EDT)",  hora: "02:00 – 08:00" },
-      { banderas: ["🇪🇸"],       zona: "España",     hora: "08:00 – 14:00" },
+      { banderas: ["co","pe","ec"], zona: "COL / PER / ECU", hora: "01:00 – 07:00" },
+      { banderas: ["ve"],           zona: "Venezuela",        hora: "01:30 – 07:30" },
+      { banderas: ["mx"],           zona: "México (CDT)",     hora: "00:00 – 06:00" },
+      { banderas: ["cl","us"],       zona: "Chile / USA (EDT)", hora: "02:00 – 08:00" },
+      { banderas: ["ar"],            zona: "Argentina",         hora: "03:00 – 09:00" },
+      { banderas: ["es"],           zona: "España",           hora: "08:00 – 14:00" },
     ],
   },
 ];

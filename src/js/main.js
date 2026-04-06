@@ -17,20 +17,23 @@ function closeMenu() {
 }
 
 // ── SESIONES ──────────────────────────────────────────────────
+function flagImg(code) {
+  return `<img src="https://flagcdn.com/20x15/${code}.png" width="20" height="15" alt="${code}" style="border-radius:2px;display:inline-block;">`;
+}
+
 function renderSesiones() {
   const cont = document.getElementById('sesiones-grid');
   if (!cont) return;
   cont.innerHTML = SESIONES.map(s => `
     <div class="sesion-card">
       <div class="sesion-header">
-        <span class="sesion-emoji">${s.emoji}</span>
+        ${flagImg(s.icono)}
         <span class="sesion-nombre">${s.nombre}</span>
       </div>
       <div class="sesion-horarios">
         ${s.horarios.map(h => `
           <div class="sesion-tz">
-            <span class="sesion-tz-flags">${h.banderas.join('')}</span>
-            <span class="sesion-tz-zona">${h.zona}</span>
+            <span class="sesion-tz-flags">${h.banderas.map(flagImg).join('')}</span>
             <span class="sesion-tz-hora">${h.hora}</span>
           </div>
         `).join('')}
