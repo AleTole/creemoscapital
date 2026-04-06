@@ -4,6 +4,29 @@ Todas las versiones del sitio documentadas acá.
 
 ---
 
+## [v0.3.0] — 2026-04-06
+**Commit:** `9c9b37d`
+
+### Agregado
+- Player de Kick en vivo en el hero (muestra stream cuando están en vivo)
+- Badge "EN VIVO" animado con glow pulsante sobre el player
+- Botones de donación bajo el player (Kick y YouTube Super Chat)
+- Kick agregado a redes sociales
+- Sesiones: banderas como imágenes reales (flagcdn.com) — compatible con Windows
+- Sesiones: agrega Venezuela, Ecuador y México con sus horarios
+- Sesiones: Chile y USA combinados por coincidir en UTC-4
+
+### Cambiado
+- Cuadritos de redes sociales: tamaño uniforme 100×100px
+- Sesiones: se muestran solo banderas + horario (sin texto de zona)
+- Footer: eliminado "Todas las noches" del tagline
+- Calendario: solo muestra eventos desde hoy en adelante
+
+### Eliminado
+- Discord de comunidad y contacto
+
+---
+
 ## [v0.2.0] — 2026-04-06
 **Commit:** `4166c4d`
 
