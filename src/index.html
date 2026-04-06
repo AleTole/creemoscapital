@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creemos Capital — Trading en Vivo</title>
+  <meta name="description" content="Aprendé trading con análisis en vivo. Sesiones NY, Crypto, Asia y Europa todas las noches desde las 21hs.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
+            sky:   { 400: '#38bdf8', 500: '#0ea5e9', 600: '#0284c7' },
+            gold:  { 400: '#fbbf24', 500: '#f59e0b' },
+            long:  '#22c55e',
+            short: '#ef4444',
+          },
+          fontFamily: {
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #050d1a;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      background: linear-gradient(to bottom, rgba(5,13,26,0.8) 0%, transparent 100%);
+    }
+    #navbar.scrolled {
+      background: rgba(5,13,26,0.97) !important;
+      box-shadow: 0 1px 20px rgba(0,0,0,0.5);
+    }
+    .nav-link {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(226,232,240,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #38bdf8; }
+
+    /* ── HERO ── */
+    .hero-bg {
+      background: radial-gradient(ellipse at 30% 50%, rgba(14,165,233,0.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 80% 20%, rgba(56,189,248,0.08) 0%, transparent 50%),
+                  linear-gradient(135deg, #050d1a 0%, #0a1628 50%, #0f2040 100%);
+    }
+    .hero-grid {
+      background-image: linear-gradient(rgba(56,189,248,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(56,189,248,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* ── LIVE BANNER ── */
+    .live-banner {
+      background: linear-gradient(90deg, #0a1628, #0f2040, #0a1628);
+      border-top: 1px solid rgba(56,189,248,0.2);
+      border-bottom: 1px solid rgba(56,189,248,0.2);
+    }
+    .sesion-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 1rem 1.5rem;
+      border-right: 1px solid rgba(56,189,248,0.15);
+    }
+    .sesion-card:last-child { border-right: none; }
+    .sesion-emoji  { font-size: 1.4rem; }
+    .sesion-nombre { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #94a3b8; }
+    .sesion-horario{ font-size: 1rem; font-weight: 600; color: #38bdf8; font-family: 'Space Grotesk', sans-serif; }
+
+    /* ── SECCIÓN TÍTULOS ── */
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #38bdf8;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .section-divider {
+      width: 40px;
+      height: 2px;
+      background: #0ea5e9;
+      margin: 1rem 0 0;
+    }
+
+    /* ── VIDEOS ── */
+    .video-card {
+      display: block;
+      text-decoration: none;
+      background: #0a1628;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56,189,248,0.4);
+      box-shadow: 0 8px 30px rgba(14,165,233,0.15);
+    }
+    .video-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #0f2040;
+    }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .video-card:hover .video-thumb img { transform: scale(1.04); }
+    .video-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .video-card:hover .video-play { opacity: 1; }
+    .video-play svg { width: 48px; height: 48px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+    .video-duracion {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .video-titulo {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    /* ── IDEAS DE TRADING ── */
+    .idea-card {
+      background: #0a1628;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .idea-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+    .idea-activo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .idea-dir {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+    }
+    .idea-dir.long  { background: rgba(34,197,94,0.15);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .idea-dir.short { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+    .idea-desc {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+    .idea-niveles {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .nivel {
+      display: flex;
+      flex-direction: column;
+      background: rgba(15,32,64,0.8);
+      padding: 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .nivel-label { font-size: 0.65rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; }
+    .nivel-val   { font-size: 0.9rem; font-weight: 600; color: #e2e8f0; font-family: 'Space Grotesk', sans-serif; }
+    .nivel-val.target { color: #22c55e; }
+    .nivel-val.stop   { color: #ef4444; }
+    .idea-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.72rem;
+    }
+    .idea-fecha     { color: #475569; }
+    .status-activa  { color: #38bdf8; }
+    .status-objetivo{ color: #22c55e; font-weight: 600; }
+    .status-stop    { color: #ef4444; }
+
+    /* ── BOTONES ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: #0ea5e9;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(14,165,233,0.35);
+    }
+    .btn-primary:hover {
+      background: #0284c7;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 25px rgba(14,165,233,0.5);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: transparent;
+      color: #38bdf8;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border: 1px solid rgba(56,189,248,0.4);
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover {
+      background: rgba(56,189,248,0.1);
+      border-color: #38bdf8;
+    }
+
+    /* ── COMUNIDAD ── */
+    .comunidad-card {
+      background: #0a1628;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .comunidad-card:hover {
+      border-color: rgba(56,189,248,0.35);
+      box-shadow: 0 4px 20px rgba(14,165,233,0.1);
+    }
+
+    /* ── REDES SOCIALES ── */
+    .red-social {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1.25rem 1.5rem;
+      background: #0a1628;
+      border: 1px solid rgba(56,189,248,0.12);
+      border-radius: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      min-width: 90px;
+      transition: all 0.2s;
+    }
+    .red-social:hover {
+      border-color: rgba(56,189,248,0.4);
+      color: #38bdf8;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(14,165,233,0.15);
+    }
+    .btn-contacto {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      border: 1px solid;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-contacto:hover { transform: translateY(-2px); filter: brightness(1.15); }
+
+    /* ── ANIMACIÓN ENTRADA ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ────────────────────────────────────────────── -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+      <a href="#inicio" class="font-display text-xl font-bold text-white tracking-wide">
+        Creemos <span class="text-sky-400">Capital</span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="#live"      class="nav-link">En Vivo</a>
+        <a href="#videos"    class="nav-link">Videos</a>
+        <a href="#ideas"     class="nav-link">Ideas</a>
+        <a href="#comunidad" class="nav-link">Comunidad</a>
+        <a href="#musica"    class="nav-link">Música</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="https://www.youtube.com/@creemoscapital" target="_blank" rel="noopener"
+           class="btn-primary text-sm py-2 px-4">
+          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+          </svg>
+          Suscribirse
+        </a>
+        <button onclick="toggleMenu()" class="md:hidden p-2 text-slate-300">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-navy-900/98 border-t border-sky-900/30 px-6 py-5 flex flex-col gap-5">
+      <a href="#live"      onclick="closeMenu()" class="nav-link">En Vivo</a>
+      <a href="#videos"    onclick="closeMenu()" class="nav-link">Videos</a>
+      <a href="#ideas"     onclick="closeMenu()" class="nav-link">Ideas</a>
+      <a href="#comunidad" onclick="closeMenu()" class="nav-link">Comunidad</a>
+      <a href="#musica"    onclick="closeMenu()" class="nav-link">Música</a>
+    </div>
+  </header>
+
+
+  <!-- ── HERO ──────────────────────────────────────────────── -->
+  <section id="inicio" class="hero-bg hero-grid relative min-h-screen flex items-center">
+    <div class="max-w-7xl mx-auto px-6 py-32 w-full">
+      <div class="max-w-2xl">
+        <p class="section-label fade-up">Trading en vivo · Todas las noches</p>
+        <h1 class="font-display text-5xl md:text-7xl font-bold text-white leading-tight mb-6 fade-up delay-1">
+          Creemos<br><span class="text-sky-400">Capital</span><br>
+          <span class="text-3xl md:text-4xl font-normal text-slate-300">juntos</span>
+        </h1>
+        <p class="text-slate-400 text-lg font-light mb-10 max-w-lg leading-relaxed fade-up delay-2">
+          Análisis en vivo de mercados: NY, Crypto, Asia y Europa.<br>
+          Estrategias reales, en tiempo real, para traders de todos los niveles.
+        </p>
+        <div class="flex flex-wrap gap-4 fade-up delay-3">
+          <a href="https://www.youtube.com/@creemoscapital" target="_blank" rel="noopener" class="btn-primary">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+            </svg>
+            Ver en YouTube
+          </a>
+          <a href="#ideas" class="btn-outline">Ver ideas de trading</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Decoración gráfica -->
+    <div class="absolute right-0 top-0 h-full w-1/2 hidden lg:block pointer-events-none">
+      <div style="position:absolute;top:20%;right:10%;width:280px;height:280px;background:radial-gradient(circle,rgba(14,165,233,0.12) 0%,transparent 70%);border-radius:50%;"></div>
+      <div style="position:absolute;bottom:25%;right:25%;width:180px;height:180px;background:radial-gradient(circle,rgba(56,189,248,0.08) 0%,transparent 70%);border-radius:50%;"></div>
+    </div>
+  </section>
+
+
+  <!-- ── LIVE BANNER ────────────────────────────────────────── -->
+  <section id="live" class="live-banner py-6">
+    <div class="max-w-7xl mx-auto px-6">
+      <p class="text-center text-xs tracking-[0.3em] uppercase text-sky-400 mb-4">Sesiones en vivo · Cada noche</p>
+      <div id="sesiones-grid" class="flex flex-wrap justify-center divide-x divide-sky-900/30"></div>
+      <div class="text-center mt-4">
+        <a href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener"
+           class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors">
+          <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+          Ir al canal para ver si estamos en vivo
+        </a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── VIDEOS ─────────────────────────────────────────────── -->
+  <section id="videos" class="py-24 px-6">
+    <div class="max-w-7xl mx-auto">
+
+      <!-- Para empezar -->
+      <div class="mb-16">
+        <p class="section-label">Para empezar</p>
+        <h2 class="section-title">Trading para novatos</h2>
+        <div class="section-divider"></div>
+        <p class="text-slate-500 text-sm mt-3 mb-10">El punto de partida para todo trader que está comenzando.</p>
+        <div id="grid-novatos" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+
+      <!-- Estrategia -->
+      <div>
+        <p class="section-label">Método</p>
+        <h2 class="section-title">La Estrategia</h2>
+        <div class="section-divider"></div>
+        <p class="text-slate-500 text-sm mt-3 mb-8">El sistema completo explicado sesión por sesión. Navegá los 8 videos desde el player.</p>
+        <div class="rounded-lg overflow-hidden border border-sky-900/30" style="aspect-ratio: 16/9; max-width: 900px;">
+          <iframe id="iframe-estrategia"
+                  width="100%" height="100%"
+                  src=""
+                  title="Estrategia Creemos Capital"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ── IDEAS DE TRADING ───────────────────────────────────── -->
+  <section id="ideas" class="py-24 px-6" style="background: #080e1c;">
+    <div class="max-w-7xl mx-auto">
+      <p class="section-label">Análisis</p>
+      <h2 class="section-title">Ideas de Trading</h2>
+      <div class="section-divider"></div>
+      <p class="text-slate-500 text-sm mt-3 mb-10">
+        Niveles de referencia compartidos en los lives. No son recomendaciones de inversión.
+      </p>
+      <div id="ideas-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+
+  <!-- ── COMUNIDAD ──────────────────────────────────────────── -->
+  <section id="comunidad" class="py-24 px-6">
+    <div class="max-w-4xl mx-auto text-center">
+      <p class="section-label">Únete</p>
+      <h2 class="section-title">La Comunidad</h2>
+      <div class="section-divider" style="margin: 1rem auto;"></div>
+      <p class="text-slate-400 font-light mt-4 mb-12 max-w-lg mx-auto">
+        Nuestra comunidad es privada y por invitación. Si querés ser parte, escribinos.
+      </p>
+      <div class="grid sm:grid-cols-2 gap-6 mb-10">
+
+        <div class="comunidad-card">
+          <div class="text-4xl mb-3">💬</div>
+          <h3 class="font-display font-semibold text-lg text-slate-200 mb-2">Discord</h3>
+          <p class="text-slate-500 text-sm mb-5">Análisis, alertas y chat en tiempo real durante los lives.</p>
+          <a href="https://discord.com/invite/creemoscapital" target="_blank" rel="noopener" class="btn-outline text-sm py-2 px-5">
+            Solicitar acceso
+          </a>
+        </div>
+
+        <div class="comunidad-card">
+          <div class="text-4xl mb-3">📡</div>
+          <h3 class="font-display font-semibold text-lg text-slate-200 mb-2">Telegram</h3>
+          <p class="text-slate-500 text-sm mb-5">Notificaciones de ideas y avisos antes de cada sesión.</p>
+          <a href="https://t.me/creemoscapital" target="_blank" rel="noopener" class="btn-outline text-sm py-2 px-5">
+            Solicitar acceso
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── MÚSICA ─────────────────────────────────────────────── -->
+  <section id="musica" class="py-24 px-6" style="background: #080e1c;">
+    <div class="max-w-3xl mx-auto text-center">
+      <p class="section-label">Soundtrack</p>
+      <h2 class="section-title">Nuestra Música</h2>
+      <div class="section-divider" style="margin: 1rem auto;"></div>
+      <p class="text-slate-500 text-sm mt-3 mb-10">La música que suena en los lives, en Spotify y YouTube Music.</p>
+      <div class="rounded-lg overflow-hidden border border-sky-900/30" style="aspect-ratio: 16/9;">
+        <iframe id="iframe-musica"
+                width="100%" height="100%"
+                src=""
+                title="Música Creemos Capital"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </div>
+      <p class="text-slate-600 text-xs mt-4">También en
+        <a href="https://music.youtube.com/search?q=creemos+capital" target="_blank" rel="noopener" class="text-sky-500 hover:underline">YouTube Music</a> y
+        <a href="https://open.spotify.com/search/creemos%20capital" target="_blank" rel="noopener" class="text-sky-500 hover:underline">Spotify</a>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ── REDES & CONTACTO ───────────────────────────────────── -->
+  <section class="py-20 px-6 border-t border-sky-900/30" style="background:#080e1c;">
+    <div class="max-w-4xl mx-auto text-center">
+
+      <p class="section-label">Seguinos y escribinos</p>
+      <h2 class="section-title mb-2">Nuestras Redes Sociales</h2>
+      <div class="section-divider" style="margin: 1rem auto 3rem;"></div>
+
+      <!-- Redes -->
+      <div class="flex flex-wrap justify-center gap-6 mb-12">
+
+        <a href="https://www.youtube.com/@CreemosCapital" target="_blank" rel="noopener" class="red-social">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+          <span>YouTube</span>
+        </a>
+
+        <a href="https://www.tiktok.com/@creemoscapital" target="_blank" rel="noopener" class="red-social">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.56V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
+          <span>TikTok</span>
+        </a>
+
+        <a href="https://www.instagram.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838a4.162 4.162 0 100 8.324 4.162 4.162 0 000-8.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          <span>Instagram</span>
+        </a>
+
+        <a href="https://www.facebook.com/people/Creemos-Capital/61564167813649/" target="_blank" rel="noopener" class="red-social">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          <span>Facebook</span>
+        </a>
+
+        <a href="https://x.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
+          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          <span>X / Twitter</span>
+        </a>
+
+      </div>
+
+      <!-- Contacto -->
+      <p class="section-label mb-6">Contáctenos</p>
+      <div class="flex flex-wrap justify-center gap-4">
+
+        <a href="https://api.whatsapp.com/send/?phone=573153263852&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25d366;">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          WhatsApp
+        </a>
+
+        <a href="https://t.me/creemoscapitaloficial" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(38,166,209,0.12);border-color:rgba(38,166,209,0.3);color:#26a6d1;">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+          Telegram
+        </a>
+
+        <a href="mailto:contacto@creemoscapital.com" class="btn-contacto" style="background:rgba(56,189,248,0.12);border-color:rgba(56,189,248,0.3);color:#38bdf8;">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+          Email
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FOOTER ─────────────────────────────────────────────── -->
+  <footer class="px-6 pt-10 pb-6 border-t border-sky-900/20">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+        <div>
+          <p class="font-display font-bold text-xl text-white mb-1">
+            Creemos <span class="text-sky-400">Capital</span>
+          </p>
+          <p class="text-slate-600 text-xs">Trading en vivo · Todas las noches · creemoscapital.com</p>
+        </div>
+        <p class="text-slate-700 text-xs">© 2025 Creemos Capital. Todos los derechos reservados.</p>
+      </div>
+
+      <!-- Disclaimer legal -->
+      <div class="border-t border-sky-900/20 pt-6">
+        <p class="text-slate-600 text-xs leading-relaxed mb-3">
+          <strong class="text-slate-500">⚠ Aviso Legal:</strong> El contenido de esta página web es exclusivamente con fines educativos e informativos y no debe considerarse como asesoramiento financiero, legal o fiscal. El trading y la inversión en los mercados financieros conllevan un alto nivel de riesgo, incluyendo la posibilidad de perder la totalidad del capital invertido. No es adecuado para todos los inversores, y cada persona debe evaluar su tolerancia al riesgo antes de participar en estos mercados.
+        </p>
+        <p class="text-slate-600 text-xs leading-relaxed mb-3">
+          Creemos Capital no garantiza ningún tipo de resultado o rendimiento futuro, y el desempeño pasado no es indicativo de resultados futuros. Todas las decisiones de inversión y trading son responsabilidad exclusiva del usuario.
+        </p>
+        <p class="text-slate-600 text-xs leading-relaxed mb-3">
+          Recuerda: nunca operes con dinero que no puedas permitirte perder y mantén una gestión de riesgo adecuada en cada operación. El trading no es un esquema de enriquecimiento rápido y requiere educación, disciplina y experiencia. Creemos Capital y sus representantes no se hacen responsables por pérdidas derivadas de la aplicación de la información compartida en esta transmisión.
+        </p>
+        <p class="text-slate-500 text-xs font-medium">Al continuar viendo esta transmisión, aceptas que eres el único responsable de tus decisiones financieras. ¡Opera con responsabilidad!</p>
+      </div>
+
+    </div>
+  </footer>
+
+
+  <script src="./js/data.js"></script>
+  <script src="./js/main.js"></script>
+
+</body>
+</html>
