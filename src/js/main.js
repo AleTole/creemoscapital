@@ -197,21 +197,106 @@ async function cargarCalendario() {
     </div>`;
 }
 
-// ── MINI PLAYER ───────────────────────────────────────────────
-function toggleMiniPlayer() {
-  document.getElementById('mini-player').classList.toggle('collapsed');
+// ── MODAL MÚSICA ──────────────────────────────────────────────
+function cerrarModal() {
+  const overlay = document.getElementById('music-modal-overlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+// ── MUSIC PLAYER (YouTube IFrame API) ─────────────────────────
+let _ytPlayer      = null;
+let _ytReady       = false;
+let _ytAutoplay    = false;
+let _progressTimer = null;
+
+function onYouTubeIframeAPIReady() {
+  _ytPlayer = new YT.Player('yt-player-hidden', {
+    height: '1', width: '1',
+    playerVars: { listType: 'playlist', list: MUSICA_PLAYLIST_ID, rel: 0, autoplay: 0 },
+    events: {
+      onReady: (e) => {
+        _ytReady = true;
+        e.target.setVolume(80);
+        if (_ytAutoplay) e.target.playVideo();
+      },
+      onStateChange: (e) => {
+        const playing = e.data === YT.PlayerState.PLAYING;
+        const playIcon = document.getElementById('music-play-icon');
+        if (playIcon) {
+          playIcon.innerHTML = playing
+            ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
+            : '<path d="M8 5v14l11-7z"/>';
+        }
+        if (playing) { _startProgress(); _updateTitle(); }
+        else clearInterval(_progressTimer);
+      },
+    },
+  });
+}
+
+function _updateTitle() {
+  if (!_ytPlayer || !_ytPlayer.getVideoData) return;
+  const data = _ytPlayer.getVideoData();
+  const el = document.getElementById('music-title');
+  if (el && data && data.title) el.textContent = data.title;
+}
+
+function _startProgress() {
+  clearInterval(_progressTimer);
+  _progressTimer = setInterval(() => {
+    if (!_ytPlayer || !_ytPlayer.getDuration) return;
+    const dur = _ytPlayer.getDuration();
+    const cur = _ytPlayer.getCurrentTime();
+    const bar = document.getElementById('music-progress');
+    if (bar && dur > 0) bar.style.width = (cur / dur * 100) + '%';
+  }, 1000);
+}
+
+function musicTogglePlay() {
+  if (!_ytReady || !_ytPlayer) return;
+  const state = _ytPlayer.getPlayerState();
+  if (state === YT.PlayerState.PLAYING) _ytPlayer.pauseVideo();
+  else _ytPlayer.playVideo();
+}
+
+function musicNext() {
+  if (!_ytReady || !_ytPlayer) return;
+  _ytPlayer.nextVideo();
+  setTimeout(_updateTitle, 1200);
+}
+
+function musicPrev() {
+  if (!_ytReady || !_ytPlayer) return;
+  _ytPlayer.previousVideo();
+  setTimeout(_updateTitle, 1200);
+}
+
+function musicVolume(val) {
+  if (!_ytReady || !_ytPlayer) return;
+  _ytPlayer.setVolume(parseInt(val));
+}
+
+function toggleMusicDropdown() {
+  const dropdown = document.getElementById('music-dropdown');
+  const chevron  = document.getElementById('music-nav-chevron');
+  const isOpen   = dropdown.style.display === 'block';
+  dropdown.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+}
+
+function activarMusica() {
+  cerrarModal();
+  const dropdown = document.getElementById('music-dropdown');
+  const chevron  = document.getElementById('music-nav-chevron');
+  dropdown.style.display = 'block';
+  if (chevron) chevron.style.transform = 'rotate(180deg)';
+  if (_ytReady && _ytPlayer) _ytPlayer.playVideo();
+  else _ytAutoplay = true;
 }
 
 // ── PLAYERS ───────────────────────────────────────────────────
 function renderPlayers() {
-  const musicaSrc = `https://www.youtube.com/embed/${MUSICA_PRIMER_VIDEO_ID}?list=${MUSICA_PLAYLIST_ID}&rel=0&autoplay=0`;
-
-  const musica = document.getElementById('iframe-musica');
-  if (musica) musica.src = musicaSrc;
-
-  const miniMusica = document.getElementById('iframe-mini-musica');
-  if (miniMusica) miniMusica.src = musicaSrc;
-
+  // Player controlado por YouTube IFrame API
 }
 
 // ── INIT ──────────────────────────────────────────────────────
@@ -220,4 +305,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderVideos();
   renderPlayers();
   cargarCalendario();
+
+  // Cargar iframe de sección música solo cuando es visible
+  const seccionMusica = document.getElementById('musica');
+  if (seccionMusica) {
+    const obs = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        const iframe = document.getElementById('iframe-musica');
+        if (iframe && !iframe.src) {
+          iframe.src = `https://www.youtube.com/embed/${MUSICA_PRIMER_VIDEO_ID}?list=${MUSICA_PLAYLIST_ID}&rel=0&autoplay=0`;
+        }
+        obs.disconnect();
+      }
+    }, { threshold: 0.1 });
+    obs.observe(seccionMusica);
+  }
 });
