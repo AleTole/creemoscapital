@@ -5,10 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creemos Capital — Trading en Vivo</title>
   <meta name="description" content="Aprendé trading con análisis en vivo. Sesiones NY, Crypto, Asia y Europa todas las noches desde las 21hs.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://www.okx.com https://www.youtube.com; media-src 'none';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -110,7 +113,7 @@
     }
     .sesion-tz-flags { display: flex; align-items: center; gap: 3px; }
     .sesion-tz-zona  { font-size: 0.7rem; color: #64748b; }
-    .sesion-tz-hora  { font-size: 0.78rem; font-weight: 600; color: #e2e8f0; font-family: 'Space Grotesk', sans-serif; white-space: nowrap; }
+    .sesion-tz-hora  { font-size: 0.78rem; font-weight: 600; color: #e2e8f0; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
 
     /* ── SECCIÓN TÍTULOS ── */
     .section-label {
@@ -121,7 +124,7 @@
       margin-bottom: 0.5rem;
     }
     .section-title {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: clamp(1.6rem, 3vw, 2.2rem);
       font-weight: 600;
       color: #f1f5f9;
@@ -226,6 +229,74 @@
       border-color: #00d4ff;
     }
 
+    /* ── REGISTRO GRID RESPONSIVE ── */
+    @media (min-width: 1024px) {
+      #registro-grid { grid-template-columns: 1fr 380px !important; }
+    }
+
+    /* ── OKX TICKER ── */
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    #okx-ticker-items:hover { animation-play-state: paused; }
+    .okx-item  { display:inline-flex;align-items:center;gap:0.45rem;padding:0 1.1rem; }
+    .okx-name  { font-size:0.72rem;letter-spacing:0.06em;color:#64748b;font-weight:500; }
+    .okx-price { font-size:0.8rem;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#e2e8f0; }
+    .okx-pct   { font-size:0.72rem;font-weight:600; }
+    .okx-pos   { color:#22c55e; }
+    .okx-neg   { color:#ef4444; }
+    .okx-sep   { color:#1e3a5f;font-size:1rem;padding:0 0.25rem; }
+
+    /* ── REGISTRO ── */
+    .registro-step {
+      background: #050e1c;
+      border: 1px solid rgba(0,212,255,0.22);
+      border-radius: 10px;
+      padding: 2rem 1.5rem;
+      position: relative;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    .registro-step:hover {
+      border-color: rgba(0,212,255,0.45);
+      box-shadow: 0 6px 28px rgba(0,184,224,0.12);
+      transform: translateY(-3px);
+    }
+    .registro-step-num {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00d4ff22, #0099cc22);
+      border: 1.5px solid rgba(0,212,255,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #00d4ff;
+      margin: 0 auto 1.1rem;
+    }
+    .registro-step-icon { font-size: 1.9rem; margin-bottom: 0.75rem; }
+    .registro-step h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; color: #f1f5f9; margin-bottom: 0.6rem; }
+    .registro-step p  { font-size: 0.82rem; color: #64748b; line-height: 1.65; }
+    .registro-step strong { color: #94a3b8; }
+
+    .registro-alerta {
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.18);
+      border-left: 3px solid #00d4ff;
+      border-radius: 8px;
+      padding: 1.1rem 1.4rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      font-size: 0.82rem;
+      color: #64748b;
+      line-height: 1.6;
+    }
+    .registro-alerta-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+
     /* ── COMUNIDAD ── */
     .comunidad-card {
       background: #050e1c;
@@ -316,10 +387,10 @@
     }
     .cal-row:last-child { border-bottom: none; }
     .cal-row:hover { background: rgba(0,212,255,0.04); }
-    .cal-time   { font-size: 0.78rem; color: #475569; font-family: 'Space Grotesk', sans-serif; white-space: nowrap; }
+    .cal-time   { font-size: 0.78rem; color: #475569; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
     .cal-pais   { font-size: 1.1rem; color: #94a3b8; display: flex; align-items: center; gap: 0.4rem; }
     .cal-evento { font-size: 0.82rem; color: #cbd5e1; }
-    .cal-num    { font-size: 0.78rem; font-family: 'Space Grotesk', sans-serif; text-align: right; white-space: nowrap; }
+    .cal-num    { font-size: 0.78rem; font-family: 'DM Sans', sans-serif; text-align: right; white-space: nowrap; }
     .cal-prev   { color: #64748b; }
     .cal-forecast { color: #94a3b8; }
     .cal-actual { font-weight: 600; }
@@ -367,7 +438,7 @@
     }
     .noticias-card-icon svg { width: 18px; height: 18px; }
     .noticias-card-title {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'DM Sans', sans-serif;
       font-size: 0.9rem;
       font-weight: 600;
       color: #f1f5f9;
@@ -513,7 +584,7 @@
         <a href="#live"      class="nav-link">En Vivo</a>
         <a href="#videos"    class="nav-link">Videos</a>
         <a href="#noticias"  class="nav-link">Noticias</a>
-        <a href="#comunidad" class="nav-link">Comunidad</a>
+        <a href="#registro"  class="nav-link" style="color:#00d4ff;font-weight:600;">Únete</a>
         <a href="#musica"    class="nav-link">Música</a>
       </nav>
 
@@ -544,7 +615,7 @@
       <a href="#live"      onclick="closeMenu()" class="nav-link">En Vivo</a>
       <a href="#videos"    onclick="closeMenu()" class="nav-link">Videos</a>
       <a href="#noticias"  onclick="closeMenu()" class="nav-link">Noticias</a>
-      <a href="#comunidad" onclick="closeMenu()" class="nav-link">Comunidad</a>
+      <a href="#registro"  onclick="closeMenu()" class="nav-link" style="color:#00d4ff;font-weight:600;">Únete</a>
       <a href="#musica"    onclick="closeMenu()" class="nav-link">Música</a>
     </div>
 
@@ -595,30 +666,19 @@
   <div id="yt-player-hidden" style="position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;top:-9999px;left:-9999px;"></div>
 
 
-  <!-- ── TICKER TAPE ───────────────────────────────────────────── -->
-  <div style="position:fixed;top:64px;left:0;right:0;z-index:35;background:rgba(5,14,28,0.97);border-bottom:1px solid rgba(0,212,255,0.15);backdrop-filter:blur(8px);height:46px;overflow:hidden;">
-    <div class="tradingview-widget-container" style="margin-top:-4px;">
-      <div class="tradingview-widget-container__widget"></div>
-      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-      {
-        "symbols": [
-          {"proName":"FXPRO:EURUSD","title":"EUR/USD"},
-          {"proName":"FXPRO:GBPUSD","title":"GBP/USD"},
-          {"proName":"FXPRO:USDJPY","title":"USD/JPY"},
-          {"proName":"FXPRO:USDCHF","title":"USD/CHF"},
-          {"proName":"FXPRO:AUDUSD","title":"AUD/USD"},
-          {"proName":"FXPRO:XAUUSD","title":"Oro"},
-          {"proName":"TVC:USOIL","title":"Petróleo WTI"},
-          {"proName":"FOREXCOM:SPXUSD","title":"S&P 500"},
-          {"proName":"FOREXCOM:NSXUSD","title":"Nasdaq"}
-        ],
-        "showSymbolLogo": true,
-        "isTransparent": true,
-        "displayMode": "adaptive",
-        "colorTheme": "dark",
-        "locale": "es"
-      }
-      </script>
+  <!-- ── TICKER OKX ───────────────────────────────────────────── -->
+  <div style="position:fixed;top:64px;left:0;right:0;z-index:35;background:rgba(5,14,28,0.97);border-bottom:1px solid rgba(0,212,255,0.15);backdrop-filter:blur(8px);height:46px;display:flex;align-items:center;overflow:hidden;">
+    <!-- OKX Powered by badge -->
+    <a href="https://www.okx.com/join/CREEMOS" target="_blank" rel="noopener noreferrer"
+       style="flex-shrink:0;padding:0 0.85rem;border-right:1px solid rgba(0,212,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.1rem;text-decoration:none;height:100%;">
+      <span style="font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:#475569;line-height:1;">Powered by</span>
+      <img src="./img/OKX-250x141.png" alt="OKX" style="height:18px;width:auto;display:block;">
+    </a>
+    <!-- Ticker scrolling -->
+    <div style="flex:1;overflow:hidden;mask-image:linear-gradient(to right,transparent 0,black 3%,black 97%,transparent 100%);">
+      <div id="okx-ticker-items" style="display:inline-flex;align-items:center;gap:0;animation:tickerScroll 55s linear infinite;white-space:nowrap;">
+        <span style="color:#475569;font-size:0.78rem;padding:0 2rem;">Cargando precios en tiempo real…</span>
+      </div>
     </div>
   </div>
 
@@ -749,6 +809,7 @@
             <button onclick="filtrarCalendario('todos')"  id="btn-todos"  class="cal-btn cal-btn-active">Todos</button>
             <button onclick="filtrarCalendario('alto')"   id="btn-alto"   class="cal-btn">🔴 Alto</button>
             <button onclick="filtrarCalendario('medio')"  id="btn-medio"  class="cal-btn">🟠 Medio</button>
+            <button onclick="filtrarCalendario('bajo')"   id="btn-bajo"   class="cal-btn">🟡 Bajo</button>
           </div>
         </div>
         <div id="ff-calendar-wrap" class="rounded-lg border border-sky-900/30 overflow-hidden">
@@ -845,23 +906,141 @@
 
 
   <!-- ── COMUNIDAD ──────────────────────────────────────────── -->
-  <section id="comunidad" class="py-24 px-6">
-    <div class="max-w-4xl mx-auto text-center">
-      <p class="section-label">Únete</p>
-      <h2 class="section-title">La Comunidad</h2>
-      <div class="section-divider" style="margin: 1rem auto;"></div>
-      <p class="text-slate-400 font-light mt-4 mb-12 max-w-lg mx-auto">
-        Nuestra comunidad es privada y por invitación. Si querés ser parte, escribenos.
-      </p>
-      <div class="grid sm:grid-cols-2 gap-6 mb-10">
+  <!-- ── REGISTRO ─────────────────────────────────────────── -->
+  <section id="registro" class="py-24 px-6" style="background:#030810;">
+    <div class="max-w-6xl mx-auto">
 
-        <div class="comunidad-card">
-          <div class="text-4xl mb-3">📡</div>
-          <h3 class="font-display font-semibold text-lg text-slate-200 mb-2">Telegram</h3>
-          <p class="text-slate-500 text-sm mb-5">Notificaciones de ideas y avisos antes de cada sesión.</p>
-          <a href="https://t.me/creemoscapital" target="_blank" rel="noopener" class="btn-outline text-sm py-2 px-5">
-            Solicitar acceso
-          </a>
+      <!-- Encabezado -->
+      <div class="text-center mb-14">
+        <p class="section-label">🚀 Acceso 100% Gratuito</p>
+        <h2 class="section-title">Únete a Creemos Capital</h2>
+        <div class="section-divider" style="margin:1rem auto;"></div>
+        <p class="text-slate-400 font-light mt-4 max-w-xl mx-auto">
+          Operamos y aprendemos en vivo hasta 21 horas al día. Únete en 4 pasos simples y seguros.
+        </p>
+      </div>
+
+      <!-- Layout 2 columnas: pasos izquierda · panel CTA derecha -->
+      <div id="registro-grid" style="display:grid;grid-template-columns:1fr;gap:2rem;">
+
+        <!-- Columna izquierda: pasos -->
+        <div style="display:flex;flex-direction:column;gap:1rem;">
+
+          <!-- Paso 1 -->
+          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
+            <div class="registro-step-num" style="margin:0;flex-shrink:0;">1</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">📝</span>
+                <h3 style="margin:0;">Completa el Formulario</h3>
+              </div>
+              <p>Ingresa información verídica. <strong>La foto es obligatoria</strong> (selfie o tipo documento). Solo toma 2 minutos.</p>
+            </div>
+          </div>
+
+          <!-- Paso 2 -->
+          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
+            <div class="registro-step-num" style="margin:0;flex-shrink:0;">2</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">📧</span>
+                <h3 style="margin:0;">Revisa tu Correo</h3>
+              </div>
+              <p>Recibirás un mensaje desde <strong>info@creemoscapital.com</strong> con tu código de verificación. Revisa también la carpeta de <strong>SPAM</strong>.</p>
+              <div style="margin-top:0.6rem;padding:0.5rem 0.75rem;background:rgba(239,68,68,0.08);border-radius:6px;border-left:2px solid #ef4444;font-size:0.78rem;color:#94a3b8;">
+                ⛔ <strong>Nunca</strong> enviamos archivos adjuntos ni links. Solo el código numérico.
+              </div>
+            </div>
+          </div>
+
+          <!-- Paso 3 -->
+          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
+            <div class="registro-step-num" style="margin:0;flex-shrink:0;">3</div>
+            <div>
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">💬</span>
+                <h3 style="margin:0;">Verifica por WhatsApp</h3>
+              </div>
+              <p>Envíanos al <strong>+57 315 326 3852</strong> los siguientes datos:</p>
+              <ul style="margin-top:0.5rem;display:flex;flex-direction:column;gap:0.3rem;">
+                <li style="font-size:0.8rem;color:#64748b;">✅ Tu <strong style="color:#94a3b8;">nombre completo</strong> (igual al formulario)</li>
+                <li style="font-size:0.8rem;color:#64748b;">✅ El <strong style="color:#94a3b8;">código de verificación</strong> recibido</li>
+                <li style="font-size:0.8rem;color:#64748b;">✅ Tu <strong style="color:#94a3b8;">usuario de Telegram</strong> (ej: @miusuario)</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Paso 4 -->
+          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;border-color:rgba(34,197,94,0.3);">
+            <div class="registro-step-num" style="margin:0;flex-shrink:0;border-color:rgba(34,197,94,0.5);color:#22c55e;background:rgba(34,197,94,0.08);">4</div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
+                <span style="font-size:1.4rem;">🎉</span>
+                <h3 style="margin:0;color:#22c55e;">¡Acceso Aprobado! — máx. 24 hs</h3>
+              </div>
+              <p>Validamos tu información y te damos acceso a todo:</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-top:0.6rem;">
+                <span style="font-size:0.8rem;color:#64748b;">📡 Grupo <strong style="color:#94a3b8;">Telegram</strong> exclusivo</span>
+                <span style="font-size:0.8rem;color:#64748b;">🎮 Sesiones en <strong style="color:#94a3b8;">Discord</strong></span>
+                <span style="font-size:0.8rem;color:#64748b;">🏦 <strong style="color:#94a3b8;">Brokers</strong> y exchanges asociados</span>
+                <span style="font-size:0.8rem;color:#64748b;">⚡ <strong style="color:#94a3b8;">Herramientas</strong> y contenido premium</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Columna derecha: panel CTA -->
+        <div style="position:sticky;top:120px;height:fit-content;">
+          <div style="background:linear-gradient(135deg,#050e1c,#07111f);border:1px solid rgba(0,212,255,0.25);border-radius:14px;padding:2rem;display:flex;flex-direction:column;gap:1.25rem;">
+
+            <div style="text-align:center;">
+              <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
+              <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:#f1f5f9;margin-bottom:0.25rem;">Empezá Ahora</h3>
+              <p style="font-size:0.8rem;color:#475569;">Gratuito · Seguro · Sin compromisos</p>
+            </div>
+
+            <!-- Paso 1: Form -->
+            <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:1rem;">
+              <p style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#00d4ff;margin-bottom:0.6rem;font-weight:600;">① Primer paso</p>
+              <a href="https://forms.gle/gpwxCJwcXvEX2bU26"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn-primary"
+                 style="width:100%;justify-content:center;font-size:0.9rem;padding:0.85rem 1rem;">
+                <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+                Completar Formulario 📋
+              </a>
+            </div>
+
+            <!-- Paso 3: WhatsApp -->
+            <div style="background:rgba(37,211,102,0.05);border:1px solid rgba(37,211,102,0.15);border-radius:8px;padding:1rem;">
+              <p style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#25d366;margin-bottom:0.6rem;font-weight:600;">③ Luego del correo</p>
+              <a href="https://api.whatsapp.com/send/?phone=573153263852&text=Hola%2C+quiero+completar+mi+registro+en+Creemos+Capital.+Mi+nombre+es%3A&type=phone_number&app_absent=0"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn-contacto"
+                 style="width:100%;justify-content:center;background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.35);color:#25d366;">
+                <svg style="width:18px;height:18px;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Enviar por WhatsApp 💬
+              </a>
+              <p style="font-size:0.72rem;color:#475569;margin-top:0.5rem;text-align:center;">+57 315 326 3852</p>
+            </div>
+
+            <!-- Sellos de seguridad -->
+            <div style="display:flex;flex-direction:column;gap:0.4rem;padding-top:0.25rem;border-top:1px solid rgba(0,212,255,0.08);">
+              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
+                <span>🔒</span><span>Datos protegidos · No se comparten con terceros</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
+                <span>🛡️</span><span>Comunidad verificada y libre de bots</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
+                <span>⏳</span><span>Acceso aprobado en máximo 24 horas</span>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
@@ -875,21 +1054,39 @@
       <p class="section-label">Soundtrack</p>
       <h2 class="section-title">Nuestra Música</h2>
       <div class="section-divider" style="margin: 1rem auto;"></div>
-      <p class="text-slate-500 text-sm mt-3 mb-10">La música que suena en los lives, completa y sin cortes.</p>
-      <div class="rounded-lg overflow-hidden border border-sky-900/30" style="height:90px;">
-        <iframe id="iframe-musica"
-                width="100%" height="90"
-                src=""
-                title="Música Creemos Capital"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-        </iframe>
+      <p class="text-slate-500 text-sm mt-3 mb-10">La música que suena en los lives. Escúchala completa en tus plataformas favoritas.</p>
+
+      <div class="grid sm:grid-cols-2 gap-5 max-w-xl mx-auto mb-8">
+
+        <!-- Spotify -->
+        <a href="https://open.spotify.com/intl-es/artist/7JJXOml59BOQLztO0W1nL3"
+           target="_blank" rel="noopener noreferrer"
+           style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:2rem 1.5rem;background:#050e1c;border:1px solid rgba(30,215,96,0.3);border-radius:10px;text-decoration:none;transition:all 0.2s;"
+           onmouseover="this.style.borderColor='rgba(30,215,96,0.6)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(30,215,96,0.12)'"
+           onmouseout="this.style.borderColor='rgba(30,215,96,0.3)';this.style.transform='';this.style.boxShadow=''">
+          <svg viewBox="0 0 24 24" fill="#1ED760" style="width:48px;height:48px;"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+          <div>
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:#f1f5f9;margin-bottom:0.2rem;">Spotify</p>
+            <p style="font-size:0.78rem;color:#64748b;">Escuchar en Spotify →</p>
+          </div>
+        </a>
+
+        <!-- YouTube Music -->
+        <a href="https://music.youtube.com/channel/UCv4ma-yTMOqYYF_Ii5kv0zQ"
+           target="_blank" rel="noopener noreferrer"
+           style="display:flex;flex-direction:column;align-items:center;gap:1rem;padding:2rem 1.5rem;background:#050e1c;border:1px solid rgba(255,0,0,0.25);border-radius:10px;text-decoration:none;transition:all 0.2s;"
+           onmouseover="this.style.borderColor='rgba(255,0,0,0.5)';this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(255,0,0,0.1)'"
+           onmouseout="this.style.borderColor='rgba(255,0,0,0.25)';this.style.transform='';this.style.boxShadow=''">
+          <svg viewBox="0 0 24 24" fill="#FF0000" style="width:48px;height:48px;"><path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm0 19.104c-3.924 0-7.104-3.18-7.104-7.104S8.076 4.896 12 4.896s7.104 3.18 7.104 7.104-3.18 7.104-7.104 7.104zm0-13.332c-3.432 0-6.228 2.796-6.228 6.228S8.568 18.228 12 18.228s6.228-2.796 6.228-6.228S15.432 5.772 12 5.772zM9.684 15.54V8.46L15.816 12l-6.132 3.54z"/></svg>
+          <div>
+            <p style="font-family:'Space Grotesk',sans-serif;font-weight:600;color:#f1f5f9;margin-bottom:0.2rem;">YouTube Music</p>
+            <p style="font-size:0.78rem;color:#64748b;">Escuchar en YouTube Music →</p>
+          </div>
+        </a>
+
       </div>
-      <p class="text-slate-600 text-xs mt-4">También en
-        <a href="https://open.spotify.com/intl-es/artist/7JJXOml59BOQLztO0W1nL3" target="_blank" rel="noopener" class="text-sky-500 hover:underline">Spotify</a> ·
-        <a href="https://music.youtube.com/channel/UCv4ma-yTMOqYYF_Ii5kv0zQ" target="_blank" rel="noopener" class="text-sky-500 hover:underline">YouTube Music</a>
-      </p>
+
+      <p style="font-size:0.78rem;color:#334155;">🎵 Música original creada por y para la comunidad Creemos Capital</p>
     </div>
   </section>
 

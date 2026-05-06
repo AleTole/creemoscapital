@@ -2,6 +2,17 @@
 //  CREEMOS CAPITAL — Lógica del sitio
 // =================================================================
 
+// ── UTILIDADES ────────────────────────────────────────────────
+function esc(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ── NAVBAR scroll ─────────────────────────────────────────────
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
@@ -52,7 +63,7 @@ function videoCard(v) {
         <div class="video-play">
           <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
         </div>
-        <span class="video-duracion">${v.duracion}</span>
+        <span class="video-duracion">${v.duracion || ''}</span>
       </div>
       <p class="video-titulo">${v.titulo}</p>
     </a>
@@ -117,7 +128,8 @@ function renderCalendario() {
   const filtrados = _calEventos.filter(e => {
     if (_calFiltro === 'alto')  return e.impact === 'High';
     if (_calFiltro === 'medio') return e.impact === 'Medium';
-    return e.impact === 'High' || e.impact === 'Medium';
+    if (_calFiltro === 'bajo')  return e.impact === 'Low';
+    return true;
   });
 
   if (filtrados.length === 0) {
@@ -145,10 +157,10 @@ function renderCalendario() {
       <div class="cal-row">
         <span class="cal-time">${formatoHora(e.date)}</span>
         <span class="cal-pais" title="${pais.nombre}"><span class="cal-impacto"><span class="imp-${imp}"></span></span>${pais.bandera}</span>
-        <span class="cal-evento">${e.title}</span>
-        <span class="cal-num cal-forecast">${e.forecast || '—'}</span>
-        <span class="cal-num cal-prev">${e.previous || '—'}</span>
-        <span class="cal-num cal-actual ${cls}">${actual || '·'}</span>
+        <span class="cal-evento">${esc(e.title)}</span>
+        <span class="cal-num cal-forecast">${esc(e.forecast) || '—'}</span>
+        <span class="cal-num cal-prev">${esc(e.previous) || '—'}</span>
+        <span class="cal-num cal-actual ${cls}">${esc(actual) || '·'}</span>
       </div>`;
     }).join('')}
   `).join('');
@@ -157,7 +169,8 @@ function renderCalendario() {
 function filtrarCalendario(filtro) {
   _calFiltro = filtro;
   document.querySelectorAll('.cal-btn').forEach(b => b.classList.remove('cal-btn-active'));
-  document.getElementById(`btn-${filtro}`).classList.add('cal-btn-active');
+  const btnActivo = document.getElementById(`btn-${filtro}`);
+  if (btnActivo) btnActivo.classList.add('cal-btn-active');
   renderCalendario();
 }
 
@@ -165,9 +178,10 @@ async function cargarCalendario() {
   const loading = document.getElementById('ff-calendar-loading');
   const FF_URL  = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota';
   const PROXIES = [
-    '/calendar-proxy.php',
-    FF_URL,
+    `https://corsproxy.io/?${encodeURIComponent(FF_URL)}`,
     `https://api.allorigins.win/raw?url=${encodeURIComponent(FF_URL)}`,
+    FF_URL,
+    '/calendar-proxy.php',
   ];
   const errores = [];
   for (const url of PROXIES) {
@@ -181,7 +195,7 @@ async function cargarCalendario() {
       hoy.setHours(0, 0, 0, 0);
       _calEventos = data.filter(e => {
         const fecha = new Date(e.date);
-        return fecha >= hoy && (e.impact === 'High' || e.impact === 'Medium' || e.impact === 'Low') && e.impact !== 'Holiday';
+        return fecha >= hoy && e.impact !== 'Holiday';
       });
       if (loading) loading.style.display = 'none';
       renderCalendario();
@@ -189,11 +203,13 @@ async function cargarCalendario() {
     } catch (e) { errores.push(`${url} → ${e.message}`); continue; }
   }
   if (loading) loading.innerHTML = `
-    <div class="text-center py-4">
-      <p class="text-red-400 text-sm mb-3">No se pudo cargar el calendario.</p>
-      <pre style="font-size:0.6rem;color:#64748b;text-align:left;padding:1rem;max-width:600px;margin:0 auto;white-space:pre-wrap;">${errores.join('\n')}</pre>
+    <div class="text-center py-10">
+      <div style="font-size:2rem;margin-bottom:0.75rem;">📅</div>
+      <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.25rem;">El calendario no está disponible en este momento.</p>
       <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener"
-         class="text-sky-500 text-sm hover:underline">Ver calendario en Forex Factory →</a>
+         style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.4rem;border:1px solid rgba(0,212,255,0.35);border-radius:6px;color:#00d4ff;font-size:0.85rem;text-decoration:none;">
+        Ver calendario en Forex Factory →
+      </a>
     </div>`;
 }
 
@@ -294,30 +310,71 @@ function activarMusica() {
   else _ytAutoplay = true;
 }
 
-// ── PLAYERS ───────────────────────────────────────────────────
-function renderPlayers() {
-  // Player controlado por YouTube IFrame API
+// ── OKX TICKER ────────────────────────────────────────────────
+const OKX_PARES = ['BTC-USDT','ETH-USDT','SOL-USDT','XRP-USDT','BNB-USDT','DOGE-USDT','ADA-USDT','AVAX-USDT','LINK-USDT','TON-USDT'];
+
+function fmtPrecio(n) {
+  if (n >= 1000) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (n >= 1)    return n.toFixed(3);
+  return n.toFixed(5);
+}
+
+function renderTickerOKX(data) {
+  const cont = document.getElementById('okx-ticker-items');
+  if (!cont) return;
+  const mapa = {};
+  data.forEach(t => { mapa[t.instId] = t; });
+
+  const html = OKX_PARES.map(par => {
+    const t = mapa[par];
+    if (!t) return '';
+    const precio = parseFloat(t.last);
+    const open   = parseFloat(t.sodUtc8);
+    const pct    = open > 0 ? ((precio - open) / open * 100) : 0;
+    const pos    = pct >= 0;
+    const base   = par.split('-')[0];
+    return `<div class="okx-item">
+      <span class="okx-name">${base}</span>
+      <span class="okx-price">$${fmtPrecio(precio)}</span>
+      <span class="okx-pct ${pos ? 'okx-pos' : 'okx-neg'}">${pos ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%</span>
+    </div>`;
+  }).join('<span class="okx-sep">·</span>');
+
+  // Duplicar para scroll infinito
+  cont.innerHTML = html + '<span class="okx-sep" style="padding:0 2rem;"></span>' + html;
+}
+
+async function cargarTickerOKX() {
+  const OKX_API = 'https://www.okx.com/api/v5/market/tickers?instType=SPOT';
+  const urls = [
+    OKX_API,
+    `https://corsproxy.io/?${encodeURIComponent(OKX_API)}`,
+  ];
+  for (const url of urls) {
+    try {
+      const res  = await fetch(url, { cache: 'no-store' });
+      const json = await res.json();
+      if (json.code === '0' && Array.isArray(json.data)) {
+        renderTickerOKX(json.data);
+        setInterval(async () => {
+          try {
+            const r = await fetch(url, { cache: 'no-store' });
+            const j = await r.json();
+            if (j.code === '0') renderTickerOKX(j.data);
+          } catch(_) {}
+        }, 15000);
+        return;
+      }
+    } catch(_) { continue; }
+  }
 }
 
 // ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   renderSesiones();
   renderVideos();
-  renderPlayers();
   cargarCalendario();
+  cargarTickerOKX();
 
-  // Cargar iframe de sección música solo cuando es visible
-  const seccionMusica = document.getElementById('musica');
-  if (seccionMusica) {
-    const obs = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) {
-        const iframe = document.getElementById('iframe-musica');
-        if (iframe && !iframe.src) {
-          iframe.src = `https://www.youtube.com/embed/${MUSICA_PRIMER_VIDEO_ID}?list=${MUSICA_PLAYLIST_ID}&rel=0&autoplay=0`;
-        }
-        obs.disconnect();
-      }
-    }, { threshold: 0.1 });
-    obs.observe(seccionMusica);
-  }
+  // Spotify iframe carga con src fijo (no requiere Observer)
 });

@@ -28,13 +28,13 @@ const VIDEOS_NOVATOS = [
 // Agregá más videos acá — aparecen automáticamente como miniaturas
 const VIDEOS_ESTRATEGIA = [
   { id: "O-s8F1EYgZo",   titulo: "Rompimiento sin volumen es sospechoso" },
-  { id: "SyskCkiNby8",   titulo: "Estrategia C4 — Video 2" },
-  { id: "ezvbivW95X4",   titulo: "Estrategia C4 — Video 3" },
-  { id: "mCSDxA4bjMA",   titulo: "Estrategia C4 — Video 4" },
-  { id: "l2HCP4BVG3s",   titulo: "Estrategia C4 — Video 5" },
-  { id: "7xrAUPnKfFc",   titulo: "Estrategia C4 — Video 6" },
-  { id: "OvhAA3B6oYo",   titulo: "Tendencia NO es una línea inclinada — Tendencia · Estrategia C4" },
-  { id: "ySxbg7pZ0b8",   titulo: "No son líneas, son Zonas — Soportes y Resistencias · Estrategia C4" },
+  { id: "SyskCkiNby8",   titulo: "Vela Bonita VS Rechazo Real — Acción del precio" },
+  { id: "ezvbivW95X4",   titulo: "Sin estructura no hay tendencia" },
+  { id: "mCSDxA4bjMA",   titulo: "Si el precio no reacciona antes, no es soporte" },
+  { id: "l2HCP4BVG3s",   titulo: "Precio sin Volumen no convence" },
+  { id: "7xrAUPnKfFc",   titulo: "Una vela NO es señal — Acción del precio" },
+  { id: "OvhAA3B6oYo",   titulo: "Tendencia NO es una línea inclinada" },
+  { id: "ySxbg7pZ0b8",   titulo: "No son líneas, son Zonas — Soportes y Resistencias" },
 ];
 
 // ── SESIONES DE MERCADO ────────────────────────────────────────
