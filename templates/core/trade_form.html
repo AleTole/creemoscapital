@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ title }} - Creemos Capital{% endblock %}
+{% block description %}Registrar nueva operación de trading{% endblock %}
+
+{% block content %}
+<section class="hero-bg relative min-h-screen pt-[9rem] pb-16">
+  <div class="max-w-3xl mx-auto px-6 w-full">
+
+    <div class="flex items-center gap-4 mb-8">
+      <a href="{% url 'core:dashboard' %}" class="text-slate-400 hover:text-sky-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      </a>
+      <div>
+        <h1 class="section-title">{{ title }}</h1>
+        <p class="text-slate-400 text-sm mt-1">Registra los detalles de tu operación</p>
+      </div>
+    </div>
+
+    {% if messages %}
+    <div class="mb-6">
+      {% for message in messages %}
+      <div class="p-4 rounded-lg border {% if message.tags == 'error' %}bg-red-900/20 border-red-500/30 text-red-400{% else %}bg-sky-900/20 border-sky-500/30 text-sky-400{% endif %}">
+        {{ message }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-6">
+      {% csrf_token %}
+
+      <div class="bg-navy-800/50 border border-sky-900/30 rounded-xl p-6">
+        <h2 class="text-sm font-semibold text-sky-400 uppercase tracking-wider mb-4">Información Básica</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.fecha.label }}</label>
+            {{ form.fecha }}
+            {% if form.fecha.errors %}<p class="text-red-400 text-xs mt-1">{{ form.fecha.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.par.label }}</label>
+            {{ form.par }}
+            {% if form.par.errors %}<p class="text-red-400 text-xs mt-1">{{ form.par.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.mercado.label }}</label>
+            {{ form.mercado }}
+            {% if form.mercado.errors %}<p class="text-red-400 text-xs mt-1">{{ form.mercado.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.tipo.label }}</label>
+            {{ form.tipo }}
+            {% if form.tipo.errors %}<p class="text-red-400 text-xs mt-1">{{ form.tipo.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.estrategia.label }}</label>
+            {{ form.estrategia }}
+            {% if form.estrategia.errors %}<p class="text-red-400 text-xs mt-1">{{ form.estrategia.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.emocion.label }}</label>
+            {{ form.emocion }}
+            {% if form.emocion.errors %}<p class="text-red-400 text-xs mt-1">{{ form.emocion.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-navy-800/50 border border-sky-900/30 rounded-xl p-6">
+        <h2 class="text-sm font-semibold text-sky-400 uppercase tracking-wider mb-4">Precios y Niveles</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.precio_entrada.label }}</label>
+            {{ form.precio_entrada }}
+            {% if form.precio_entrada.errors %}<p class="text-red-400 text-xs mt-1">{{ form.precio_entrada.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.precio_salida.label }}</label>
+            {{ form.precio_salida }}
+            {% if form.precio_salida.errors %}<p class="text-red-400 text-xs mt-1">{{ form.precio_salida.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.stop_loss.label }}</label>
+            {{ form.stop_loss }}
+            {% if form.stop_loss.errors %}<p class="text-red-400 text-xs mt-1">{{ form.stop_loss.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.take_profit.label }}</label>
+            {{ form.take_profit }}
+            {% if form.take_profit.errors %}<p class="text-red-400 text-xs mt-1">{{ form.take_profit.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.lotes.label }}</label>
+            {{ form.lotes }}
+            {% if form.lotes.errors %}<p class="text-red-400 text-xs mt-1">{{ form.lotes.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.duracion.label }}</label>
+            {{ form.duracion }}
+            {% if form.duracion.errors %}<p class="text-red-400 text-xs mt-1">{{ form.duracion.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-navy-800/50 border border-sky-900/30 rounded-xl p-6">
+        <h2 class="text-sm font-semibold text-sky-400 uppercase tracking-wider mb-4">Resultado</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.resultado.label }}</label>
+            {{ form.resultado }}
+            {% if form.resultado.errors %}<p class="text-red-400 text-xs mt-1">{{ form.resultado.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.pnl.label }}</label>
+            {{ form.pnl }}
+            {% if form.pnl.errors %}<p class="text-red-400 text-xs mt-1">{{ form.pnl.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.pnl_porciento.label }}</label>
+            {{ form.pnl_porciento }}
+            {% if form.pnl_porciento.errors %}<p class="text-red-400 text-xs mt-1">{{ form.pnl_porciento.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-navy-800/50 border border-sky-900/30 rounded-xl p-6">
+        <h2 class="text-sm font-semibold text-sky-400 uppercase tracking-wider mb-4">Notas y Reflexión</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.notas.label }}</label>
+            {{ form.notas }}
+            {% if form.notas.errors %}<p class="text-red-400 text-xs mt-1">{{ form.notas.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.lecciones.label }}</label>
+            {{ form.lecciones }}
+            {% if form.lecciones.errors %}<p class="text-red-400 text-xs mt-1">{{ form.lecciones.errors.0 }}</p>{% endif %}
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-1.5">{{ form.screenshot.label }}</label>
+            {{ form.screenshot }}
+            {% if form.screenshot.errors %}<p class="text-red-400 text-xs mt-1">{{ form.screenshot.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <a href="{% url 'core:dashboard' %}" class="btn-outline">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+          Volver al Dashboard
+        </a>
+        <button type="submit" class="btn-primary">
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+          Guardar Trade
+        </button>
+      </div>
+    </form>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  .form-input, .form-select, select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, #050e1c 0%, #0a1628 100%);
+    border: 1px solid rgba(0,212,255,0.2);
+    border-radius: 10px;
+    color: #e2e8f0 !important;
+    font-size: 0.9rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color-scheme: dark;
+  }
+  .form-input:focus, .form-select:focus, select:focus {
+    outline: none;
+    border-color: #00d4ff;
+    box-shadow: 0 0 0 4px rgba(0,212,255,0.15), 0 0 20px rgba(0,212,255,0.1);
+  }
+  .form-input::placeholder { color: #475569; }
+  .form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300d4ff' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.85rem center;
+    padding-right: 2.2rem;
+  }
+  textarea.form-input {
+    resize: vertical;
+    min-height: 80px;
+  }
+</style>
+{% endblock %}

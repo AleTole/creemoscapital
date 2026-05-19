@@ -1,0 +1,67 @@
+{% load static %}<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Creemos Capital — Trading en Vivo{% endblock %}</title>
+  <meta name="description" content="{% block description %}Trading en vivo con estrategia C4{% endblock %}">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://s.ytimg.com https://player.kick.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.tailwindcss.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; frame-src https://www.youtube.com https://player.kick.com https://open.spotify.com; connect-src 'self' https://www.okx.com https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://flagcdn.com; media-src https://www.youtube.com;">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
+            sky:   { 400: '#00d4ff', 500: '#00b8e0', 600: '#0099cc' },
+            gold:  { 400: '#fbbf24', 500: '#f59e0b' },
+            long:  '#22c55e',
+            short: '#ef4444',
+          },
+          fontFamily: {
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body onload="setTimeout(showMusicModal, 2000)">
+
+  {% include 'core/partials/navbar.html' %}
+  {% include 'core/partials/ticker.html' %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  {% include 'core/partials/footer.html' %}
+  {% include 'core/partials/music_player.html' %}
+  {% include 'core/partials/music_modal.html' %}
+
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script>
+    function closeSuccessModal() {
+      const modal = document.getElementById('registro-success-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        window.location.href = '/';
+      }
+    }
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

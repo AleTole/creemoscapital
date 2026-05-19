@@ -1,0 +1,13 @@
+{% load static %}
+<div style="position:fixed;top:64px;left:0;right:0;z-index:35;background:rgba(5,14,28,0.97);border-bottom:1px solid rgba(0,212,255,0.15);backdrop-filter:blur(8px);height:46px;display:flex;align-items:center;overflow:hidden;">
+  <a href="{{ config.okx_affiliate_url }}" target="_blank" rel="noopener noreferrer"
+     style="flex-shrink:0;padding:0 0.85rem;border-right:1px solid rgba(0,212,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.1rem;text-decoration:none;height:100%;">
+    <span style="font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:#475569;line-height:1;">Powered by</span>
+    <img src="{% static 'img/okx-logo.png' %}" alt="OKX" style="height:18px;width:auto;display:block;">
+  </a>
+  <div style="flex:1;overflow:hidden;mask-image:linear-gradient(to right,transparent 0,black 3%,black 97%,transparent 100%);">
+    <div id="okx-ticker-items" style="display:inline-flex;align-items:center;gap:0;animation:tickerScroll 55s linear infinite;white-space:nowrap;">
+      <span style="color:#475569;font-size:0.78rem;padding:0 2rem;">Cargando precios en tiempo real…</span>
+    </div>
+  </div>
+</div>

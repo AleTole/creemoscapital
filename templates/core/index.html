@@ -1,0 +1,380 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Creemos Capital — Trading en Vivo{% endblock %}
+
+{% block content %}
+
+<!-- ── HERO ──────────────────────────────────────────────── -->
+<section id="inicio" class="hero-bg relative min-h-screen flex items-center">
+  <div class="max-w-7xl mx-auto px-6 w-full" style="padding-top:9rem;padding-bottom:4rem;">
+    <div class="flex flex-col lg:flex-row items-center gap-12">
+
+      <div class="flex-1 max-w-xl">
+        <p class="section-label fade-up">Trading en vivo · <span style="color:#f1f5f9;font-weight:700;font-size:0.85rem;">¡Casi 21 hs al día!</span></p>
+        <div class="mb-6 fade-up delay-1">
+          <img src="{% static 'img/logo.png' %}" alt="Creemos Capital" class="w-72 md:w-96 h-auto">
+        </div>
+        <p class="text-slate-400 text-lg font-light mb-10 max-w-lg leading-relaxed fade-up delay-2">
+          Análisis en vivo de mercados: NY, Crypto, Asia y Europa.<br>
+          Estrategia C4, en tiempo real, para traders de todos los niveles.
+        </p>
+        <div class="flex flex-wrap gap-4 fade-up delay-3">
+          <a href="{{ config.youtube_channel_url }}" target="_blank" rel="noopener" class="btn-primary">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
+            </svg>
+            Ver en YouTube
+          </a>
+          <a href="{% url 'core:noticias' %}" class="btn-outline">Ver noticias del mercado</a>
+        </div>
+      </div>
+
+      <div class="flex-1 w-full max-w-xl fade-up delay-2">
+        <div class="flex items-center justify-between mb-3">
+          <div class="live-badge">
+            <span class="live-dot"></span>
+            <span>EN VIVO</span>
+          </div>
+          <a href="https://kick.com/{{ config.kick_channel }}" target="_blank" rel="noopener"
+             class="text-xs text-slate-500 hover:text-sky-400 transition-colors">kick.com/{{ config.kick_channel }} →</a>
+        </div>
+        <div class="rounded-xl overflow-hidden border border-sky-900/30 shadow-2xl" style="aspect-ratio:16/9;">
+          <iframe
+            src="https://player.kick.com/{{ config.kick_channel }}"
+            width="100%" height="100%"
+            frameborder="0"
+            scrolling="no"
+            allowfullscreen
+            allow="autoplay; fullscreen">
+          </iframe>
+        </div>
+
+        <div class="flex flex-wrap gap-3 mt-4">
+          <a href="https://kick.com/{{ config.kick_channel }}" target="_blank" rel="noopener" class="btn-apoyo btn-kick">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>
+            Donar en Kick
+          </a>
+          <a href="{{ config.youtube_channel_url }}/live" target="_blank" rel="noopener" class="btn-apoyo btn-youtube">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+            Super Chat en YouTube
+          </a>
+        </div>
+        <p class="text-slate-600 text-xs mt-2">Las donaciones y Super Chats se procesan directamente en cada plataforma durante el live.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── LIVE BANNER ────────────────────────────────────────── -->
+<section id="live" class="live-banner py-6">
+  <div class="max-w-7xl mx-auto px-6">
+    <p class="text-center text-xs tracking-[0.3em] uppercase text-sky-400 mb-5">Horarios de sesiones · Por país</p>
+    <div id="sesiones-grid" class="flex flex-wrap justify-center divide-x divide-sky-900/30">
+      {% for sesion in sesiones %}
+      <div class="sesion-card">
+        <div class="sesion-header">
+          <span class="sesion-emoji">{{ sesion.emoji }}</span>
+          <span class="sesion-nombre">{{ sesion.nombre }}</span>
+        </div>
+        <div class="sesion-horarios">
+          {% for horario in sesion.horarios.all %}
+          <div class="sesion-tz">
+            <div class="sesion-tz-flags">
+              {% for flag in horario.bandera_codigo.split %}
+              <img src="https://flagcdn.com/20x15/{{ flag }}.png" alt="{{ flag }}" loading="lazy">
+              {% endfor %}
+            </div>
+            <span class="sesion-tz-hora">{{ horario.hora }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="text-center mt-4">
+      <a href="{{ config.youtube_channel_url }}/live" target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors">
+        <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+        Ir al canal para ver si estamos en vivo
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── VIDEOS ─────────────────────────────────────────────── -->
+<section id="videos" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+
+    <div class="mb-16">
+      <p class="section-label">Para empezar</p>
+      <h2 class="section-title">Trading para novatos</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div id="grid-novatos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+      {% for video in videos_novatos %}
+      <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" rel="noopener" class="video-card">
+        <div class="video-thumb">
+          <img src="{{ video.thumbnail_url }}" alt="{{ video.titulo }}" loading="lazy">
+          <div class="video-play">
+            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="video-titulo">{{ video.titulo }}</div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <div class="mb-16">
+      <p class="section-label">Aprendé más</p>
+      <h2 class="section-title">La Estrategia</h2>
+      <div class="section-divider"></div>
+    </div>
+
+    <div id="grid-estrategia" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {% for video in videos_estrategia %}
+      <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" target="_blank" rel="noopener" class="video-card">
+        <div class="video-thumb">
+          <img src="{{ video.thumbnail_url }}" alt="{{ video.titulo }}" loading="lazy">
+          <div class="video-play">
+            <svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+        </div>
+        <div class="video-titulo">{{ video.titulo }}</div>
+      </a>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ── NOTICIAS ───────────────────────────────────────────── -->
+<section id="noticias" class="py-24 px-6" style="background:#080e1c;">
+  <div class="max-w-7xl mx-auto">
+    <p class="section-label">Mantenete informado</p>
+    <h2 class="section-title">Noticias del Mercado</h2>
+    <div class="section-divider mb-10"></div>
+
+    <div class="mb-12">
+      <h3 class="text-lg font-semibold text-white mb-4">Calendario Económico</h3>
+      <div class="flex gap-2 mb-4">
+        <button class="cal-btn cal-btn-active" data-filter="all">Todos</button>
+        <button class="cal-btn" data-filter="alto">Alto</button>
+        <button class="cal-btn" data-filter="medio">Medio</button>
+        <button class="cal-btn" data-filter="bajo">Bajo</button>
+      </div>
+      <div id="calendario-container" class="border border-sky-900/30 rounded-lg overflow-hidden max-h-96 overflow-y-auto">
+        <div id="calendario-spinner" class="flex items-center justify-center py-12">
+          <div class="animate-spin w-6 h-6 border-2 border-sky-500 border-t-transparent rounded-full"></div>
+          <span class="ml-3 text-slate-500 text-sm">Cargando calendario…</span>
+        </div>
+        <div id="calendario-content" style="display:none;"></div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <a href="https://es.investing.com/news/forex-news" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div><div class="noticias-card-title">Forex</div><div class="noticias-card-desc">Últimas noticias del mercado de divisas.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="https://es.investing.com/news/stock-market-news" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg></div>
+        <div><div class="noticias-card-title">Acciones</div><div class="noticias-card-desc">Noticias del mercado de acciones global.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="https://es.investing.com/news/cryptocurrency-news" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></div>
+        <div><div class="noticias-card-title">Criptomonedas</div><div class="noticias-card-desc">Noticias del mundo crypto y blockchain.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="https://es.investing.com/technical-analysis" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/></svg></div>
+        <div><div class="noticias-card-title">Análisis Técnico</div><div class="noticias-card-desc">Análisis y señales técnicas del mercado.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="https://www.forexfactory.com/news" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 7.5h1.5m-1.5 3h1.5m-7.5 6h7.5m-7.5 3h7.5m-3-9h3.5m-3.5 3h3.5m-3.5 3h3.5M3 21h18M3 3h18"/></svg></div>
+        <div><div class="noticias-card-title">Forex Factory News</div><div class="noticias-card-desc">Noticias y análisis de Forex Factory.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+      <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="noticias-card">
+        <div class="noticias-card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg></div>
+        <div><div class="noticias-card-title">Forex Factory Calendar</div><div class="noticias-card-desc">Calendario económico completo.</div></div>
+        <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── REGISTRO ───────────────────────────────────────────── -->
+<section id="registro" class="py-24 px-6">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <p class="section-label">Forma parte</p>
+      <h2 class="section-title">¿Cómo unirse a Creemos Capital?</h2>
+      <div class="section-divider" style="margin: 1rem auto 0;"></div>
+    </div>
+
+    <div id="registro-grid" class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div class="registro-step">
+          <div class="registro-step-num">1</div>
+          <div class="registro-step-icon">📝</div>
+          <h3>Completa el formulario</h3>
+          <p>Llena el <a href="{{ config.google_form_url }}" target="_blank" rel="noopener" style="color:#00d4ff;text-decoration:underline;">formulario de registro</a> con tus datos básicos.</p>
+        </div>
+        <div class="registro-step">
+          <div class="registro-step-num">2</div>
+          <div class="registro-step-icon">📧</div>
+          <h3>Revisa tu email</h3>
+          <p>Te enviaremos un <strong>código de verificación</strong>. Revisa spam si no lo ves.</p>
+        </div>
+        <div class="registro-step">
+          <div class="registro-step-num">3</div>
+          <div class="registro-step-icon">💬</div>
+          <h3>Verifica por WhatsApp</h3>
+          <p>Envía tu código al <a href="{{ config.whatsapp_url }}" target="_blank" rel="noopener" style="color:#00d4ff;text-decoration:underline;">{{ config.whatsapp_number }}</a>.</p>
+        </div>
+        <div class="registro-step">
+          <div class="registro-step-num">4</div>
+          <div class="registro-step-icon">✅</div>
+          <h3>Acceso aprobado</h3>
+          <p>En <strong>menos de 24 horas</strong> recibirás tu acceso. ¡Bienvenido!</p>
+        </div>
+      </div>
+
+      <div class="lg:sticky lg:top-24 self-start">
+        <div class="bg-navy-800 border border-sky-900/30 rounded-xl p-6">
+          <h3 class="text-lg font-semibold text-white mb-4">¿Listo para empezar?</h3>
+          <a href="{{ config.google_form_url }}" target="_blank" rel="noopener" class="btn-primary w-full justify-center mb-4">
+            Registrarse ahora
+          </a>
+          <a href="{{ config.whatsapp_url }}" target="_blank" rel="noopener" class="btn-contacto w-full justify-center" style="background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25d366;">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp
+          </a>
+          <div class="mt-4 space-y-3">
+            <div class="flex items-center gap-2 text-sm text-slate-400">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>100% gratuito</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-400">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>Sin spam, solo contenido de valor</span>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-slate-400">
+              <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              <span>Comunidad activa de traders</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="registro-alerta mt-10">
+      <span class="registro-alerta-icon">⚠️</span>
+      <div><strong>Importante:</strong> Si no recibes el email en 10 minutos, revisa la carpeta de spam. Si aún no lo encuentras, contáctanos por WhatsApp y te ayudaremos.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── MUSICA ─────────────────────────────────────────────── -->
+<section id="musica" class="py-20 px-6" style="background:#080e1c;">
+  <div class="max-w-5xl mx-auto text-center">
+    <p class="section-label">Música de la comunidad</p>
+    <h2 class="section-title mb-2">Escuchá nuestra música</h2>
+    <div class="section-divider" style="margin: 1rem auto 3rem;"></div>
+    <div class="flex flex-wrap justify-center gap-6">
+      <a href="{{ config.spotify_url }}" target="_blank" rel="noopener" class="comunidad-card" style="min-width:200px;">
+        <svg class="w-10 h-10 mx-auto mb-3" fill="#1DB954" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.581-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.66.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+        <span class="text-white font-semibold">Spotify</span>
+      </a>
+      <a href="{{ config.youtube_music_url }}" target="_blank" rel="noopener" class="comunidad-card" style="min-width:200px;">
+        <svg class="w-10 h-10 mx-auto mb-3" fill="#FF0000" viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.6 0 12 0zm0 19.5c-4.14 0-7.5-3.36-7.5-7.5S7.86 4.5 12 4.5s7.5 3.36 7.5 7.5-3.36 7.5-7.5 7.5zm0-13.5c-3.315 0-6 2.685-6 6s2.685 6 6 6 6-2.685 6-6-2.685-6-6-6zm-2.25 9V7.5l6 3-6 3z"/></svg>
+        <span class="text-white font-semibold">YouTube Music</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── REDES & CONTACTO ───────────────────────────────────── -->
+<section class="py-20 px-6 border-t border-sky-900/30" style="background:#080e1c;">
+  <div class="max-w-4xl mx-auto text-center">
+
+    <p class="section-label">Seguinos y escribinos</p>
+    <h2 class="section-title mb-2">Nuestras Redes Sociales</h2>
+    <div class="section-divider" style="margin: 1rem auto 3rem;"></div>
+
+    <div class="flex flex-wrap justify-center gap-6 mb-12">
+
+      <a href="https://www.youtube.com/@CreemosCapital" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+        <span>YouTube</span>
+      </a>
+
+      <a href="https://www.tiktok.com/@creemoscapital" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.56V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
+        <span>TikTok</span>
+      </a>
+
+      <a href="https://www.instagram.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838a4.162 4.162 0 100 8.324 4.162 4.162 0 000-8.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        <span>Instagram</span>
+      </a>
+
+      <a href="https://www.facebook.com/people/Creemos-Capital/61564167813649/" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        <span>Facebook</span>
+      </a>
+
+      <a href="https://x.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        <span>X / Twitter</span>
+      </a>
+
+      <a href="https://kick.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
+        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>
+        <span>Kick</span>
+      </a>
+
+    </div>
+
+    <p class="section-label mb-6">Contáctenos</p>
+    <div class="flex flex-wrap justify-center gap-4">
+
+      <a href="{{ config.whatsapp_url }}" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25d366;">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        WhatsApp
+      </a>
+
+      <a href="{{ config.telegram_url }}" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(38,166,209,0.12);border-color:rgba(38,166,209,0.3);color:#26a6d1;">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Telegram
+      </a>
+
+      <a href="mailto:{{ config.email }}" class="btn-contacto" style="background:rgba(0,212,255,0.38);border-color:rgba(0,212,255,0.3);color:#00d4ff;">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+        Email
+      </a>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  window.CALENDARIO_API_URL = '{% url "core:proxy_calendario" %}';
+  window.YOUTUBE_PLAYLIST_ID = '{{ config.youtube_music_playlist_id }}';
+</script>
+{% endblock %}
