@@ -22,3 +22,11 @@ theme/static/css/
 .vscode/
 *.swp
 *.swo
+
+# Claude Code local config
+.claude/settings.local.json
+
+# Deploy artifacts / cache
+deploy.zip
+src/deploy.zip
+src/.cache/
