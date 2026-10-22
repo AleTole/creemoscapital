@@ -80,9 +80,3 @@ const SESIONES = [
   },
 ];
 
-// ── MÚSICA ─────────────────────────────────────────────────────
-// Canal de YouTube Music — UCv4ma-yTMOqYYF_Ii5kv0zQ
-// La playlist de uploads es el channel ID con UC → UU
-const MUSICA_PLAYLIST_ID     = "UUv4ma-yTMOqYYF_Ii5kv0zQ";
-const MUSICA_PRIMER_VIDEO_ID = "videoseries";
-

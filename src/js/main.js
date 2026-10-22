@@ -178,10 +178,10 @@ async function cargarCalendario() {
   const loading = document.getElementById('ff-calendar-loading');
   const FF_URL  = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota';
   const PROXIES = [
-    `https://corsproxy.io/?${encodeURIComponent(FF_URL)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(FF_URL)}`,
-    FF_URL,
     '/calendar-proxy.php',
+    FF_URL,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(FF_URL)}`,
+    `https://corsproxy.io/?${encodeURIComponent(FF_URL)}`,
   ];
   const errores = [];
   for (const url of PROXIES) {
@@ -199,6 +199,7 @@ async function cargarCalendario() {
       });
       if (loading) loading.style.display = 'none';
       renderCalendario();
+      mostrarAlertaNoticias();
       return;
     } catch (e) { errores.push(`${url} → ${e.message}`); continue; }
   }
@@ -213,101 +214,71 @@ async function cargarCalendario() {
     </div>`;
 }
 
-// ── MODAL MÚSICA ──────────────────────────────────────────────
-function cerrarModal() {
-  const overlay = document.getElementById('music-modal-overlay');
+// ── ALERTA DE NOTICIAS DEL DÍA ──────────────────────────────────
+const ACTIVOS_POR_MONEDA = {
+  USD: 'Dólar (DXY), todos los pares con USD, oro, índices US30/NAS100/SPX500',
+  EUR: 'EUR/USD, EUR/GBP, EUR/JPY',
+  GBP: 'GBP/USD, EUR/GBP, GBP/JPY',
+  JPY: 'USD/JPY, EUR/JPY, GBP/JPY',
+  CAD: 'USD/CAD, CAD/JPY, petróleo (WTI)',
+  AUD: 'AUD/USD, AUD/JPY, AUD/NZD',
+  NZD: 'NZD/USD, AUD/NZD',
+  CHF: 'USD/CHF, EUR/CHF',
+  CNY: 'USD/CNY, mercados asiáticos, cobre',
+};
+
+function mostrarAlertaNoticias() {
+  const ahora = new Date();
+  const hoy = new Date(ahora);
+  hoy.setHours(0, 0, 0, 0);
+  const manana = new Date(hoy);
+  manana.setDate(manana.getDate() + 1);
+
+  const key = `noticias_alerta_${hoy.toISOString().slice(0, 10)}`;
+  if (localStorage.getItem(key)) return;
+
+  const deHoy = _calEventos
+    .filter(e => {
+      const f = new Date(e.date);
+      return f >= ahora && f < manana && (e.impact === 'High' || e.impact === 'Medium');
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (deHoy.length === 0) return;
+
+  const cont = document.getElementById('noticias-alerta-lista');
+  const overlay = document.getElementById('noticias-alerta-overlay');
+  if (!cont || !overlay) return;
+
+  cont.innerHTML = deHoy.map(e => {
+    const code = (e.country || e.currency || '').toUpperCase().trim();
+    const pais = PAISES[code] || { nombre: code || '—', bandera: '🌐' };
+    const activos = (ACTIVOS_POR_MONEDA[code] || 'Revisar el par correspondiente').split(',').map(a => a.trim());
+    const esAlto = e.impact === 'High';
+    const color = esAlto ? '#ef4444' : '#f97316';
+    const bg    = esAlto ? 'rgba(239,68,68,0.06)' : 'rgba(249,115,22,0.06)';
+    const border= esAlto ? 'rgba(239,68,68,0.25)' : 'rgba(249,115,22,0.25)';
+    return `
+      <div style="background:${bg};border:1px solid ${border};border-radius:10px;padding:0.85rem 1rem;">
+        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap;">
+          <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${color};background:rgba(255,255,255,0.06);border:1px solid ${border};border-radius:999px;padding:0.15rem 0.55rem;">${esAlto ? 'Alto' : 'Medio'}</span>
+          <span style="font-size:0.75rem;color:#94a3b8;font-weight:600;">${formatoHora(e.date)}</span>
+          <span style="font-size:0.9rem;">${pais.bandera}</span>
+        </div>
+        <div style="font-size:0.88rem;color:#f1f5f9;font-weight:600;margin-bottom:0.5rem;">${esc(e.title)}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">
+          ${activos.map(a => `<span style="font-size:0.68rem;color:#94a3b8;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:0.2rem 0.5rem;">${esc(a)}</span>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+
+  overlay.style.display = 'flex';
+  localStorage.setItem(key, '1');
+}
+
+function cerrarAlertaNoticias() {
+  const overlay = document.getElementById('noticias-alerta-overlay');
   if (overlay) overlay.style.display = 'none';
-}
-
-// ── MUSIC PLAYER (YouTube IFrame API) ─────────────────────────
-let _ytPlayer      = null;
-let _ytReady       = false;
-let _ytAutoplay    = false;
-let _progressTimer = null;
-
-function onYouTubeIframeAPIReady() {
-  _ytPlayer = new YT.Player('yt-player-hidden', {
-    height: '1', width: '1',
-    playerVars: { listType: 'playlist', list: MUSICA_PLAYLIST_ID, rel: 0, autoplay: 0 },
-    events: {
-      onReady: (e) => {
-        _ytReady = true;
-        e.target.setVolume(80);
-        if (_ytAutoplay) e.target.playVideo();
-      },
-      onStateChange: (e) => {
-        const playing = e.data === YT.PlayerState.PLAYING;
-        const playIcon = document.getElementById('music-play-icon');
-        if (playIcon) {
-          playIcon.innerHTML = playing
-            ? '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>'
-            : '<path d="M8 5v14l11-7z"/>';
-        }
-        if (playing) { _startProgress(); _updateTitle(); }
-        else clearInterval(_progressTimer);
-      },
-    },
-  });
-}
-
-function _updateTitle() {
-  if (!_ytPlayer || !_ytPlayer.getVideoData) return;
-  const data = _ytPlayer.getVideoData();
-  const el = document.getElementById('music-title');
-  if (el && data && data.title) el.textContent = data.title;
-}
-
-function _startProgress() {
-  clearInterval(_progressTimer);
-  _progressTimer = setInterval(() => {
-    if (!_ytPlayer || !_ytPlayer.getDuration) return;
-    const dur = _ytPlayer.getDuration();
-    const cur = _ytPlayer.getCurrentTime();
-    const bar = document.getElementById('music-progress');
-    if (bar && dur > 0) bar.style.width = (cur / dur * 100) + '%';
-  }, 1000);
-}
-
-function musicTogglePlay() {
-  if (!_ytReady || !_ytPlayer) return;
-  const state = _ytPlayer.getPlayerState();
-  if (state === YT.PlayerState.PLAYING) _ytPlayer.pauseVideo();
-  else _ytPlayer.playVideo();
-}
-
-function musicNext() {
-  if (!_ytReady || !_ytPlayer) return;
-  _ytPlayer.nextVideo();
-  setTimeout(_updateTitle, 1200);
-}
-
-function musicPrev() {
-  if (!_ytReady || !_ytPlayer) return;
-  _ytPlayer.previousVideo();
-  setTimeout(_updateTitle, 1200);
-}
-
-function musicVolume(val) {
-  if (!_ytReady || !_ytPlayer) return;
-  _ytPlayer.setVolume(parseInt(val));
-}
-
-function toggleMusicDropdown() {
-  const dropdown = document.getElementById('music-dropdown');
-  const chevron  = document.getElementById('music-nav-chevron');
-  const isOpen   = dropdown.style.display === 'block';
-  dropdown.style.display = isOpen ? 'none' : 'block';
-  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
-}
-
-function activarMusica() {
-  cerrarModal();
-  const dropdown = document.getElementById('music-dropdown');
-  const chevron  = document.getElementById('music-nav-chevron');
-  dropdown.style.display = 'block';
-  if (chevron) chevron.style.transform = 'rotate(180deg)';
-  if (_ytReady && _ytPlayer) _ytPlayer.playVideo();
-  else _ytAutoplay = true;
 }
 
 // ── OKX TICKER ────────────────────────────────────────────────

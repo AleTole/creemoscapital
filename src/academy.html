@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creemos Capital Academy — Formación en Trading</title>
+  <meta name="description" content="Creemos Capital Academy: convierte tu conocimiento en capital. Formación en trading, inversión, gestión del riesgo y psicotrading. Conoce C4 Elite, nuestro programa avanzado de 8 sesiones en vivo.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://www.okx.com https://www.youtube.com; media-src 'none';">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
+            sky:   { 400: '#00d4ff', 500: '#00b8e0', 600: '#0099cc' },
+            gold:  { 400: '#fbbf24', 500: '#f59e0b' },
+            long:  '#22c55e',
+            short: '#ef4444',
+          },
+          fontFamily: {
+            sans:    ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #051828;
+      background-image:
+        radial-gradient(ellipse at 0% 0%, rgba(0,212,255,0.35) 0%, transparent 50%),
+        radial-gradient(ellipse at 100% 100%, rgba(99,102,241,0.32) 0%, transparent 50%);
+      background-attachment: fixed;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+
+    /* ── NAVBAR ── */
+    #navbar {
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      background: rgba(5,13,26,0.97);
+      box-shadow: 0 1px 20px rgba(0,0,0,0.5);
+    }
+    .nav-link {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(226,232,240,0.7);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: #00d4ff; }
+    .nav-link.active { color: #00d4ff; }
+
+    /* ── SECCIÓN TÍTULOS ── */
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #00d4ff;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-family: 'DM Sans', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .section-divider {
+      width: 40px;
+      height: 2px;
+      background: #ff0000;
+      margin: 1rem 0 0;
+    }
+
+    /* ── VIDEOS ── */
+    .video-card {
+      display: block;
+      text-decoration: none;
+      background: #050e1c;
+      border: 1px solid rgba(0,212,255,0.38);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,212,255,0.4);
+      box-shadow: 0 8px 30px rgba(0,184,224,0.28);
+    }
+    .video-thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      overflow: hidden;
+      background: #0f2040;
+    }
+    .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .video-card:hover .video-thumb img { transform: scale(1.04); }
+    .video-play {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .video-card:hover .video-play { opacity: 1; }
+    .video-play svg { width: 48px; height: 48px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
+    .video-duracion {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      font-size: 0.7rem;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    .video-titulo {
+      padding: 0.75rem;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      line-height: 1.4;
+    }
+
+    /* ── BOTONES ── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      background: #ff0000;
+      color: white;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(255,0,0,0.35);
+    }
+    .btn-primary:hover {
+      background: #cc0000;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 25px rgba(0,184,224,0.5);
+    }
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0.5rem 1.25rem;
+      background: linear-gradient(135deg,#22c55e,#15803d);
+      color: #04160c !important;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 0 16px rgba(34,197,94,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: ctaPulse 2s ease-in-out infinite;
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px rgba(34,197,94,0.65);
+    }
+    @keyframes ctaPulse {
+      0%, 100% { box-shadow: 0 0 16px rgba(34,197,94,0.45); }
+      50%      { box-shadow: 0 0 28px rgba(34,197,94,0.9); }
+    }
+    .nav-academy {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 1rem;
+      background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
+      border: 1px solid rgba(0,212,255,0.55);
+      border-radius: 999px;
+      color: #00d4ff !important;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      box-shadow: 0 0 14px rgba(0,212,255,0.3);
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .nav-academy:hover {
+      transform: translateY(-1px);
+      border-color: #00d4ff;
+      box-shadow: 0 0 22px rgba(0,212,255,0.55);
+    }
+
+    /* ── ACADEMY HERO ── */
+    .academy-hero {
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(0,212,255,0.3) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.28) 0%, transparent 50%),
+        linear-gradient(135deg, #02060f 0%, #050d1a 40%, #080d1f 100%);
+    }
+    .hero-grid {
+      background-image: linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.95rem;
+      background: rgba(0,212,255,0.07);
+      border: 1px solid rgba(0,212,255,0.25);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+
+    /* ── CURSOS (CARDS DESTACADAS) ── */
+    .course-card {
+      position: relative;
+      background: linear-gradient(160deg, #061325, #050e1c 55%);
+      border: 1px solid rgba(0,212,255,0.4);
+      border-radius: 20px;
+      padding: 2.5rem;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      box-shadow: 0 0 0 1px rgba(0,212,255,0.05), 0 20px 60px rgba(0,0,0,0.35);
+      overflow: hidden;
+    }
+    .course-card::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 20px;
+      padding: 2px;
+      background: linear-gradient(135deg, rgba(0,212,255,0.6), rgba(99,102,241,0.5), rgba(0,212,255,0.6));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0.55;
+      transition: opacity 0.25s;
+      pointer-events: none;
+    }
+    .course-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 40px rgba(0,212,255,0.25), 0 24px 70px rgba(0,0,0,0.45);
+    }
+    .course-card:hover::before { opacity: 1; }
+    .course-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.85rem;
+      background: rgba(0,212,255,0.12);
+      border: 1px solid rgba(0,212,255,0.5);
+      border-radius: 999px;
+      color: #00d4ff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    @media (max-width: 640px) {
+      .course-card-grid {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+      }
+      .course-card-grid img { margin: 0 auto; }
+    }
+
+    /* ── OKX TICKER ── */
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    #okx-ticker-items:hover { animation-play-state: paused; }
+    .okx-item  { display:inline-flex;align-items:center;gap:0.45rem;padding:0 1.1rem; }
+    .okx-name  { font-size:0.72rem;letter-spacing:0.06em;color:#64748b;font-weight:500; }
+    .okx-price { font-size:0.8rem;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#e2e8f0; }
+    .okx-pct   { font-size:0.72rem;font-weight:600; }
+    .okx-pos   { color:#22c55e; }
+    .okx-neg   { color:#ef4444; }
+    .okx-sep   { color:#1e3a5f;font-size:1rem;padding:0 0.25rem; }
+
+    /* ── ANIMACIÓN ENTRADA ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.7s ease both; }
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAVBAR ────────────────────────────────────────────── -->
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+
+      <a href="./index.html">
+        <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="Creemos Capital" class="h-10 w-auto">
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="./index.html#live"      class="nav-link">En Vivo</a>
+        <a href="#" data-plat="/cursos" class="nav-link">Cursos</a>
+        <a href="./index.html#noticias"  class="nav-link">Noticias</a>
+        <a href="./academy.html"         class="nav-academy active">🎓 Academy</a>
+        <a href="#" data-plat="/login"   class="nav-link">Plataforma</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="./index.html#registro" class="nav-cta">Únete a la Comunidad</a>
+        <button onclick="toggleMenu()" class="md:hidden p-2 text-slate-300">
+          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-navy-900/98 border-t border-sky-900/30 px-6 py-5 flex flex-col gap-5">
+      <a href="./index.html#live"      onclick="closeMenu()" class="nav-link">En Vivo</a>
+      <a href="#" data-plat="/cursos" onclick="closeMenu()" class="nav-link">Cursos</a>
+      <a href="./index.html#noticias"  onclick="closeMenu()" class="nav-link">Noticias</a>
+      <a href="./academy.html"         onclick="closeMenu()" class="nav-academy active justify-center">🎓 Academy</a>
+      <a href="#" data-plat="/login"   class="nav-link">Plataforma</a>
+      <a href="./index.html#registro"  onclick="closeMenu()" class="nav-cta justify-center">Únete a la Comunidad</a>
+    </div>
+  </header>
+
+  <!-- ── TICKER OKX ───────────────────────────────────────────── -->
+  <div style="position:fixed;top:64px;left:0;right:0;z-index:35;background:rgba(5,14,28,0.97);border-bottom:1px solid rgba(0,212,255,0.15);backdrop-filter:blur(8px);height:46px;display:flex;align-items:center;overflow:hidden;">
+    <!-- OKX Powered by badge -->
+    <a href="https://www.okx.com/join/CREEMOS" target="_blank" rel="noopener noreferrer"
+       style="flex-shrink:0;padding:0 0.85rem;border-right:1px solid rgba(0,212,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.1rem;text-decoration:none;height:100%;">
+      <span style="font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:#475569;line-height:1;">Powered by</span>
+      <img src="./img/OKX-250x141.png" alt="OKX" style="height:18px;width:auto;display:block;">
+    </a>
+    <!-- Ticker scrolling -->
+    <div style="flex:1;overflow:hidden;mask-image:linear-gradient(to right,transparent 0,black 3%,black 97%,transparent 100%);">
+      <div id="okx-ticker-items" style="display:inline-flex;align-items:center;gap:0;animation:tickerScroll 55s linear infinite;white-space:nowrap;">
+        <span style="color:#475569;font-size:0.78rem;padding:0 2rem;">Cargando precios en tiempo real…</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ACADEMY HERO ─────────────────────────────────────────── -->
+  <section class="academy-hero relative overflow-hidden" style="padding-top:10.5rem;padding-bottom:6rem;">
+    <div class="hero-grid absolute inset-0" style="opacity:0.5;"></div>
+    <div class="max-w-6xl mx-auto px-6 relative">
+      <div class="flex flex-col lg:flex-row items-center gap-16">
+
+        <!-- Imagen grande -->
+        <div class="fade-up relative" style="flex-shrink:0;">
+          <div style="position:absolute;inset:-15%;background:radial-gradient(circle, rgba(0,212,255,0.22) 0%, transparent 70%);filter:blur(10px);z-index:0;"></div>
+          <picture>
+            <source srcset="./img/c4-academy-logo.webp" type="image/webp">
+            <img src="./img/c4-academy-logo.png" alt="Creemos Capital Academy" width="460" height="403" fetchpriority="high"
+                 style="position:relative;z-index:1;width:460px;max-width:82vw;height:auto;filter:drop-shadow(0 0 55px rgba(0,212,255,0.5));">
+          </picture>
+        </div>
+
+        <!-- Significado / texto -->
+        <div class="text-center lg:text-left">
+          <p class="section-label fade-up delay-1">Formación profesional</p>
+          <h1 class="fade-up delay-1" style="font-family:'DM Sans',sans-serif;font-size:clamp(2.2rem,4.2vw,3.2rem);font-weight:700;color:#f1f5f9;line-height:1.1;letter-spacing:-0.01em;">
+            Creemos Capital<br><span style="background:linear-gradient(135deg,#00d4ff,#6366f1);-webkit-background-clip:text;background-clip:text;color:transparent;">Academy</span>
+          </h1>
+          <div class="section-divider fade-up delay-1" style="margin:1.25rem auto 0;"></div>
+          <p class="text-slate-400 text-base max-w-xl mx-auto lg:mx-0 mt-6 leading-relaxed fade-up delay-2">
+            <strong class="text-slate-100">Convierte tu conocimiento en capital.</strong> El espacio de formación
+            de Creemos Capital, creado para quienes quieren aprender a desenvolverse en los mercados financieros
+            con conocimiento, criterio y disciplina.
+          </p>
+          <p class="text-slate-500 text-sm max-w-xl mx-auto lg:mx-0 mt-4 leading-relaxed fade-up delay-2">
+            Programas y cursos diseñados para acompañarte desde los conceptos fundamentales hasta metodologías más avanzadas:
+            trading, inversión en acciones, creación y gestión de portafolios, análisis técnico, gestión del riesgo,
+            psicotrading y herramientas para la toma de decisiones financieras.
+          </p>
+          <p class="text-slate-500 text-sm max-w-xl mx-auto lg:mx-0 mt-4 leading-relaxed fade-up delay-2">
+            Nuestra filosofía es sencilla: no se trata de perseguir resultados rápidos, sino de aprender a tomar mejores
+            decisiones. Por eso combinamos formación estructurada, herramientas prácticas, análisis de casos y aplicación
+            en escenarios reales de mercado. Tanto si estás comenzando como si ya tienes experiencia, aquí podrás seguir
+            construyendo conocimiento y desarrollar tu propio criterio como trader e inversionista.
+          </p>
+
+          <!-- Mini stats -->
+          <div class="flex flex-wrap justify-center lg:justify-start gap-3 mt-7 fade-up delay-2">
+            <span class="hero-pill">📈 Trading & Inversión</span>
+            <span class="hero-pill">🧠 Psicotrading</span>
+            <span class="hero-pill">🛡️ Gestión de Riesgo</span>
+          </div>
+
+          <div class="fade-up delay-2 flex flex-wrap justify-center lg:justify-start gap-3" style="margin-top:1.75rem;">
+            <a href="#" data-plat="/login?modo=reg" class="nav-cta" style="animation:none;padding:0.7rem 1.5rem;">Crear mi cuenta gratis</a>
+            <a href="#" data-plat="/cursos" class="nav-academy" style="padding:0.7rem 1.5rem;">Ver los cursos</a>
+          </div>
+
+          <p class="fade-up delay-2" style="margin-top:1.75rem;font-family:'DM Sans',sans-serif;font-weight:600;color:#00d4ff;letter-spacing:0.06em;font-size:0.9rem;text-transform:uppercase;">
+            Aprende · Practica · Evoluciona
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ───────────────────────────────────────────────── -->
+  <footer class="px-6 pt-10 pb-6 border-t border-sky-900/20">
+    <div class="max-w-7xl mx-auto">
+
+      <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+        <div>
+          <p class="font-display font-bold text-xl text-white mb-1">
+            Creemos <span class="text-sky-400">Capital</span>
+          </p>
+          <p class="text-slate-600 text-xs">Academy · Convierte tu conocimiento en capital · creemoscapital.com</p>
+        </div>
+        <p class="text-slate-700 text-xs">© 2026 Creemos Capital. Todos los derechos reservados.</p>
+      </div>
+
+      <!-- Disclaimer legal -->
+      <div class="border-t border-sky-900/20 pt-6">
+        <p class="text-slate-600 text-xs leading-relaxed mb-3">
+          <strong class="text-slate-500">⚠ Aviso Legal:</strong> El contenido de esta página web es exclusivamente con fines educativos e informativos y no debe considerarse como asesoramiento financiero, legal o fiscal. El trading y la inversión en los mercados financieros conllevan un alto nivel de riesgo, incluyendo la posibilidad de perder la totalidad del capital invertido. No es adecuado para todos los inversores, y cada persona debe evaluar su tolerancia al riesgo antes de participar en estos mercados.
+        </p>
+        <p class="text-slate-600 text-xs leading-relaxed mb-3">
+          Creemos Capital no garantiza ningún tipo de resultado o rendimiento futuro, y el desempeño pasado no es indicativo de resultados futuros. Todas las decisiones de inversión y trading son responsabilidad exclusiva del usuario.
+        </p>
+        <p class="text-slate-500 text-xs font-medium">Al usar este contenido, aceptas que eres el único responsable de tus decisiones financieras. ¡Opera con responsabilidad!</p>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    // Dirección de la plataforma (Sala de trading). En local corre en el puerto 3100;
+    // Para probar en local, cambiar esta línea por "http://localhost:3100".
+    var PLATFORM_URL = "https://academy.creemoscapital.com";
+    document.querySelectorAll("[data-plat]").forEach(function (a) { a.href = PLATFORM_URL + a.getAttribute("data-plat"); });
+  </script>
+  <script src="./js/data.js" defer></script>
+  <script src="./js/main.js" defer></script>
+
+</body>
+</html>

@@ -30,3 +30,13 @@ theme/static/css/
 deploy.zip
 src/deploy.zip
 src/.cache/
+
+# Script de deploy local (tiene credenciales FTP)
+deploy.py
+
+# Material de terceros (etracademy.com) y trabajo local: no se publican
+ideas/
+recursos/
+
+# La plataforma (academy) tendrá su propio repositorio privado
+academy/
