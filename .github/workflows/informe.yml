@@ -19,6 +19,9 @@ jobs:
           echo "Usando $ultimo como informe.html"
           cp "$ultimo" src/informe.html
 
+      - name: Aplicar paleta de Creemos Capital al informe
+        run: python3 scripts/recolor_informe.py src/informe.html
+
       - name: Subir informe.html + archivo de informes por FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
