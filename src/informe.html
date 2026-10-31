@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Informe Multi-Activo - 23 Oct 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@600;700&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#051828; --panel:#050e1c; --border:rgba(0,212,255,0.38);
@@ -13,7 +14,7 @@
     --text:#e2e8f0; --muted:#64748b;
   }
   *{box-sizing:border-box;}
-  body{background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',Arial,sans-serif;margin:0;padding:24px;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:24px;}
   .wrap{max-width:740px;margin:0 auto;}
   h1{color:var(--gold);font-size:22px;margin-bottom:2px;}
   .sub{color:var(--muted);font-size:13px;margin-bottom:14px;}
@@ -45,9 +46,57 @@
   .pivot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
   .note{background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--muted);margin:10px 0 0 0;}
   .foot{color:var(--muted);font-size:11px;text-align:center;margin-top:18px;}
+
+  /* ---- Integracion con creemoscapital.com ---- */
+  h1, .cat-label, .card h2 { font-family: 'DM Sans', 'Inter', sans-serif; }
+  .ic-header{
+    max-width:740px;margin:0 auto 20px;padding-bottom:14px;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border-bottom:1px solid var(--border);
+  }
+  .ic-header a.ic-logo{display:flex;align-items:center;gap:8px;text-decoration:none;}
+  .ic-header img{height:28px;width:auto;display:block;}
+  .ic-back{
+    color:var(--muted);font-size:12px;text-decoration:none;
+    display:inline-flex;align-items:center;gap:4px;transition:color .15s;
+  }
+  .ic-back:hover{color:var(--gold);}
+  .ic-footer{
+    max-width:740px;margin:28px auto 0;padding-top:16px;
+    border-top:1px solid var(--border);text-align:center;
+    font-size:11px;color:var(--muted);line-height:1.6;
+  }
+  .ic-footer a{color:var(--gold);text-decoration:none;}
+
+  /* ---- Responsive ---- */
+  @media (max-width:480px){
+    body{padding:14px;}
+    h1{font-size:19px;}
+    .sub{font-size:12px;}
+    .price{font-size:24px;}
+    .cat-label{font-size:10px;}
+    .tab-btn{font-size:10px;padding:8px 2px;min-width:48px;}
+    .card{padding:13px 14px;}
+    .card h2{font-size:12px;}
+    .pivot-pp{padding:8px 14px;}
+    .pivot-pp b{font-size:19px;}
+    .intraday, .pivot-grid{gap:6px;}
+    .lvl{padding:7px 8px;font-size:12px;}
+    .ic-header img{height:24px;}
+  }
+  @media (max-width:360px){
+    .tabs{gap:4px;}
+    .tab-btn{min-width:42px;font-size:9.5px;}
+  }
 </style>
 </head>
 <body>
+<div class="ic-header">
+  <a href="./index.html" class="ic-logo">
+    <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="Creemos Capital">
+  </a>
+  <a href="./index.html" class="ic-back">&larr; Volver al sitio</a>
+</div>
 <div class="wrap">
   <h1>Informe Multi-Activo — para hoy (viernes)</h1>
   <div class="sub">Viernes 23 Oct 2026 · Venta de tech/IA (Nasdaq -2.6%, Meta -7%), petróleo al alza por ataques hutíes a Arabia Saudita (Brent >$112), oro y plata caen · Dow plano, DXY en mínimos de 3 semanas</div>
@@ -702,6 +751,10 @@
       document.getElementById(btn.dataset.tab).classList.add('active');
     });
   });
-</script>
+</script><div class="ic-footer">
+  Creemos Capital &middot; Informe de mercado diario &middot; Solo referencia, no es consejo financiero.<br>
+  <a href="./index.html">creemoscapital.com</a>
+</div>
+
 </body>
 </html>
