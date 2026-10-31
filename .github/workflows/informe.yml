@@ -1,0 +1,32 @@
+name: Publicar Informe Diario
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/informes/**'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Usar el informe mas reciente como informe.html
+        run: |
+          ultimo=$(ls src/informes/*.html | sort | tail -n 1)
+          echo "Usando $ultimo como informe.html"
+          cp "$ultimo" src/informe.html
+
+      - name: Subir informe.html + archivo de informes por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./src/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          exclude: |
+            **/.cache/**
+            **/deploy.zip
