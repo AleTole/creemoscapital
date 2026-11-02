@@ -1,0 +1,23 @@
+# Seguridad de creemoscapital.com (Hostinger / LiteSpeed)
+
+# Nunca listar el contenido de una carpeta
+Options -Indexes
+
+# Cabeceras de seguridad. Cada una va protegida por si el módulo no estuviera: así nunca se rompe el sitio por esto.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# Archivos que nunca deben descargarse desde la web (paquetes de despliegue, copias, registros, configuración, scripts)
+<FilesMatch "\.(zip|gz|tar|tgz|bak|old|orig|sql|log|env|ini|md|py|sh|yml|yaml)$">
+  Require all denied
+</FilesMatch>
+
+# Carpetas y archivos ocultos (.cache, .private, .git…) cerrados; .well-known sigue abierto (lo usan los certificados)
+<IfModule mod_alias.c>
+  RedirectMatch 404 ^/\.(?!well-known)
+</IfModule>
