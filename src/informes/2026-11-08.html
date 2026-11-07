@@ -219,9 +219,9 @@
   .card .sub{ font-size:12px !important; border:none !important; padding-left:0 !important; font-weight:400 !important; color:#94a3b8 !important; }
 
   /* ---- Pivote compacto en una fila ---- */
-  .pivot-wrap{ flex-direction:row !important; align-items:stretch !important; gap:8px !important; }
-  .pivot-pp{ flex-shrink:0; display:flex; flex-direction:column; justify-content:center; padding:6px 12px !important; }
-  .pivot-grid{ grid-template-columns:repeat(4,1fr) !important; flex:1; gap:6px !important; }
+  .pivot-wrap{ flex-direction:column !important; align-items:stretch !important; gap:8px !important; }
+  .pivot-pp{ flex-shrink:0; display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; padding:6px 12px !important; }
+  .pivot-grid{ grid-template-columns:repeat(4,1fr) !important; width:100%; gap:6px !important; }
 
   /* Sidebar fijo pegado a la ventana + contenido centrado, en pantallas grandes */
   @media (min-width:900px){
@@ -1094,23 +1094,7 @@
       document.getElementById(btn.dataset.tab).classList.add('active');
     });
   });
-</script><footer class="px-6 pt-10 pb-6 border-t border-sky-900/20" style="margin-top:2rem;">
-  <div class="max-w-7xl mx-auto">
-    <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
-      <div>
-        <p class="font-display font-bold text-xl text-white mb-1">Creemos <span class="text-sky-400">Capital</span></p>
-        <p class="text-slate-600 text-xs">Informe de mercado diario · creemoscapital.com</p>
-      </div>
-      <p class="text-slate-700 text-xs">© 2026 Creemos Capital. Todos los derechos reservados.</p>
-    </div>
-    <div class="border-t border-sky-900/20 pt-6">
-      <p class="text-slate-600 text-xs leading-relaxed mb-3">
-        <strong class="text-slate-500">⚠ Aviso Legal:</strong> El contenido de este informe es exclusivamente con fines educativos e informativos y no debe considerarse como asesoramiento financiero, legal o fiscal. El trading y la inversion en los mercados financieros conllevan un alto nivel de riesgo, incluyendo la posibilidad de perder la totalidad del capital invertido.
-      </p>
-      <p class="text-slate-500 text-xs font-medium">Al usar este contenido, aceptas que eres el unico responsable de tus decisiones financieras. ¡Opera con responsabilidad!</p>
-    </div>
-  </div>
-</footer>
+</script>
 
 <script src="./js/data.js" defer></script>
 <script src="./js/main.js" defer></script>
