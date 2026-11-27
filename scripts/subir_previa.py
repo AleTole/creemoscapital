@@ -9,6 +9,7 @@ GitHub Actions no esta disponible). NO toca la pagina oficial: solo escribe dent
 Uso (PowerShell, desde la carpeta del proyecto):
     python scripts/subir_previa.py            -> prepara y sube (pide la contrasena de FTP; no se guarda)
     python scripts/subir_previa.py --probar   -> solo prepara la copia y lista los archivos, sin conectarse
+    python scripts/subir_previa.py --login    -> solo comprueba usuario y contrasena (no sube nada)
 
 Servidor y usuario se leen de deploy.py (ya los tienes ahi). La contrasena: variable FTP_PASS o se pide al ejecutar.
 """
@@ -101,7 +102,25 @@ def subir_carpeta(ftp: ftplib.FTP, local: Path, remoto: str) -> int:
     return n
 
 
+def solo_comprobar_acceso():
+    """Entra al FTP y lista los nombres de la raiz. No sube, no borra, no modifica nada."""
+    host, usuario = leer_constante("FTP_HOST"), leer_constante("FTP_USER")
+    print(f"Servidor: {host}\nUsuario:  {usuario}")
+    clave = os.environ.get("FTP_PASS") or getpass.getpass("Contrasena de FTP de Hostinger (no se muestra): ")
+    ftp = conectar_verificado(host)
+    try:
+        ftp.login(usuario, clave)
+    except ftplib.error_perm as e:
+        sys.exit(f"\nEl servidor rechazo el acceso: {e}\n -> revisa usuario y contrasena en hPanel > Archivos > Cuentas FTP.")
+    print("\nAcceso CORRECTO. Contenido de la raiz (solo nombres):")
+    for nombre in sorted(ftp.nlst()):
+        print("  ", nombre)
+    ftp.quit()
+
+
 def main():
+    if "--login" in sys.argv:
+        return solo_comprobar_acceso()
     solo_probar = "--probar" in sys.argv
     with tempfile.TemporaryDirectory(prefix="previa-cc-") as tmp:
         destino = Path(tmp) / "previa"
