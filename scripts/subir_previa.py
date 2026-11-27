@@ -69,6 +69,19 @@ def preparar(destino: Path) -> None:
         html.write_text(t.replace("<head>", '<head>\n  <meta name="robots" content="noindex, nofollow">', 1), encoding="utf-8")
 
 
+NOMBRE_CERTIFICADO = "ftp.hstgr.io"      # el certificado de Hostinger es *.hstgr.io, no el numero (IP) del servidor
+
+
+def conectar_verificado(host: str) -> ftplib.FTP_TLS:
+    """Conecta por FTPS verificando el certificado de verdad (cadena de confianza + nombre).
+    Se entra por la IP de deploy.py, pero el nombre que se comprueba es el del certificado (*.hstgr.io)."""
+    ftp = ftplib.FTP_TLS(context=ssl.create_default_context())
+    ftp.connect(host, 21, timeout=30)
+    ftp.host = NOMBRE_CERTIFICADO            # ftplib usa este valor como "server_hostname" al cifrar
+    ftp.auth()                               # negociacion TLS: aqui se valida el certificado (aun sin enviar usuario ni clave)
+    return ftp
+
+
 def subir_carpeta(ftp: ftplib.FTP, local: Path, remoto: str) -> int:
     n = 0
     try:
@@ -103,8 +116,7 @@ def main():
         host, usuario = leer_constante("FTP_HOST"), leer_constante("FTP_USER")
         clave = os.environ.get("FTP_PASS") or getpass.getpass("Contrasena de FTP de Hostinger (no se muestra): ")
         print(f"\nConectando a {host} (FTP cifrado)...")
-        ftp = ftplib.FTP_TLS(context=ssl.create_default_context())
-        ftp.connect(host, 21, timeout=30)
+        ftp = conectar_verificado(host)
         ftp.login(usuario, clave)
         ftp.prot_p()
         total = subir_carpeta(ftp, destino, CARPETA)
