@@ -1,14 +1,16 @@
 name: Actualizar datos (videos y noticias)
 
-# Cada 15 minutos:
+# SOLO MANUAL por ahora: el trabajo automatico lo hace el VPS (scripts/vps-publicador/publicar_datos.py, cada 10 min),
+# asi no depende de GitHub Actions ni de su facturacion. Para reactivar esta version, quita los '#' del bloque 'schedule'.
+# Lo que hace (igual que el VPS):
 #   - agrega a src/data/serie-bitget.json los nuevos "Dia N de 33 operando con Bitget" del canal
 #     (se guarda en git para no perder los dias anteriores: el RSS de YouTube solo trae los ultimos 15)
 #   - regenera src/data/noticias.json (no se guarda en git, solo se sube al hosting)
 # Tambien se puede lanzar a mano desde la pestana Actions.
 
 on:
-  schedule:
-    - cron: '*/15 * * * *'
+  # schedule:
+  #   - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
