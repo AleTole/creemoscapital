@@ -44,3 +44,6 @@ academy/
 # Datos que se regeneran solos cada 30 minutos (no se versionan; la serie de videos SI)
 src/data/noticias.json
 src/data/calendario.json
+
+# Copias de seguridad del sitio que genera "subir_previa.py --oficial" (quedan en tu PC, no en git)
+respaldo-sitio-*/
