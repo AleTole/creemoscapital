@@ -497,6 +497,29 @@ def adapt(html: str) -> str:
     return html
 
 
+def validar(html: str):
+    """Comprueba que el informe adaptado quedo con el diseno del sitio.
+    Devuelve (errores, avisos). Con errores NO se publica: asi nunca sale una pagina rota."""
+    errores, avisos = [], []
+    if "css/evolution.css" not in html:
+        errores.append("falta la hoja de estilos del sitio (css/evolution.css)")
+    if html.count('id="ticker-items"') != 1:
+        errores.append("falta la barra con el ticker de precios")
+    if 'class="ic-cat-tabs"' not in html or "ic-cat-item" not in html:
+        errores.append("no se reconocieron las categorias de activos (Metales, Cripto...): el formato del informe cambio")
+    tabs = re.findall(r'<div class="tab-btn[^"]*" data-tab="(\w+)"', html)
+    if not tabs:
+        errores.append("no se encontro ningun activo en el menu lateral")
+    for t in tabs:
+        if f'id="{t}"' not in html:
+            errores.append(f"el activo {t.upper()} esta en el menu pero no tiene su panel")
+    if 'class="ic-year"' not in html:
+        avisos.append("no se pudo convertir el titulo a la fecha (se deja el titulo original del informe)")
+    if "data:image" in html:
+        avisos.append("quedan imagenes incrustadas en base64 (pesan mucho)")
+    return errores, avisos
+
+
 def main():
     if len(sys.argv) != 2:
         print("Uso: python recolor_informe.py <archivo.html>")
@@ -507,6 +530,15 @@ def main():
         html = f.read()
 
     html = adapt(html)
+
+    errores, avisos = validar(html)
+    for a in avisos:
+        print(f"::warning::Informe: {a}")
+    if errores:
+        for e in errores:
+            print(f"::error::Informe NO publicado: {e}")
+        print("El archivo no se modifico. En el sitio sigue el ultimo informe valido.", file=sys.stderr)
+        sys.exit(1)
 
     with open(path, "w", encoding="utf-8") as f:
         f.write(html)

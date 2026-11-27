@@ -293,8 +293,28 @@ def actualizar_noticias():
     print("Noticias:", {c: len(salida[c]) for c in ("mercados", "cripto", "exchanges")})
 
 
+# ──────────────────────────────────────────────────────────────
+#  Calendario economico (Forex Factory, semana actual)
+# ──────────────────────────────────────────────────────────────
+CALENDARIO_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota"
+
+
+def actualizar_calendario():
+    """Guarda el calendario como archivo propio del sitio: asi el navegador no depende de CORS ni de PHP.
+    Si la fuente falla se deja el archivo anterior tal cual."""
+    datos = json.loads(descargar(CALENDARIO_URL))
+    if not isinstance(datos, list) or not datos:
+        raise ValueError("el calendario llego vacio o con otro formato")
+    eventos = [
+        {k: str(e.get(k, "")) for k in ("title", "country", "date", "impact", "forecast", "previous", "actual")}
+        for e in datos if isinstance(e, dict) and e.get("date")
+    ]
+    escribir_json(DATOS / "calendario.json", eventos)
+    print(f"Calendario: {len(eventos)} eventos")
+
+
 def main():
-    for nombre, fn in (("serie", actualizar_serie), ("noticias", actualizar_noticias)):
+    for nombre, fn in (("serie", actualizar_serie), ("noticias", actualizar_noticias), ("calendario", actualizar_calendario)):
         try:
             fn()
         except Exception as exc:                  # nunca romper el workflow por una sola parte

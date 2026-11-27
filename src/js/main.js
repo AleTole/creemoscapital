@@ -199,6 +199,7 @@ async function cargarCalendario() {
   const loading = document.getElementById('ff-calendar-loading');
   const FF_URL  = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota';
   const PROXIES = [
+    './data/calendario.json',        // lo genera datos.yml cada 30 min (no depende de PHP ni de CORS)
     '/calendar-proxy.php',
     FF_URL,
     `https://api.allorigins.win/raw?url=${encodeURIComponent(FF_URL)}`,
@@ -244,6 +245,11 @@ const ACTIVOS_POR_MONEDA = {
 };
 
 function mostrarAlertaNoticias() {
+  // Si hay una promoción abierta (o por cargarse), se espera: promo.js vuelve a llamar a esta función al cerrarla.
+  if (window.ccPromoEstado === 'cargando' || window.ccPromoEstado === 'abierta') {
+    window.__alertaNoticiasPendiente = true;
+    return;
+  }
   const ahora = new Date();
   const hoy = new Date(ahora);
   hoy.setHours(0, 0, 0, 0);
