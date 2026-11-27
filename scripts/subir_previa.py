@@ -56,9 +56,9 @@ def preparar(destino: Path) -> None:
     )
 
     # 3) informe mas reciente con el diseno nuevo (valida el formato; si falla, se corta aqui)
-    informes = sorted((SRC / "informes").glob("*.html"))
-    if informes:
-        shutil.copy(informes[-1], destino / "informe.html")
+    elegido = subprocess.run([sys.executable, str(RAIZ / "scripts" / "elegir_informe.py")], cwd=RAIZ, capture_output=True, text=True)
+    if elegido.returncode == 0 and elegido.stdout.strip():
+        shutil.copy(RAIZ / elegido.stdout.strip(), destino / "informe.html")
         ejecutar(RAIZ / "scripts" / "recolor_informe.py", destino / "informe.html")
 
     # 4) oculto a buscadores

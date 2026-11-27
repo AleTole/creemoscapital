@@ -3,7 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Informe Multi-Activo - 2 Nov 2026</title>
+<title>Informe Multi-Activo - 27 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
+          sky:   { 400: '#00d4ff', 500: '#00b8e0', 600: '#0099cc' },
+          gold:  { 400: '#fbbf24', 500: '#f59e0b' },
+          long:  '#22c55e',
+          short: '#ef4444',
+        },
+        fontFamily: {
+          sans:    ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
@@ -63,6 +86,207 @@
   .pivot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
   .note{background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--muted);margin:10px 0 0 0;}
   .foot{color:var(--muted);font-size:11px;text-align:center;margin-top:18px;}
+
+  /* ---- Integracion con creemoscapital.com (navbar/ticker/footer) ---- */
+  #navbar {
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(5,13,26,0.97);
+    box-shadow: 0 1px 20px rgba(0,0,0,0.5);
+  }
+  .nav-link {
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(226,232,240,0.7); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: #00d4ff; }
+  .nav-cta {
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0.5rem 1.25rem; background: linear-gradient(135deg,#22c55e,#15803d);
+    color: #04160c !important; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.04em; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 0 16px rgba(34,197,94,0.45); transition: transform 0.2s, box-shadow 0.2s;
+    animation: ctaPulse 2s ease-in-out infinite;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 24px rgba(34,197,94,0.65); }
+  @keyframes ctaPulse {
+    0%, 100% { box-shadow: 0 0 16px rgba(34,197,94,0.45); }
+    50%      { box-shadow: 0 0 28px rgba(34,197,94,0.9); }
+  }
+  .nav-academy {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
+    border: 1px solid rgba(0,212,255,0.55); border-radius: 999px; color: #00d4ff !important;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; box-shadow: 0 0 14px rgba(0,212,255,0.3);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .nav-academy:hover { transform: translateY(-1px); border-color: #00d4ff; box-shadow: 0 0 22px rgba(0,212,255,0.55); }
+
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  #okx-ticker-items:hover { animation-play-state: paused; }
+  .okx-item  { display:inline-flex;align-items:center;gap:0.45rem;padding:0 1.1rem; }
+  .okx-name  { font-size:0.72rem;letter-spacing:0.06em;color:#64748b;font-weight:500; }
+  .okx-price { font-size:0.8rem;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#e2e8f0; }
+  .okx-pct   { font-size:0.72rem;font-weight:600; }
+  .okx-pos   { color:#22c55e; }
+  .okx-neg   { color:#ef4444; }
+  .okx-sep   { color:#1e3a5f;font-size:1rem;padding:0 0.25rem; }
+
+  body {
+    padding-top: 28px; padding-bottom: 28px; font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(0,212,255,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 10%, rgba(99,102,241,0.12) 0%, transparent 50%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  h1, .cat-label, .card h2 { font-family: 'DM Sans', 'Inter', sans-serif; }
+
+  /* ---- Titulo = fecha ---- */
+  .rep-brand h1{
+    background:linear-gradient(135deg,#f1f5f9,#b9e8ff 60%,var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    font-size:clamp(1.7rem,3vw,2.3rem); font-weight:700; letter-spacing:-0.01em;
+  }
+  .rep-brand .ic-year{
+    font-size:0.62em; font-weight:600; letter-spacing:0;
+    background:none; -webkit-text-fill-color:#94a3b8; color:#94a3b8;
+  }
+  .rep-brand .sub{
+    font-size:0.92rem; font-weight:600; color:#cbd5e1; margin-top:10px;
+    line-height:1.6; max-width:900px;
+    border-left:3px solid rgba(0,212,255,0.5); padding-left:12px;
+  }
+
+  /* ---- Layout: sidebar de categorias (acordeon) + contenido ---- */
+  .wrap{ max-width:740px; }
+  .ic-layout{ display:block; }
+  .ic-content{ min-width:0; }
+
+  .ic-cat-tabs{
+    display:flex; flex-direction:column; gap:4px; margin-bottom:20px;
+    background:linear-gradient(160deg,#061325,var(--panel) 55%);
+    border:1px solid var(--border); border-radius:16px; padding:10px;
+  }
+  .ic-cat-item{ border-radius:10px; }
+  .ic-cat-btn{
+    position:relative; width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px;
+    text-align:left; border-radius:10px; border:1px solid transparent;
+    background:transparent; color:#94a3b8; font-size:0.8rem; font-weight:700;
+    letter-spacing:0.03em; text-transform:uppercase; cursor:pointer; padding:0.7rem 0.9rem;
+    transition:background .18s,color .18s,border-color .18s;
+  }
+  .ic-cat-btn:hover{ background:rgba(0,212,255,0.08); color:#e2e8f0; }
+  .ic-cat-item.open .ic-cat-btn{
+    background:linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
+    color:var(--gold); border-color:rgba(0,212,255,0.45);
+  }
+  .ic-cat-chevron{ font-size:0.7rem; opacity:0.55; transition:transform .2s; flex-shrink:0; }
+  .ic-cat-item.open .ic-cat-chevron{ transform:rotate(90deg); }
+  .ic-cat-name{ display:block; }
+  .ic-cat-assets-preview{
+    display:block; font-size:0.65rem; font-weight:500; letter-spacing:0.01em;
+    text-transform:none; color:#64748b; margin-top:2px;
+  }
+  .ic-cat-item.open .ic-cat-assets-preview{ display:none; }
+
+  .ic-cat-assets-list{ display:none; flex-direction:column; gap:2px; padding:4px 4px 8px 14px; }
+  .ic-cat-item.open .ic-cat-assets-list{ display:flex; }
+  .ic-cat-assets-list .tab-btn{
+    text-align:left; border-radius:8px; background:transparent; border:1px solid transparent;
+    color:#94a3b8; cursor:pointer; padding:0.45rem 0.75rem;
+  }
+  .ic-cat-assets-list .tab-btn:hover{ background:rgba(0,212,255,0.08); transform:none; }
+  .ic-cat-assets-list .tab-btn.active{
+    background:linear-gradient(135deg,var(--gold),#0099cc);
+    box-shadow:0 0 12px rgba(0,212,255,0.35); transform:none;
+  }
+  .ic-asset-code{
+    display:block; font-size:0.78rem; font-weight:700; letter-spacing:0.02em;
+    text-transform:uppercase; color:inherit;
+  }
+  .ic-asset-name{
+    display:block; font-size:0.64rem; font-weight:500; color:#64748b; margin-top:1px;
+  }
+  .ic-cat-assets-list .tab-btn.active .ic-asset-name{ color:rgba(4,18,28,0.65); }
+
+  .ic-cat-group{ display:none; }
+  .ic-cat-group.active{ display:block; }
+
+  /* ---- Panel de un activo: grilla compacta, 2 filas de 3 cards ---- */
+  .panel.active{ display:flex; flex-direction:column; gap:12px; }
+  .card{ margin-bottom:0 !important; padding:13px 15px !important; }
+  .card h2{ font-size:12px !important; margin-bottom:6px !important; }
+  .price{ font-size:22px !important; }
+  .pivot-pp b{ font-size:17px !important; }
+  .lvl{ padding:7px 9px !important; }
+  .lvl b{ font-size:13px !important; }
+  .zone{ padding:7px 10px !important; margin-bottom:6px !important; font-size:12px !important; }
+  .card ul{ font-size:12.5px !important; line-height:1.45 !important; }
+  .card .sub{ font-size:12px !important; border:none !important; padding-left:0 !important; font-weight:400 !important; color:#94a3b8 !important; }
+
+  /* ---- Pivote compacto en una fila ---- */
+  .pivot-wrap{ flex-direction:column !important; align-items:stretch !important; gap:8px !important; }
+  .pivot-pp{ flex-shrink:0; display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; padding:6px 12px !important; }
+  .pivot-grid{ grid-template-columns:repeat(4,1fr) !important; width:100%; gap:6px !important; }
+
+  /* Sidebar fijo pegado a la ventana + contenido centrado, en pantallas grandes */
+  @media (min-width:900px){
+    body{ padding-left:276px; }
+    .wrap{ max-width:none; margin:0; }
+    .ic-content{ max-width:1320px; margin:0 auto; padding-left:8px; }
+
+    .ic-cat-tabs{
+      position:fixed; left:0; top:110px; bottom:0; width:258px; z-index:20;
+      margin-bottom:0; overflow-y:auto; border-radius:0;
+      border-right:1px solid var(--border);
+      padding:20px 12px; box-shadow:6px 0 30px rgba(0,0,0,0.35);
+    }
+    .ic-cat-item.open .ic-cat-btn::before{
+      content:''; position:absolute; left:-10px; top:50%; transform:translateY(-50%);
+      width:4px; height:60%; border-radius:4px;
+      background:linear-gradient(180deg,var(--gold),#6366f1);
+    }
+
+    /* 3 columnas -> 6 cards caen en 2 filas parejas, en vez de 1 columna larga */
+    .panel.active{
+      display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:min-content; gap:12px;
+    }
+    .ic-panel-left, .ic-panel-right{ display:contents; }
+  }
+  @media (min-width:1500px){
+    .ic-content{ max-width:1500px; }
+  }
+
+  /* ---- Cards con borde degradado estilo Academy ---- */
+  .card{ position:relative; overflow:hidden; transition:border-color .2s, box-shadow .2s; }
+  .card::before{
+    content:''; position:absolute; inset:-1px; border-radius:10px; padding:1px;
+    background:linear-gradient(135deg, rgba(0,212,255,0.35), rgba(99,102,241,0.25), rgba(0,212,255,0.35));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  .card:hover::before{ opacity:1; }
+  .card:hover{border-color:rgba(0,212,255,0.55);box-shadow:0 6px 22px rgba(0,184,224,0.12);}
+
+  .rep-brand{grid-template-columns:1fr !important;}
+  .rep-brand h1, .rep-brand .sub{grid-column:1 !important;}
+
+  @media (max-width:480px){
+    body{padding:14px;padding-top:14px;}
+    h1{font-size:19px;}
+    .sub{font-size:13px !important;}
+    .price{font-size:24px;}
+    .cat-label{font-size:10px;}
+    .card{padding:13px 14px;}
+    .card h2{font-size:12px;}
+    .pivot-wrap{ flex-direction:column !important; }
+    .pivot-grid{ grid-template-columns:1fr 1fr !important; }
+    .pivot-pp{padding:8px 14px;}
+    .pivot-pp b{font-size:19px;}
+    .intraday, .pivot-grid{gap:6px !important;}
+    .lvl{padding:7px 8px;font-size:12px;}
+  }
 
   /* ---- Integracion con creemoscapital.com (diseno V2.0) ---- */
   body.informe { padding: 0 !important; margin: 0; background: var(--bg) !important; color: var(--text) !important; font-family: "Geist", system-ui, -apple-system, "Segoe UI", sans-serif !important; }
@@ -201,9 +425,8 @@
 <div class="wrap">
   <div class="rep-brand">
     <div>
-    <span class="tag"><i></i>Informe diario</span>
-    <h1>Lunes 2 de noviembre<span class="ic-year"> 2026</span></h1>
-    <div class="sub">Venta tech/IA: S&P -1.8%, Nasdaq -2.9% (peor mes desde mar-2025: -5.2%), Intel -30% y Amazon · Oro rompe $3,900 (mín. de 1 año), plata -6% · Hack de $6.3B en Binance: BTC a $76.4K · Brent $117.6 (máx. desde abril) · hoy OPEC+ y proof-of-reserves de Binance; elecciones EE.UU. el 3 nov.</div>
+    <h1>Viernes 27 de noviembre<span class="ic-year"> 2026</span></h1>
+    <div class="sub">Jueves 26 nov: Wall Street cerrado (Thanksgiving); Europa/Asia rebotan por aranceles de EE.UU. 'más suaves de lo temido' (propuesta de hasta 20%, no acumulables ni inmediatos): Nikkei +0.86% (57,499.16), Stoxx 600 ~+1.8%, DAX/FTSE/CAC +1.6-1.9% (cifras de primera hora; cierres estimados) · EE.UU.: sin sesión; futuros S&amp;P ~+0.5-0.7%; los índices conservan el cierre del miércoles (Dow 50,182.95, S&amp;P 7,182.78, Nasdaq 23,585.80; VIX 27.98; 10Y ~4.85%) · Fed: ~99% de hike de 25 pb el 9 dic. (PIB 3T 4.3%, core PCE 3.3%) · Oro ~$3,566 (-0.6%; mín. de 15 meses el miércoles) y plata ~$41.4 (+0.3%) · Petróleo sube con tensión en Medio Oriente/Ormuz: Brent ~$91.1 (+0.5%), WTI ~$84.5 (+1%) · BTC ~$60.7K (rango $57.2-61.5K) y ETH ~$1,704 (+4.5%) tras ~$100M en liquidaciones de cortos · EUR/USD ~1.0968, USD/JPY ~159.3 · Hoy viernes 27: EE.UU. medio día (cierre 13:00 ET; liquidez baja); domingo 29 OPEC+; lunes 30 expira el Brent de ene.; FOMC 8-9 dic. Cierres de Europa, metales, petróleo, divisas y rangos: estimados (cifras de primera hora o tardías).</div>
     </div>
   </div>
 
@@ -275,41 +498,41 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~$3,880</div>
-      <div class="sub">-3.5% (~$3,880 spot; futuro dic. $3,884.9, -3.6%): rompe $4,000 y marca mínimo de 1 año; liquidación forzada por la caída de Wall Street, crudo caro y hike dic. ~81%; peor semana desde junio. Resistencia $3,890-3,910/$3,943, soporte $3,780-3,800. Rango aprox.</div>
+      <div class="price down">~$3,566</div>
+      <div class="sub">~-0.6% (~$3,566 est.; miércoles ~$3,588): sigue cerca de mínimos de 15 meses (mín. del miércoles ~$3,469) con hike de la Fed ~99% el 9 dic., PIB 3T 4.3% y core PCE 3.3%; EE.UU. cerrado (liquidez baja). Cierre y rango aprox. (Kitco tardío $3,565.5): valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$3,922</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$3,569</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$4,085</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$3,983</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$3,820</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$3,759</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$3,609</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$3,587</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$3,547</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$3,529</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$3,943</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$3,910</b>resistencia (Kitco)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$3,862</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$3,800</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$3,630</b>R2 / resistencia</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$3,600</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$3,520</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$3,500</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$3,890-3,943</b>Resistencia inmediata (ex-soporte).</div>
-      <div class="zone zone-supply"><b class="tag-r">$3,975-4,015</b>Oferta mayor.</div>
-      <div class="zone zone-demand"><b class="tag-g">$3,780-3,862</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$3,700-3,780</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$3,600-3,650</b>Oferta (R de Kitco $3,630/3,650).</div>
+      <div class="zone zone-supply"><b class="tag-r">$3,690-3,750</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">$3,500-3,530</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$3,380-3,470</b>Demanda mayor (mín. del miércoles).</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $3,900 y sin refugio pese al riesgo geopolítico; rebotes a $3,890-3,943 son de venta salvo cierre &gt; $3,975.</li><li>Catalizador: empleo EE.UU. el viernes, elecciones el 3 nov., titulares Irán.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $3,975 invalida el sesgo bajista; &lt; $3,780 abre $3,700.</li><li><span class="tag-r">Riesgo:</span> Rebote técnico violento por sobreventa (mín. de 1 año); hike dic. ~81% y empleo EE.UU. del viernes; liquidaciones forzadas si sigue la bolsa.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $3,600; rebotes a $3,600-3,650 son de venta; &lt; $3,520 abre $3,500/$3,470.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $3,650 neutraliza; &lt; $3,470 abre $3,400.</li><li><span class="tag-r">Riesgo:</span> Fed (hike ~99%), dólar, PCE/PIB fuertes; medio día en EE.UU. hoy (liquidez baja); cifras aprox.</li></ul></div>
 </div>
 </div>
 <!-- XAG -->
@@ -317,40 +540,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~$49.02</div>
-      <div class="sub">-6.1% (~$49.0 spot): se hunde con oro y bolsa; rompe $50 y marca mínimos de varios meses; relación oro/plata se ensancha (~79). Resistencia $51-52, soporte $49/$47-48. Máx./mín. aprox.</div>
+      <div class="price">~$41.40</div>
+      <div class="sub">~+0.3% (~$41.4; miércoles ~$41.3): aguanta mejor que el oro con el rebote de Europa; el dato de ayer (~$39.8 est.) era erróneo. Máx./mín. aprox.: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$50.01</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$41.27</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$53.81</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$51.41</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$47.61</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$46.21</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$42.07</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$41.73</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$40.93</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$40.47</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$52.69</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$52.40</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$48.60</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$47.00</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$44.50</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$42.50</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$40.50</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$38.00</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$51.00-52.69</b>Oferta (ex-soporte $52.41).</div>
-      <div class="zone zone-demand"><b class="tag-g">$47.00-49.00</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$45.00-47.00</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$42.50-44.50</b>Oferta (R de Kitco $44.50).</div>
+      <div class="zone zone-demand"><b class="tag-g">$40.50-41.00</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$37.50-40.50</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — cierre en mínimos; &gt; $52.69 invalida; &lt; $48.6 apunta a $47.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; $52.69 invalida; &lt; $48.6 apunta a $47.</li><li><span class="tag-r">Riesgo:</span> Beta ~2x del oro; capitulación o rebote de corto plazo con gaps de ±3%; demanda industrial y dólar.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — rango $40.5-42.5; &lt; $40.50 abre $38/$37.5; &gt; $42.5 apunta a $44.5.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $44.50 neutraliza; &lt; $37.50 abre $35.</li><li><span class="tag-r">Riesgo:</span> Beta 2x del oro, cobre, dólar, Fed; liquidez baja; rango aprox.</li></ul></div>
 </div>
 </div>
   </div>
@@ -363,40 +586,41 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~$77,200</div>
-      <div class="sub">-4.7% (~$77,200): hack récord de $6.3B en Binance (retiros pausados, atribuido a Corea del Norte) → mín. $76,400 (el más bajo desde el 18 sep.) y $1.57B en liquidaciones; rebota a ~$77K. Soporte clave $75-77K. Rango 24h aprox.; datos del sábado.</div>
+      <div class="price">~$60,730</div>
+      <div class="sub">~$60,730 (+4.7% en 24 h; 7 d -3.6%): rebote desde $57.2K con ~$100M de cortos liquidados y liquidez baja por Thanksgiving; sin recuperar $62K. Rango Coinbase: $57,208-61,527.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$78,200</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$59,800</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$82,800</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$80,000</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$75,400</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$73,600</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$64,100</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$62,400</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$58,100</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$55,500</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$81,000</b>máx. 24h (aprox.)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$79,600</b>resistencia (ex-soporte)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$76,400</b>mín. 24h</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$75,000</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$62,700</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$61,500</b>R1 / máx. de 24 h</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$58,300</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$57,200</b>S2 / mín. de 24 h</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$79,600-81,800</b>Oferta; EMA 20/50 y ex-soporte.</div>
-      <div class="zone zone-demand"><b class="tag-g">$75,000-76,400</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$72,000-75,000</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$61,500-62,700</b>Oferta (máx. de 24 h y del martes).</div>
+      <div class="zone zone-supply"><b class="tag-r">$64,000-65,800</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">$57,200-58,300</b>Soporte inmediato (mín. de 24 h).</div>
+      <div class="zone zone-demand"><b class="tag-g">$55,100-57,200</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo la zona $79.6-81K; perder $75K abre $72K; Binance publica proof-of-reserves el lunes (puede dar volatilidad).</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; $81K recupera la estructura; &lt; $75K abre $72K.</li><li><span class="tag-r">Riesgo:</span> Binance (retiros pausados, proof-of-reserves el lunes), venta del hacker (~$285M en ETH), Nasdaq a la baja, liquidaciones con poca liquidez el fin de semana.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — rebote técnico bajo $62.7K; &gt; $61.5K apunta a $62.7K; &lt; $58.3K abre $57.2K/$55.1K.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $62,700 neutraliza; &lt; $55,100 abre $52,000.</li><li><span class="tag-r">Riesgo:</span> ETF (noviembre récord de salidas), Fed, liquidez baja; rebote por cortos.</li></ul></div>
 </div>
 </div>
 <!-- ETH -->
@@ -404,40 +628,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~$2,240</div>
-      <div class="sub">~-4.5% (~$2,240 aprox.): mínimo de $2,170 con el hack de Binance y rebote; el hacker convirtió ~$285M a ETH (presión vendedora). Rango 24h aprox.; datos del sábado.</div>
+      <div class="price">~$1,704</div>
+      <div class="sub">~$1,704 (+4.5% en 24 h; 7 d -4.0%): rebota con BTC y recupera $1,700; sin superar $1,725-1,770. Rango aprox.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$2,257</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$1,688</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$2,447</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$2,343</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$2,153</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$2,067</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$1,788</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$1,746</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$1,646</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$1,588</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$2,360</b>máx. 24h (aprox.)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$2,300</b>resistencia</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$2,170</b>mín. 24h</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$2,100</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$1,770</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$1,730</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$1,650</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$1,590</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$2,300-2,380</b>Oferta.</div>
-      <div class="zone zone-demand"><b class="tag-g">$2,100-2,170</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$2,000-2,100</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$1,725-1,800</b>Oferta.</div>
+      <div class="zone zone-demand"><b class="tag-g">$1,630-1,670</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$1,500-1,630</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $2,300; perder $2,170 abre $2,100/$2,000.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; $2,380 invalida; &lt; $2,170 abre $2,100/$2,000.</li><li><span class="tag-r">Riesgo:</span> Ventas del hacker en ETH, salidas de ETF, correlación con Nasdaq.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — rebote sobre $1,700; &gt; $1,730 apunta a $1,770; &lt; $1,650 abre $1,590.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $1,800 neutraliza; &lt; $1,540 abre $1,480.</li><li><span class="tag-r">Riesgo:</span> Salidas de ETF, Fed, liquidez baja; cifras aprox.</li></ul></div>
 </div>
 </div>
   </div>
@@ -450,40 +674,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price">$104.12</div>
-      <div class="sub">Cerró $104.12 (dic.; +2.2%, +15% en octubre): otro ataque a un petrolero en Ormuz y reportes de posibles nuevos ataques de EE.UU. a Irán; nuevo máximo desde la primavera. Máx./mín. aprox.</div>
+      <div class="price">~$84.51</div>
+      <div class="sub">~$84.5 (ene.; +1% est.; miércoles ~$83.7): sube por Medio Oriente y reportes de buques atacados en Ormuz pese a la recuperación de oferta. Cierre y rango estimados; el contrato de ene. expira el lun 30.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$103.41</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$84.10</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$106.51</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$105.31</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$102.21</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$100.31</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$85.90</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$85.21</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$83.41</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$82.30</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$108.85</b>resistencia mayor</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$104.60</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$101.50</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$100.00</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$86.30</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$85.20</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$83.30</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$82.00</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$104.60-108.85</b>Oferta; sin resistencia clara arriba de $104.</div>
-      <div class="zone zone-demand"><b class="tag-g">$100.00-102.00</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$97.00-100.00</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$85.00-86.50</b>Oferta.</div>
+      <div class="zone zone-demand"><b class="tag-g">$82.00-83.30</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$79.50-82.00</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Alcista — cierra en máximos de 6 meses; &gt; $104.6 apunta a $108.85; &lt; $102 neutraliza.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &lt; $102 neutraliza; &gt; $104.6 apunta a $108.85.</li><li><span class="tag-r">Riesgo:</span> Gaps por Ormuz/Houthis/ataques EE.UU. a Irán (alza) o por rumores de acuerdo (baja ±3%); OPEC+ el domingo; elecciones EE.UU. el 3 nov.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-alcista — sobre $83.3; &gt; $85.2 apunta a $86.3; &lt; $83.3 abre $82.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; $82.00 neutraliza; &gt; $86.50 abre $88.</li><li><span class="tag-r">Riesgo:</span> Ormuz/Medio Oriente, OPEC+ (dom 29), exceso de oferta, dólar; cifras estimadas.</li></ul></div>
 </div>
 </div>
 <!-- BRENT -->
@@ -491,40 +715,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price">$117.64</div>
-      <div class="sub">Cerró $117.64 (dic.; +2%, +6% sobre el viernes anterior; +13% en octubre; máx. desde el 29 de abril): Ormuz, Houthis/Arabia Saudita y posible reanudación de ataques de EE.UU. a Irán. Máx./mín. aprox.</div>
+      <div class="price">~$91.10</div>
+      <div class="sub">~$91.1 (ene.; +0.5%; miércoles ~$90.6-91.3): corrige el ~$93.3 de ayer (mezcla ene./feb.); sube por Ormuz/Medio Oriente. El contrato de ene. expira el lun 30. Cierre y rango estimados.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$116.88</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$91.00</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$119.88</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$118.76</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$115.76</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$113.88</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$92.30</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$91.70</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$90.40</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$89.70</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$120.00</b>número redondo</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$118.00</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$115.00</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$113.00</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$93.90</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$92.50</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$90.00</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$88.40</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$118.00-120.00</b>Oferta; máx. de abril.</div>
-      <div class="zone zone-demand"><b class="tag-g">$113.00-115.30</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$111.00-113.00</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$92.50-94.00</b>Oferta.</div>
+      <div class="zone zone-demand"><b class="tag-g">$89.50-90.50</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$87.00-89.50</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Alcista — sobre $115; &gt; $118 apunta a $120; reunión OPEC+ el domingo.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &lt; $115 neutraliza; &gt; $118 abre $120.</li><li><span class="tag-r">Riesgo:</span> OPEC+ el domingo, ataques a petroleros y a Arabia Saudita; un acuerdo EE.UU.-Irán podría dar un gap de -$3-4.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — rango $90-92.5; &gt; $92.5 apunta a $93.9; &lt; $90 abre $88.4. Ojo al spread ene./feb.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; $88.40 neutraliza; &gt; $94 abre $96.</li><li><span class="tag-r">Riesgo:</span> Ormuz, OPEC+ (dom 29), roll del contrato (lun 30), dólar; cierre estimado.</li></ul></div>
 </div>
 </div>
 <!-- NATGAS -->
@@ -532,41 +756,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~$2.880</div>
-      <div class="sub">~-1% (~$2.88 aprox., dic.; sin settle oficial): intradía bajó de $2.85 y se recuperó; clima templado (nov. podría ser el 2º más cálido), inyecciones grandes y productores (EQT, Expand) recortando producción. Rango aprox.</div>
+      <div class="price">~$2.840</div>
+      <div class="sub">~$2.84 (dic.; estimado sin settle: EE.UU. cerrado ayer): sin datos nuevos; vigilar apertura de hoy (medio día). Dato estimado: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>$2.890</b></div>
+        <div class="pivot-pp"><span>PP</span><b>$2.837</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>$3.020</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>$2.950</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>$2.820</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>$2.760</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>$2.967</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$2.903</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$2.773</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$2.707</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>$3.050</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>$2.960</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>$2.830</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>$2.700</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>$2.950</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$2.890</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$2.750</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$2.680</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">$2.950-3.100</b>Oferta.</div>
-      <div class="zone zone-supply"><b class="tag-r">$3.250-3.400</b>Oferta mayor.</div>
-      <div class="zone zone-demand"><b class="tag-g">$2.700-2.850</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">$2.500-2.700</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">$2.880-2.960</b>Oferta (soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">$2.740-2.800</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$2.600-2.740</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo $3.00; perder $2.85 abre $2.70; los recortes de producción y el frío darían rebote.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; $3.10 invalida; &lt; $2.70 abre $2.50.</li><li><span class="tag-r">Riesgo:</span> Meteorología (frío tardío), recortes de producción (EQT, Expand), inventarios EIA del jueves; ojo con saltos por roll en los CFD.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo $2.88; rebotes a $2.88-2.95 son de venta; &lt; $2.75 abre $2.68/$2.60.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $2.96 neutraliza; &lt; $2.60 abre $2.50.</li><li><span class="tag-r">Riesgo:</span> Meteorología, GNL/Irán, EIA; liquidez baja hoy (medio día); dato estimado.</li></ul></div>
 </div>
 </div>
   </div>
@@ -579,40 +802,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">51,770</div>
-      <div class="sub">-1.09% (cierre 51,770.3; octubre +1.5%): cae con Amazon/Intel; Fed: dos miembros piden subir tipos. Máx./mín. aprox.</div>
+      <div class="price">50,183</div>
+      <div class="sub">Sin sesión el jueves (Thanksgiving): se mantiene el cierre del miércoles. +0.33% (cierre 50,182.95; martes 50,018.70; +164 pts): revierte una caída de ~1,100 pts intradía (hasta ~48,915) tras el PCE caliente y el desplome de chips; segundo cierre seguido sobre 50,000. Máx./mín. aprox.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>51,933</b></div>
+        <div class="pivot-pp"><span>PP</span><b>49,779</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>52,663</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>52,217</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>51,487</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>51,203</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>51,104</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>50,644</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>49,319</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>48,454</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>52,380</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>52,085</b>resistencia (mín. del jueves)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>51,650</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>51,300</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>51,500</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>50,850</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>49,150</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>48,200</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">52,085-52,500</b>Oferta; hueco bajista.</div>
-      <div class="zone zone-demand"><b class="tag-g">51,300-51,650</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">50,800-51,300</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">50,500-51,500</b>Oferta (máx. del martes y ex-soporte).</div>
+      <div class="zone zone-demand"><b class="tag-g">48,900-49,300</b>Soporte inmediato (mín. del miércoles).</div>
+      <div class="zone zone-demand"><b class="tag-g">48,000-48,900</b>Demanda mayor (cierre del viernes 20).</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo 52,085; perder 51,650 abre 51,300.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 52,085 neutraliza; &lt; 51,650 abre 51,300.</li><li><span class="tag-r">Riesgo:</span> Contagio de la venta de tech al Dow, yields ~5%, gap del lunes por Wall Street; elecciones el 3 nov.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — vuelve sobre 50,000 tras la mecha; &gt; 50,850 apunta a 51,500; &lt; 49,150 abre 48,200.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 51,500 neutraliza (alcista); &lt; 48,200 abre 47,400.</li><li><span class="tag-r">Riesgo:</span> Thanksgiving hoy (cerrado; viernes 13:00 ET con liquidez baja), Fed (hike dic.), aranceles; ¿rebote de gato muerto?; VIX 28.</li></ul></div>
 </div>
 </div>
 <!-- SP500 -->
@@ -620,40 +843,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">7,580</div>
-      <div class="sub">-1.82% (cierre 7,580.1; mayor caída diaria desde junio; octubre -1.2%): Amazon -2% y Intel -30% (guía débil por memoria cara) renuevan dudas sobre el gasto en IA. ~3.4% bajo el récord (7,844). Máx./mín. aprox.</div>
+      <div class="price down">7,183</div>
+      <div class="sub">Sin sesión el jueves (Thanksgiving): se mantiene el cierre del miércoles. -0.25% (cierre 7,182.78; martes 7,201.09; -18 pts): cae ~3.5% en el mínimo del día por el PCE caliente (3.8% a/a, core 3.3%) y el desplome de chips, y recupera casi todo; VIX 27.98 (+6%). Máx./mín. estimados.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>7,623</b></div>
+        <div class="pivot-pp"><span>PP</span><b>7,119</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>7,783</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>7,682</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>7,522</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>7,463</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>7,374</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>7,279</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>7,024</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>6,864</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>7,720</b>resistencia (cierre del jueves)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>7,725</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>7,565</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>7,500</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>7,440</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>7,310</b>R1 / ex-soporte</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>7,020</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>6,850</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">7,640-7,725</b>Oferta; hueco bajista.</div>
-      <div class="zone zone-demand"><b class="tag-g">7,500-7,565</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">7,400-7,500</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">7,300-7,440</b>Oferta (resistencia 7,300 y máx. del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">7,020-7,130</b>Soporte inmediato (gap del lunes y mín. del miércoles).</div>
+      <div class="zone zone-demand"><b class="tag-g">6,880-7,020</b>Demanda mayor (cierre del viernes 20).</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista a corto — cierre débil; &lt; 7,565 abre 7,500; rebotes a 7,640 son de venta salvo cierre &gt; 7,720.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 7,720 invalida; &lt; 7,500 abre 7,400.</li><li><span class="tag-r">Riesgo:</span> Gap bajista/rebote por Amazon/Intel/Apple, hike dic. (Fed), VIX &gt;20; elecciones EE.UU. el 3 nov.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — consolida 7,130-7,300; &lt; 7,130 abre 7,020/6,880; &gt; 7,300 apunta a 7,440.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 7,440 neutraliza (alcista); &lt; 6,880 abre 6,780.</li><li><span class="tag-r">Riesgo:</span> Mercado cerrado hoy (Thanksgiving) y viernes a las 13:00 ET; Fed (hike dic.), aranceles, Nvidia/IA; ¿rebote de gato muerto?; VIX 28.</li></ul></div>
 </div>
 </div>
 <!-- US100 -->
@@ -661,40 +884,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~28,540</div>
-      <div class="sub">Nasdaq Comp. 25,437 (-2.86%; octubre -5.2%, peor mes desde mar-2025): Intel -30%, Amazon y megacaps IA; US100 estimado ~-2.9%. Cierre y rango aprox.</div>
+      <div class="price down">~26,100</div>
+      <div class="sub">Sin sesión el jueves (Thanksgiving). Cierre del miércoles ~26,100 est. (Nasdaq Comp. 23,585.80, -0.62%); futuros S&amp;P +0.5-0.7% antes de la apertura de hoy. Cifras estimadas: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>28,797</b></div>
+        <div class="pivot-pp"><span>PP</span><b>25,817</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>29,647</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>29,093</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>28,243</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>27,947</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>27,167</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>26,633</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>25,283</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>24,467</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>29,050</b>resistencia (ex-soporte)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>29,350</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>28,500</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>28,000</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>27,700</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>26,900</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>24,450</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>22,800</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">28,800-29,350</b>Oferta; hueco bajista.</div>
-      <div class="zone zone-demand"><b class="tag-g">28,000-28,500</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">27,500-28,000</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">26,650-27,700</b>Oferta (cierre del lunes y gap).</div>
+      <div class="zone zone-demand"><b class="tag-g">25,000-25,700</b>Soporte inmediato (mín. del miércoles y cierre del viernes 20).</div>
+      <div class="zone zone-demand"><b class="tag-g">24,200-25,000</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — cierre en mínimos; &lt; 28,500 abre 28,000; rebote a 28,800-29,050 es de venta.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 29,050 neutraliza; &lt; 28,000 abre 27,500.</li><li><span class="tag-r">Riesgo:</span> Concentración en megacaps IA, gasto en capex (Amazon/Alphabet), Intel y semis; mes con -5% da riesgo de rebote por fin de mes/rebalanceo.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo 26,650 tras el susto intradía; &lt; 25,700 abre 25,000/24,450; &gt; 26,650 neutraliza.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 26,900 neutraliza (alcista); &lt; 24,200 abre 23,400.</li><li><span class="tag-r">Riesgo:</span> Chips/IA (desplome intradía de &gt;9%), mercado cerrado hoy, aranceles/exportaciones a China; cierre y rango estimados.</li></ul></div>
 </div>
 </div>
 <!-- DAX -->
@@ -702,40 +925,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">25,818</div>
-      <div class="sub">-0.85% (cierre 25,818.2; semana +2.5%, octubre +2.5%): crudo caro y tech débil (Infineon -6.4%, Siemens Energy -6.9%); Bayer +5.5%; IPC alemán 2.8% (esperado 3.0%). Máx./mín. aprox.</div>
+      <div class="price">~25,150</div>
+      <div class="sub">~+1.8% (~25,150 est.; miércoles ~24,702, no ~25,000 como estimé): rebote por aranceles de EE.UU. más suaves de lo temido y menores yields; primera hora 25,127-25,180 (+1.7-1.9%). Cierre y rango estimados: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>25,879</b></div>
+        <div class="pivot-pp"><span>PP</span><b>25,110</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>26,179</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>25,999</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>25,699</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>25,579</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>25,330</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>25,240</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>25,020</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>24,890</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>26,040</b>resistencia (cierre del jueves)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>26,060</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>25,760</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>25,500</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>25,400</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>25,250</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>24,900</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>24,700</b>S2 / cierre del miércoles</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">26,040-26,200</b>Oferta; hueco de 26,000.</div>
-      <div class="zone zone-demand"><b class="tag-g">25,500-25,760</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">25,300-25,500</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">25,250-25,450</b>Oferta (máx. recientes).</div>
+      <div class="zone zone-demand"><b class="tag-g">24,700-24,950</b>Soporte inmediato (gap y cierre del miércoles).</div>
+      <div class="zone zone-demand"><b class="tag-g">24,400-24,700</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral — pierde 26,000; &lt; 25,760 abre 25,500; el lunes puede abrir con gap por Wall Street.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 26,040 recupera el sesgo; &lt; 25,500 abre 25,300.</li><li><span class="tag-r">Riesgo:</span> Gap por la venta de Wall Street, crudo (Ormuz), Francia y energía europea.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Alcista-neutral — rebote con gap sobre 24,700; &gt; 25,250 apunta a 25,450; &lt; 24,900 rellena el gap.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; 24,700 neutraliza; &gt; 25,450 abre 25,700.</li><li><span class="tag-r">Riesgo:</span> Wall Street medio día hoy, aranceles (propuesta, no antes de enero), IA; cierre y rango estimados.</li></ul></div>
 </div>
 </div>
 <!-- UK100 -->
@@ -743,40 +966,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price">10,730</div>
-      <div class="sub">+0.07% (cierre 10,729.8; semana +0.4%): AstraZeneca +7% compensa NatWest -8.8% y tech; la libra supera 1.20 vs euro. Máx./mín. aprox.</div>
+      <div class="price">~10,590</div>
+      <div class="sub">~+1.6% (~10,590 est.; miércoles ~10,427): rally con Imperial Brands +13% (Altria) y alivio arancelario; primera hora 10,557-10,592. Cierre y rango estimados: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>10,737</b></div>
+        <div class="pivot-pp"><span>PP</span><b>10,570</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>10,837</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>10,783</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>10,683</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>10,637</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>10,650</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>10,620</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>10,540</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>10,490</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>10,790</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>10,770</b>resistencia</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>10,690</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>10,640</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>10,680</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>10,620</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>10,500</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>10,430</b>S2 / cierre del miércoles</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">10,770-10,850</b>Oferta.</div>
-      <div class="zone zone-demand"><b class="tag-g">10,640-10,690</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">10,550-10,640</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">10,600-10,700</b>Oferta.</div>
+      <div class="zone zone-demand"><b class="tag-g">10,430-10,520</b>Soporte inmediato (gap).</div>
+      <div class="zone zone-demand"><b class="tag-g">10,300-10,430</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral — el más resistente de los índices; BoE el 5 nov.; gap por Wall Street el lunes.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &lt; 10,640 apunta a 10,550; &gt; 10,850 gana tracción.</li><li><span class="tag-r">Riesgo:</span> BoE el 5 nov. (hike), gilts (10Y ~5.3%), bancos (NatWest -8.8%), gap por tech de EE.UU.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Alcista-neutral — gap alcista; &gt; 10,620 apunta a 10,700; &lt; 10,500 rellena el gap.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; 10,430 neutraliza; &gt; 10,700 abre 10,800.</li><li><span class="tag-r">Riesgo:</span> Mineras, BoE, aranceles UE, rebote por Imperial/consumo; cierre y rango estimados.</li></ul></div>
 </div>
 </div>
 <!-- JAPAN225 -->
@@ -784,40 +1007,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">63,290</div>
-      <div class="sub">-2.12% (cierre 63,290.1; semana +0.2%): el BoJ mantiene 1.25% (8-1, un voto por subir) y la IA arrastra a Advantest -9% y Tokyo Electron -5.6%. Máx./mín. aprox.</div>
+      <div class="price">57,499</div>
+      <div class="sub">+0.86% (cierre 57,499.16; miércoles 57,011.62): rebote liderado por IA y alivio arancelario, con toma de ganancias; el BoJ y el yen (159.3) en foco. Máx./mín. estimados: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>63,597</b></div>
+        <div class="pivot-pp"><span>PP</span><b>57,283</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>64,897</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>64,093</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>62,793</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>62,297</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>58,133</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>57,816</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>56,966</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>56,433</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>64,660</b>resistencia (cierre del jueves)</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>64,400</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>63,100</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>62,000</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>58,600</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>58,000</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>56,900</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>56,000</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">63,800-64,660</b>Oferta; hueco bajista.</div>
-      <div class="zone zone-demand"><b class="tag-g">62,000-63,100</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">61,000-62,000</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">58,000-58,700</b>Oferta (cierre del martes).</div>
+      <div class="zone zone-demand"><b class="tag-g">56,750-57,000</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">55,700-56,750</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo 64,000; perder 63,100 abre 62,000; el Nikkei puede abrir el lunes con el reflejo del cierre de EE.UU. (-2.9% Nasdaq).</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 64,660 invalida; &lt; 62,000 abre 61,000.</li><li><span class="tag-r">Riesgo:</span> Gap por la caída de EE.UU. (Nasdaq -2.9%), chips/IA (Advantest, Tokyo Electron), BoJ hawkish (1 voto por subir) y yen más fuerte.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — rebote bajo 58,000; &gt; 58,000 apunta a 58,700; &lt; 56,900 abre 56,000.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 58,700 neutraliza; &lt; 55,700 abre 54,400.</li><li><span class="tag-r">Riesgo:</span> Nvidia/IA, BoJ (hike), yen, EE.UU. medio día hoy; máx./mín. estimados.</li></ul></div>
 </div>
 </div>
   </div>
@@ -830,41 +1053,41 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price">~101.95</div>
-      <div class="sub">~101.95 aprox. (fuentes dispares: 101.76-102.0): el dólar rebota con la venta de bolsa pese a yields a la baja (10Y 4.93%); resistencia 102.35-102.50, soporte 101.50-101.65. Cierre y rango aprox.</div>
+      <div class="price down">~103.95</div>
+      <div class="sub">~103.9 est. (miércoles ~103.95): consolida cerca del máximo de más de un año con hike de la Fed ~99% el 9 dic. Sin dato confiable del jueves: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>101.95</b></div>
+        <div class="pivot-pp"><span>PP</span><b>103.95</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>102.45</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>102.20</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>101.70</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>101.45</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>104.35</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>104.15</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>103.75</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>103.55</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>102.50</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>102.35</b>resistencia (zona baja)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>101.50</b>soporte</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>101.20</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>104.45</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>104.20</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>103.70</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>103.45</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">102.35-102.50</b>Resistencia.</div>
-      <div class="zone zone-supply"><b class="tag-r">103.15-103.30</b>Oferta mayor.</div>
-      <div class="zone zone-demand"><b class="tag-g">101.50-101.70</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">101.20-101.50</b>Soporte mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">104.20-104.50</b>Oferta (máx. de más de un año).</div>
+      <div class="zone zone-supply"><b class="tag-r">104.75-105.00</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">103.70-103.90</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">103.30-103.70</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral — rango 101.5-102.5; hike dic. sostiene, bolsa a la baja da demanda de refugio.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 102.50 apunta a 103.2; &lt; 101.50 reanuda la caída.</li><li><span class="tag-r">Riesgo:</span> Hike dic. y datos de EE.UU. (empleo el viernes), demanda de refugio si cae la bolsa, elecciones el 3 nov.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — consolida 103.7-104.2; &gt; 104.20 apunta a 104.45; &lt; 103.70 abre 103.45.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; 103.45 neutraliza; &gt; 104.75 abre 105.</li><li><span class="tag-r">Riesgo:</span> Fed (hike dic.), aranceles, Thanksgiving (liquidez baja); toma de ganancias.</li></ul></div>
 </div>
 </div>
 <!-- EURUSD -->
@@ -872,40 +1095,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~1.1156</div>
-      <div class="sub">-0.23% (1.1156): sigue bajo 1.1150-1.1200 tras el BCE; mínimo de varios meses ~1.1100. Soporte 1.1100-1.1115, resistencia 1.1200. Máx./mín. aprox.</div>
+      <div class="price">~1.0968</div>
+      <div class="sub">~+0.0% (~1.0968; miércoles ~1.0974): sigue bajo 1.1000; aranceles propuestos a la UE (hasta 20%) pesan. Cierre y rango estimados: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>1.1160</b></div>
+        <div class="pivot-pp"><span>PP</span><b>1.0968</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>1.1215</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>1.1186</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>1.1131</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>1.1105</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>1.1003</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>1.0985</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>1.0950</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>1.0933</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>1.1200</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>1.1190</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>1.1135</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>1.1100</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>1.1010</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>1.0985</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>1.0915</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>1.0880</b>S2 / objetivo ING</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">1.1180-1.1250</b>Oferta.</div>
-      <div class="zone zone-demand"><b class="tag-g">1.1050-1.1135</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">1.1000-1.1050</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">1.0985-1.1020</b>Oferta (número redondo y soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">1.0910-1.0945</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">1.0850-1.0910</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo 1.1200; perder 1.1100 abre 1.1050/1.1000.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 1.1200 invalida; &lt; 1.1100 abre 1.1050/1.1000.</li><li><span class="tag-r">Riesgo:</span> Francia/fiscal, BCE tras Lagarde (dimite en feb.), energía europea cara; dólar de refugio.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo 1.0985; rebotes a 1.0985-1.1020 son de venta; &lt; 1.0915 abre 1.0880/1.0850.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 1.1020 neutraliza; &lt; 1.0850 abre 1.0800.</li><li><span class="tag-r">Riesgo:</span> Aranceles UE, Fed/BCE (hike dic.), liquidez baja por Thanksgiving; cierre y rango estimados.</li></ul></div>
 </div>
 </div>
 <!-- GBPUSD -->
@@ -913,40 +1136,40 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price">~1.3400</div>
-      <div class="sub">~+0.2% (~1.3400 aprox.): la libra sube a máximo del mes y supera 1.20 contra el euro por apuestas de hike del BoE el 5 nov.; resistencia 1.3435-1.3460, soporte 1.3355. Cierre y rango aprox.</div>
+      <div class="price down">~1.3090</div>
+      <div class="sub">~-0.05% (~1.3090 est.; martes ~1.3095): plano cerca del mínimo de 2026 (1.3076) con el dólar firme. Cierre y rango estimados (sin dato confiable): valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>1.3400</b></div>
+        <div class="pivot-pp"><span>PP</span><b>1.3088</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>1.3460</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>1.3430</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>1.3370</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>1.3340</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>1.3143</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>1.3117</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>1.3062</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>1.3033</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>1.3460</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>1.3430</b>máx. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>1.3370</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>1.3355</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>1.3150</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>1.3120</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>1.3050</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>1.3010</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">1.3430-1.3510</b>Oferta.</div>
-      <div class="zone zone-demand"><b class="tag-g">1.3300-1.3370</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">1.3230-1.3300</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">1.3120-1.3160</b>Oferta (cierre del lunes y soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">1.3050-1.3095</b>Soporte inmediato (mín. anual 1.3076).</div>
+      <div class="zone zone-demand"><b class="tag-g">1.2980-1.3050</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral-alcista — sobre 1.3385; &gt; 1.3435 apunta a 1.3510.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &lt; 1.3355 neutraliza; &gt; 1.3435 apunta a 1.3510.</li><li><span class="tag-r">Riesgo:</span> BoE el 5 nov. (hike), gilts, dólar por aversión al riesgo y elecciones EE.UU.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo 1.3120; rebotes a 1.3120-1.3160 son de venta; &lt; 1.3050 abre 1.3010/1.2980.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 1.3160 neutraliza; &lt; 1.2980 abre 1.2930.</li><li><span class="tag-r">Riesgo:</span> BoE (hike dic.), Fed, aranceles; liquidez baja por Thanksgiving; cierre y rango estimados.</li></ul></div>
 </div>
 </div>
 <!-- USDJPY -->
@@ -954,44 +1177,45 @@
 <div class="ic-panel-left">
 <div class="card">
       <h2>Precio actual</h2>
-      <div class="price down">~157.00</div>
-      <div class="sub">~-0.3% (~157.0 aprox.): el yen sube por 3er día tras el BoJ (hold 8-1, hawkish) y yields a la baja; soporte 156.0-157.0 (50d 157.57 como resistencia). Cierre y rango aprox.</div>
+      <div class="price">~159.30</div>
+      <div class="sub">~159.30 (miércoles ~159.16): sin romper 160 con expectativas de hike del BoJ; 10Y EE.UU. ~4.85%. Cierre y rango estimados: valida en tu plataforma.</div>
     </div>
 <div class="card">
       <h2>Punto de pivote (aprox.)</h2>
       <div class="pivot-wrap">
-        <div class="pivot-pp"><span>PP</span><b>157.03</b></div>
+        <div class="pivot-pp"><span>PP</span><b>159.27</b></div>
         <div class="pivot-grid">
-          <div class="lvl"><span class="tag-r">R2</span><b>157.93</b></div>
-          <div class="lvl"><span class="tag-r">R1</span><b>157.47</b></div>
-          <div class="lvl"><span class="tag-g">S1</span><b>156.57</b></div>
-          <div class="lvl"><span class="tag-g">S2</span><b>156.13</b></div>
+          <div class="lvl"><span class="tag-r">R2</span><b>159.77</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>159.53</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>159.03</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>158.77</b></div>
         </div>
       </div>
     </div>
 <div class="card">
       <h2>Soportes/resistencias intradía</h2>
       <div class="intraday">
-        <div class="lvl"><span class="tag-r">R2</span><b>157.85</b>resistencia</div>
-        <div class="lvl"><span class="tag-r">R1</span><b>157.57</b>media de 50 días</div>
-        <div class="lvl"><span class="tag-g">S1</span><b>156.60</b>mín. del viernes (aprox.)</div>
-        <div class="lvl"><span class="tag-g">S2</span><b>156.00</b>soporte siguiente</div>
+        <div class="lvl"><span class="tag-r">R2</span><b>160.00</b>R2 / 160.00</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>159.75</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>158.60</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>158.00</b>S2</div>
       </div>
     </div>
 <div class="card">
       <h2>Zonas de oferta / demanda</h2>
-      <div class="zone zone-supply"><b class="tag-r">157.50-158.00</b>Oferta.</div>
-      <div class="zone zone-demand"><b class="tag-g">156.00-156.80</b>Soporte inmediato.</div>
-      <div class="zone zone-demand"><b class="tag-g">155.00-156.00</b>Demanda mayor.</div>
+      <div class="zone zone-supply"><b class="tag-r">159.75-160.50</b>Oferta (160.00, zona de intervención del MoF).</div>
+      <div class="zone zone-demand"><b class="tag-g">158.60-159.00</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">157.80-158.60</b>Demanda mayor.</div>
     </div>
 </div>
 <div class="ic-panel-right">
-<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — bajo 157.57 (media 50 d.); perder 156 abre 155; la intervención se aleja con el yen más fuerte.</li></ul></div>
-<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> &gt; 157.57 invalida; &lt; 156.00 abre 155.</li><li><span class="tag-r">Riesgo:</span> BoJ hawkish (1 voto por subir), yields de EE.UU. a la baja, unwind de carry si cae la bolsa; intervención menos probable.</li></ul></div>
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — consolida 158.6-159.75; &gt; 159.75 apunta a 160; &lt; 158.6 abre 158. Riesgo de intervención del MoF en 160-162.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 160.50 neutraliza (alcista); &lt; 157.80 abre 156.80.</li><li><span class="tag-r">Riesgo:</span> Yields/Fed, JGB, intervención del MoF (160+), Thanksgiving (liquidez baja); cierre y rango estimados.</li></ul></div>
 </div>
 </div>
   </div>
 </div>
+
 </div>
 </div>
 
@@ -1007,6 +1231,37 @@
       panels.forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
       document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+<script src="./js/data.js" defer></script>
+<script src="./js/main.js" defer></script>
+
+<script>
+  document.querySelectorAll('.ic-cat-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.ic-cat-item');
+      var cat = btn.dataset.cat;
+
+      document.querySelectorAll('.ic-cat-item').forEach(function (it) { it.classList.remove('open'); });
+      document.querySelectorAll('.ic-cat-group').forEach(function (g) { g.classList.remove('active'); });
+
+      item.classList.add('open');
+      var group = document.querySelector('.ic-cat-group[data-cat="' + cat + '"]');
+      if (!group) return;
+      group.classList.add('active');
+
+      if (!group.querySelector('.panel.active')) {
+        var firstTab = item.querySelector('.tab-btn');
+        if (firstTab) {
+          document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+          firstTab.classList.add('active');
+          var firstPanel = document.getElementById(firstTab.dataset.tab);
+          if (firstPanel) firstPanel.classList.add('active');
+        }
+      }
     });
   });
 </script><footer>
@@ -1078,6 +1333,7 @@
     });
   });
 </script>
+
 
 </body>
 </html>

@@ -15,7 +15,7 @@ jobs:
 
       - name: Usar el informe mas reciente como informe.html
         run: |
-          ultimo=$(ls src/informes/*.html | sort | tail -n 1)
+          ultimo=$(python3 scripts/elegir_informe.py)   # el de fecha mas reciente, sin depender del nombre del archivo
           echo "Usando $ultimo como informe.html"
           cp "$ultimo" src/informe.html
 

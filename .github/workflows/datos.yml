@@ -1,6 +1,6 @@
 name: Actualizar datos (videos y noticias)
 
-# Cada 30 minutos:
+# Cada 15 minutos:
 #   - agrega a src/data/serie-bitget.json los nuevos "Dia N de 33 operando con Bitget" del canal
 #     (se guarda en git para no perder los dias anteriores: el RSS de YouTube solo trae los ultimos 15)
 #   - regenera src/data/noticias.json (no se guarda en git, solo se sube al hosting)
@@ -8,7 +8,7 @@ name: Actualizar datos (videos y noticias)
 
 on:
   schedule:
-    - cron: '*/30 * * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:

@@ -30,7 +30,7 @@ jobs:
 
       - name: Informe más reciente con el diseño nuevo
         run: |
-          ultimo=$(ls src/informes/*.html | sort | tail -n 1)
+          ultimo=$(python3 scripts/elegir_informe.py)
           cp "$ultimo" src/informe.html
           python3 scripts/recolor_informe.py src/informe.html
 
