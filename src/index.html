@@ -1,1123 +1,459 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creemos Capital — Trading en Vivo</title>
-  <meta name="description" content="Aprendé trading con análisis en vivo. Sesiones NY, Crypto, Asia y Europa todas las noches desde las 21hs.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://www.okx.com https://www.youtube.com; media-src 'none';">
+  <meta name="description" content="Aprende trading con análisis en vivo. Sesiones NY, Crypto, Asia y Europa todas las noches desde las 21hs.">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://www.okx.com https://www.youtube.com; media-src 'none';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/evolution.css">
 
-  <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
-            sky:   { 400: '#00d4ff', 500: '#00b8e0', 600: '#0099cc' },
-            gold:  { 400: '#fbbf24', 500: '#f59e0b' },
-            long:  '#22c55e',
-            short: '#ef4444',
-          },
-          fontFamily: {
-            sans:    ['Inter', 'system-ui', 'sans-serif'],
-            display: ['Space Grotesk', 'system-ui', 'sans-serif'],
-          },
-        }
-      }
-    }
+    // Aplica el tema guardado antes de pintar (oscuro por defecto)
+    (function () {
+      var s = null; try { s = localStorage.getItem('cc-theme'); } catch (e) {}
+      document.documentElement.setAttribute('data-theme', s === 'light' ? 'light' : 'dark');
+    })();
   </script>
-
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #051828;
-      background-image:
-        radial-gradient(ellipse at 0% 0%, rgba(0,212,255,0.35) 0%, transparent 50%),
-        radial-gradient(ellipse at 100% 100%, rgba(99,102,241,0.32) 0%, transparent 50%);
-      background-attachment: fixed;
-      color: #e2e8f0;
-      overflow-x: hidden;
-    }
-
-    /* ── NAVBAR ── */
-    #navbar {
-      transition: background 0.3s ease, box-shadow 0.3s ease;
-      background: linear-gradient(to bottom, rgba(5,13,26,0.8) 0%, transparent 100%);
-    }
-    #navbar.scrolled {
-      background: rgba(5,13,26,0.97) !important;
-      box-shadow: 0 1px 20px rgba(0,0,0,0.5);
-    }
-    .nav-link {
-      font-size: 0.8rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(226,232,240,0.7);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .nav-link:hover { color: #00d4ff; }
-
-    /* ── HERO ── */
-    .hero-bg {
-      background:
-        radial-gradient(ellipse at 20% 50%, rgba(0,212,255,0.38) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 20%, rgba(99,102,241,0.32) 0%, transparent 50%),
-        radial-gradient(ellipse at 60% 80%, rgba(0,212,255,0.35) 0%, transparent 45%),
-        linear-gradient(135deg, #02060f 0%, #050d1a 40%, #080d1f 100%);
-    }
-    .hero-grid {
-      background-image: linear-gradient(rgba(0,212,255,0.05) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(0,212,255,0.05) 1px, transparent 1px);
-      background-size: 60px 60px;
-    }
-
-    /* ── LIVE BANNER ── */
-    .live-banner {
-      background: linear-gradient(90deg, #0a1628, #0f2040, #0a1628);
-      border-top: 1px solid rgba(0,212,255,0.35);
-      border-bottom: 1px solid rgba(0,212,255,0.35);
-    }
-    .sesion-card {
-      flex: 1;
-      min-width: 240px;
-      padding: 1.25rem 1.5rem;
-      border-right: 1px solid rgba(0,212,255,0.15);
-    }
-    .sesion-card:last-child { border-right: none; }
-    .sesion-header {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.65rem;
-      border-bottom: 1px solid rgba(0,212,255,0.1);
-    }
-    .sesion-emoji  { font-size: 1.3rem; }
-    .sesion-nombre { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: #00d4ff; font-weight: 600; }
-    .sesion-horarios { display: flex; flex-direction: column; gap: 0.35rem; }
-    .sesion-tz {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .sesion-tz-flags { display: flex; align-items: center; gap: 3px; }
-    .sesion-tz-zona  { font-size: 0.7rem; color: #64748b; }
-    .sesion-tz-hora  { font-size: 0.78rem; font-weight: 600; color: #e2e8f0; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
-
-    /* ── SECCIÓN TÍTULOS ── */
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: #00d4ff;
-      margin-bottom: 0.5rem;
-    }
-    .section-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: clamp(1.6rem, 3vw, 2.2rem);
-      font-weight: 600;
-      color: #f1f5f9;
-    }
-    .section-divider {
-      width: 40px;
-      height: 2px;
-      background: #ff0000;
-      margin: 1rem 0 0;
-    }
-
-    /* ── VIDEOS ── */
-    .video-card {
-      display: block;
-      text-decoration: none;
-      background: #050e1c;
-      border: 1px solid rgba(0,212,255,0.38);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
-    .video-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0,212,255,0.4);
-      box-shadow: 0 8px 30px rgba(0,184,224,0.28);
-    }
-    .video-thumb {
-      position: relative;
-      aspect-ratio: 16/9;
-      overflow: hidden;
-      background: #0f2040;
-    }
-    .video-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-    .video-card:hover .video-thumb img { transform: scale(1.04); }
-    .video-play {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,0.3);
-      opacity: 0;
-      transition: opacity 0.2s;
-    }
-    .video-card:hover .video-play { opacity: 1; }
-    .video-play svg { width: 48px; height: 48px; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5)); }
-    .video-duracion {
-      position: absolute;
-      bottom: 8px;
-      right: 8px;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      font-size: 0.7rem;
-      padding: 2px 6px;
-      border-radius: 3px;
-    }
-    .video-titulo {
-      padding: 0.75rem;
-      font-size: 0.85rem;
-      color: #cbd5e1;
-      line-height: 1.4;
-    }
-
-    /* ── BOTONES ── */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.875rem 2rem;
-      background: #ff0000;
-      color: white;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(255,0,0,0.35);
-    }
-    .btn-primary:hover {
-      background: #cc0000;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 25px rgba(0,184,224,0.5);
-    }
-    .nav-cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0.5rem 1.25rem;
-      background: linear-gradient(135deg,#22c55e,#15803d);
-      color: #04160c !important;
-      font-weight: 700;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border-radius: 999px;
-      text-decoration: none;
-      box-shadow: 0 0 16px rgba(34,197,94,0.45);
-      transition: transform 0.2s, box-shadow 0.2s;
-      animation: ctaPulse 2s ease-in-out infinite;
-    }
-    .nav-cta:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 24px rgba(34,197,94,0.65);
-    }
-    @keyframes ctaPulse {
-      0%, 100% { box-shadow: 0 0 16px rgba(34,197,94,0.45); }
-      50%      { box-shadow: 0 0 28px rgba(34,197,94,0.9); }
-    }
-    .nav-academy {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.4rem 1rem;
-      background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
-      border: 1px solid rgba(0,212,255,0.55);
-      border-radius: 999px;
-      color: #00d4ff !important;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-decoration: none;
-      box-shadow: 0 0 14px rgba(0,212,255,0.3);
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-    }
-    .nav-academy:hover {
-      transform: translateY(-1px);
-      border-color: #00d4ff;
-      box-shadow: 0 0 22px rgba(0,212,255,0.55);
-    }
-    .btn-outline {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.875rem 2rem;
-      background: transparent;
-      color: #00d4ff;
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      border: 1px solid rgba(0,212,255,0.4);
-      border-radius: 4px;
-      transition: all 0.2s;
-    }
-    .btn-outline:hover {
-      background: rgba(0,212,255,0.1);
-      border-color: #00d4ff;
-    }
-
-    /* ── REGISTRO GRID RESPONSIVE ── */
-    @media (min-width: 1024px) {
-      #registro-grid { grid-template-columns: 1fr 380px !important; }
-    }
-
-    /* ── ACADEMY / C4 ELITE CARD RESPONSIVE ── */
-    @media (max-width: 640px) {
-      .c4-elite-card {
-        grid-template-columns: 1fr !important;
-        text-align: center !important;
-      }
-    }
-
-    /* ── OKX TICKER ── */
-    @keyframes tickerScroll {
-      from { transform: translateX(0); }
-      to   { transform: translateX(-50%); }
-    }
-    #okx-ticker-items:hover { animation-play-state: paused; }
-    .okx-item  { display:inline-flex;align-items:center;gap:0.45rem;padding:0 1.1rem; }
-    .okx-name  { font-size:0.72rem;letter-spacing:0.06em;color:#64748b;font-weight:500; }
-    .okx-price { font-size:0.8rem;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#e2e8f0; }
-    .okx-pct   { font-size:0.72rem;font-weight:600; }
-    .okx-pos   { color:#22c55e; }
-    .okx-neg   { color:#ef4444; }
-    .okx-sep   { color:#1e3a5f;font-size:1rem;padding:0 0.25rem; }
-
-    /* ── REGISTRO ── */
-    .registro-step {
-      background: #050e1c;
-      border: 1px solid rgba(0,212,255,0.22);
-      border-radius: 10px;
-      padding: 2rem 1.5rem;
-      position: relative;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-    }
-    .registro-step:hover {
-      border-color: rgba(0,212,255,0.45);
-      box-shadow: 0 6px 28px rgba(0,184,224,0.12);
-      transform: translateY(-3px);
-    }
-    .registro-step-num {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #00d4ff22, #0099cc22);
-      border: 1.5px solid rgba(0,212,255,0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      color: #00d4ff;
-      margin: 0 auto 1.1rem;
-    }
-    .registro-step-icon { font-size: 1.9rem; margin-bottom: 0.75rem; }
-    .registro-step h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; color: #f1f5f9; margin-bottom: 0.6rem; }
-    .registro-step p  { font-size: 0.82rem; color: #64748b; line-height: 1.65; }
-    .registro-step strong { color: #94a3b8; }
-
-    .registro-alerta {
-      background: rgba(0,212,255,0.04);
-      border: 1px solid rgba(0,212,255,0.18);
-      border-left: 3px solid #00d4ff;
-      border-radius: 8px;
-      padding: 1.1rem 1.4rem;
-      display: flex;
-      align-items: flex-start;
-      gap: 0.9rem;
-      font-size: 0.82rem;
-      color: #64748b;
-      line-height: 1.6;
-    }
-    .registro-alerta-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
-
-    /* ── COMUNIDAD ── */
-    .comunidad-card {
-      background: #050e1c;
-      border: 1px solid rgba(0,212,255,0.38);
-      border-radius: 8px;
-      padding: 2rem;
-      text-align: center;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .comunidad-card:hover {
-      border-color: rgba(0,212,255,0.35);
-      box-shadow: 0 4px 20px rgba(0,184,224,0.1);
-    }
-
-    /* ── REDES SOCIALES ── */
-    .red-social {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      width: 100px;
-      height: 100px;
-      background: #050e1c;
-      border: 1px solid rgba(0,212,255,0.38);
-      border-radius: 8px;
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: all 0.2s;
-    }
-    .red-social:hover {
-      border-color: rgba(0,212,255,0.4);
-      color: #00d4ff;
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,184,224,0.28);
-    }
-    .btn-contacto {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.75rem 1.5rem;
-      border: 1px solid;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .btn-contacto:hover { transform: translateY(-2px); filter: brightness(1.15); }
-
-    /* ── CALENDARIO FF ── */
-    .cal-btn {
-      font-size: 0.7rem;
-      padding: 0.3rem 0.75rem;
-      border-radius: 4px;
-      border: 1px solid rgba(0,212,255,0.35);
-      background: transparent;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s;
-      letter-spacing: 0.04em;
-    }
-    .cal-btn:hover { border-color: rgba(0,212,255,0.4); color: #94a3b8; }
-    .cal-btn-active { border-color: #00b8e0; color: #00d4ff; background: rgba(0,184,224,0.08); }
-
-    .cal-day-header {
-      background: #050e1c;
-      padding: 0.6rem 1rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: #00d4ff;
-      border-bottom: 1px solid rgba(0,212,255,0.1);
-      position: sticky;
-      top: 0;
-    }
-    .cal-row {
-      display: grid;
-      grid-template-columns: 70px 52px 1fr auto auto auto;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 0.7rem 1rem;
-      border-bottom: 1px solid rgba(0,212,255,0.06);
-      transition: background 0.15s;
-    }
-    .cal-row:last-child { border-bottom: none; }
-    .cal-row:hover { background: rgba(0,212,255,0.04); }
-    .cal-time   { font-size: 0.78rem; color: #475569; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
-    .cal-pais   { font-size: 1.1rem; color: #94a3b8; display: flex; align-items: center; gap: 0.4rem; }
-    .cal-evento { font-size: 0.82rem; color: #cbd5e1; }
-    .cal-num    { font-size: 0.78rem; font-family: 'DM Sans', sans-serif; text-align: right; white-space: nowrap; }
-    .cal-prev   { color: #64748b; }
-    .cal-forecast { color: #94a3b8; }
-    .cal-actual { font-weight: 600; }
-    .cal-actual.mejor { color: #22c55e; }
-    .cal-actual.peor  { color: #ef4444; }
-    .cal-actual.igual { color: #f59e0b; }
-    .cal-actual.pendiente { color: #475569; }
-    .imp-alto  { width: 8px; height: 8px; border-radius: 50%; background: #ef4444; flex-shrink: 0; }
-    .imp-medio { width: 8px; height: 8px; border-radius: 50%; background: #f59e0b; flex-shrink: 0; }
-    .imp-bajo  { width: 8px; height: 8px; border-radius: 50%; background: #334155; flex-shrink: 0; }
-    .cal-impacto { display: flex; align-items: center; }
-    @media (max-width: 640px) {
-      .cal-row { grid-template-columns: 60px 40px 1fr auto; }
-      .cal-forecast, .cal-prev { display: none; }
-    }
-
-    /* ── NOTICIAS CARDS ── */
-    .noticias-card {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1.25rem;
-      background: #050e1c;
-      border: 1px solid rgba(0,212,255,0.38);
-      border-radius: 8px;
-      text-decoration: none;
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-      position: relative;
-    }
-    .noticias-card:hover {
-      border-color: rgba(0,212,255,0.35);
-      box-shadow: 0 4px 20px rgba(0,184,224,0.1);
-      transform: translateY(-2px);
-    }
-    .noticias-card-icon {
-      flex-shrink: 0;
-      width: 38px;
-      height: 38px;
-      background: rgba(0,184,224,0.1);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #00d4ff;
-    }
-    .noticias-card-icon svg { width: 18px; height: 18px; }
-    .noticias-card-title {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #f1f5f9;
-      margin-bottom: 0.25rem;
-    }
-    .noticias-card-desc {
-      font-size: 0.78rem;
-      color: #64748b;
-      line-height: 1.45;
-    }
-    .noticias-arrow {
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-      color: #334155;
-      margin-left: auto;
-      align-self: center;
-      transition: color 0.2s, transform 0.2s;
-    }
-    .noticias-card:hover .noticias-arrow {
-      color: #00d4ff;
-      transform: translateX(3px);
-    }
-
-    /* ── BOTONES APOYO ── */
-    .btn-apoyo {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.55rem 1.1rem;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-decoration: none;
-      border: 1px solid;
-      transition: all 0.2s;
-    }
-    .btn-apoyo:hover { transform: translateY(-2px); filter: brightness(1.15); }
-    .btn-kick    { background: rgba(83,252,24,0.1); border-color: rgba(83,252,24,0.35); color: #53fc18; }
-    .btn-youtube { background: rgba(255,0,0,0.1);   border-color: rgba(255,0,0,0.35);   color: #ff4444; }
-
-    /* ── LIVE BADGE ── */
-    .live-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.85rem;
-      background: rgba(239,68,68,0.15);
-      border: 1px solid rgba(239,68,68,0.5);
-      border-radius: 999px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      color: #f87171;
-      box-shadow: 0 0 12px rgba(239,68,68,0.3), 0 0 30px rgba(239,68,68,0.1);
-      animation: livePulseGlow 2s ease-in-out infinite;
-    }
-    .live-dot {
-      width: 8px;
-      height: 8px;
-      background: #ef4444;
-      border-radius: 50%;
-      box-shadow: 0 0 6px #ef4444;
-      animation: liveDot 1.2s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    @keyframes liveDot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.4; transform: scale(0.7); }
-    }
-    @keyframes livePulseGlow {
-      0%, 100% { box-shadow: 0 0 12px rgba(239,68,68,0.3), 0 0 30px rgba(239,68,68,0.1); }
-      50%       { box-shadow: 0 0 20px rgba(239,68,68,0.5), 0 0 45px rgba(239,68,68,0.2); }
-    }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes modalUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes alertaPing {
-      0%   { transform: scale(1);   opacity: 0.6; }
-      75%  { transform: scale(1.7); opacity: 0; }
-      100% { transform: scale(1.7); opacity: 0; }
-    }
-
-    /* ── ANIMACIÓN ENTRADA ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-up { animation: fadeUp 0.7s ease both; }
-    .delay-1 { animation-delay: 0.1s; }
-    .delay-2 { animation-delay: 0.2s; }
-    .delay-3 { animation-delay: 0.3s; }
-  </style>
 </head>
-<body>
+<body class="no-js">
 
-  <!-- ── NAVBAR ────────────────────────────────────────────── -->
-  <header id="navbar" class="fixed top-0 left-0 right-0 z-40">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-
-      <a href="#inicio">
-        <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="Creemos Capital" class="h-10 w-auto">
+  <!-- ── NAVEGACIÓN ──────────────────────────────────────────── -->
+  <header class="nav" id="navbar">
+    <div class="container">
+      <a class="brand" href="#inicio" aria-label="Creemos Capital, inicio">
+        <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="">
+        <span class="brand-name">Creemos Capital<small>TRADING EN VIVO</small></span>
       </a>
-
-      <nav class="hidden md:flex items-center gap-8">
-        <a href="#live"      class="nav-link">En Vivo</a>
-        <a href="https://academy.creemoscapital.com/cursos" class="nav-link">Cursos</a>
-        <a href="#noticias"  class="nav-link">Noticias</a>
-        <a href="./informe.html" class="nav-link">Informe</a>
-        <a href="./academy.html" class="nav-academy">🎓 Academy</a>
+      <nav class="nav-links" aria-label="Principal">
+        <a href="#en-vivo">En vivo</a>
+        <a href="#sesiones">Sesiones</a>
+        <a href="#unete">Únete</a>
+        <a href="#noticias">Noticias</a>
+        <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
+        <a href="./informe.html">Informe</a>
+        <a href="./academy.html" class="pill">Academy</a>
       </nav>
-
-      <div class="flex items-center gap-3">
-        <a href="#registro" class="nav-cta">Únete a la Comunidad</a>
-        <button onclick="toggleMenu()" class="md:hidden p-2 text-slate-300">
-          <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"/>
-          </svg>
+      <div class="nav-actions">
+        <button class="icon-btn" id="theme" type="button" aria-label="Cambiar entre modo claro y oscuro">
+          <svg class="theme-ico-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="theme-ico-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <a class="btn btn-primary btn-sm" href="#unete">Únete a la comunidad</a>
+        <button class="icon-btn menu-btn" id="menu" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16M4 16h16"/></svg>
         </button>
       </div>
     </div>
-
-    <div id="mobile-menu" class="hidden md:hidden bg-navy-900/98 border-t border-sky-900/30 px-6 py-5 flex flex-col gap-5">
-      <a href="#live"      onclick="closeMenu()" class="nav-link">En Vivo</a>
-      <a href="https://academy.creemoscapital.com/cursos" onclick="closeMenu()" class="nav-link">Cursos</a>
-      <a href="#noticias"  onclick="closeMenu()" class="nav-link">Noticias</a>
-      <a href="./informe.html" onclick="closeMenu()" class="nav-link">Informe</a>
-      <a href="./academy.html" onclick="closeMenu()" class="nav-academy justify-center">🎓 Academy</a>
-      <a href="#registro"  onclick="closeMenu()" class="nav-cta justify-center">Únete a la Comunidad</a>
-    </div>
   </header>
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#en-vivo">En vivo</a>
+    <a href="#sesiones">Sesiones</a>
+    <a href="#unete">Únete</a>
+    <a href="#noticias">Noticias</a>
+    <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
+    <a href="./informe.html">Informe</a>
+    <a href="./academy.html">Academy</a>
+    <a class="btn btn-primary" href="#unete">Únete a la comunidad</a>
+  </div>
 
-
-  <!-- ── TICKER OKX ───────────────────────────────────────────── -->
-  <div style="position:fixed;top:64px;left:0;right:0;z-index:35;background:rgba(5,14,28,0.97);border-bottom:1px solid rgba(0,212,255,0.15);backdrop-filter:blur(8px);height:46px;display:flex;align-items:center;overflow:hidden;">
-    <!-- OKX Powered by badge -->
-    <a href="https://www.okx.com/join/CREEMOS" target="_blank" rel="noopener noreferrer"
-       style="flex-shrink:0;padding:0 0.85rem;border-right:1px solid rgba(0,212,255,0.15);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.1rem;text-decoration:none;height:100%;">
-      <span style="font-size:0.5rem;letter-spacing:0.12em;text-transform:uppercase;color:#475569;line-height:1;">Powered by</span>
-      <img src="./img/OKX-250x141.png" alt="OKX" style="height:18px;width:auto;display:block;">
+  <!-- ── TICKER OKX ──────────────────────────────────────────── -->
+  <div class="ticker" aria-label="Precios en tiempo real de OKX">
+    <a class="ticker-badge" href="https://www.okx.com/join/CREEMOS" target="_blank" rel="noopener noreferrer">
+      <span>Powered by</span>
+      <img src="./img/OKX-250x141.png" alt="OKX">
     </a>
-    <!-- Ticker scrolling -->
-    <div style="flex:1;overflow:hidden;mask-image:linear-gradient(to right,transparent 0,black 3%,black 97%,transparent 100%);">
-      <div id="okx-ticker-items" style="display:inline-flex;align-items:center;gap:0;animation:tickerScroll 55s linear infinite;white-space:nowrap;">
-        <span style="color:#475569;font-size:0.78rem;padding:0 2rem;">Cargando precios en tiempo real…</span>
-      </div>
+    <div class="ticker-view">
+      <div id="okx-ticker-items"><span class="ticker-empty">Cargando precios en tiempo real…</span></div>
     </div>
   </div>
 
-  <!-- ── HERO ──────────────────────────────────────────────── -->
-  <section id="inicio" class="hero-bg relative min-h-screen flex items-center">
-    <div class="max-w-7xl mx-auto px-6 w-full" style="padding-top:9rem;padding-bottom:4rem;">
-      <div class="flex flex-col lg:flex-row items-center gap-12">
+  <main>
 
-        <!-- Texto -->
-        <div class="flex-1 max-w-xl">
-          <p class="section-label fade-up">Trading en vivo · <span style="color:#f1f5f9;font-weight:700;font-size:0.85rem;">¡Casi 21 hs al día!</span></p>
-          <div class="mb-6 fade-up delay-1">
-            <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="Creemos Capital" class="w-72 md:w-96 h-auto">
-          </div>
-          <p class="text-slate-400 text-lg font-light mb-10 max-w-lg leading-relaxed fade-up delay-2">
-            Análisis en vivo de mercados: NY, Crypto, Asia y Europa.<br>
-            Estrategia C4, en tiempo real, para traders de todos los niveles.
-          </p>
-          <div class="flex flex-wrap gap-4 fade-up delay-3">
-            <a href="https://www.youtube.com/@creemoscapital" target="_blank" rel="noopener" class="btn-primary">
-              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/>
-              </svg>
+    <!-- ── HERO + DIRECTO ──────────────────────────────────── -->
+    <section class="hero" id="inicio">
+      <div class="hero-bg" aria-hidden="true"><div class="orb"></div><div class="orb two"></div></div>
+      <div class="container">
+        <div class="hero-inner">
+          <span class="tag live reveal"><i></i>Trading en vivo · ¡Casi 21 hs al día!</span>
+          <h1 class="h1 reveal" style="--d:1"><span class="line">Opera y aprende en vivo</span><span class="rotator" aria-hidden="true"><span class="on">con método.</span><span>en comunidad.</span><span>con estrategia C4.</span><span>cada día.</span></span><span class="sr-only">con método.</span></h1>
+          <p class="lead reveal" style="--d:2">Análisis en vivo de mercados: NY, Crypto, Asia y Europa. Estrategia C4, en tiempo real, para traders de todos los niveles.</p>
+          <div class="hero-ctas reveal" style="--d:3">
+            <a class="btn btn-primary" href="#unete">Únete a la comunidad <span class="arrow">→</span></a>
+            <a class="btn btn-ghost" href="https://www.youtube.com/@creemoscapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
               Suscríbete a YouTube
             </a>
-            <a href="#noticias" class="btn-outline">Ver noticias del mercado</a>
           </div>
         </div>
 
-        <!-- Player en vivo — Kick -->
-        <div class="flex-1 w-full max-w-xl fade-up delay-2">
-          <div class="flex items-center justify-between mb-3">
-            <div class="live-badge">
-              <span class="live-dot"></span>
-              <span>EN VIVO</span>
+        <div class="stage reveal" style="--d:4" id="en-vivo">
+          <div class="window">
+            <div class="win-bar">
+              <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+              <span class="win-title"><span class="live-dot" aria-hidden="true"></span>EN VIVO</span>
+              <a class="win-link" href="https://kick.com/creemoscapital" target="_blank" rel="noopener">kick.com/creemoscapital →</a>
             </div>
-            <a href="https://kick.com/creemoscapital" target="_blank" rel="noopener"
-               class="text-xs text-slate-500 hover:text-sky-400 transition-colors">kick.com/creemoscapital →</a>
+            <div class="player">
+              <iframe src="https://player.kick.com/creemoscapital" title="Directo de Creemos Capital en Kick" loading="lazy" scrolling="no" allowfullscreen allow="autoplay; fullscreen"></iframe>
+            </div>
+            <div class="win-foot">
+              <a class="btn btn-kick" href="https://kick.com/creemoscapital" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>
+                Donar en Kick
+              </a>
+              <a class="btn btn-yt" href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
+                Super Chat en YouTube
+              </a>
+            </div>
           </div>
-          <div class="rounded-xl overflow-hidden border border-sky-900/30 shadow-2xl" style="aspect-ratio:16/9;">
-            <iframe
-              src="https://player.kick.com/creemoscapital"
-              width="100%" height="100%"
-              frameborder="0"
-              scrolling="no"
-              allowfullscreen
-              allow="autoplay; fullscreen">
-            </iframe>
-          </div>
-
-          <!-- Botones de apoyo -->
-          <div class="flex flex-wrap gap-3 mt-4">
-            <a href="https://kick.com/creemoscapital" target="_blank" rel="noopener" class="btn-apoyo btn-kick">
-              <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>
-              Donar en Kick
-            </a>
-            <a href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener" class="btn-apoyo btn-youtube">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-              Super Chat en YouTube
-            </a>
-          </div>
-          <p class="text-slate-600 text-xs mt-2">Las donaciones y Super Chats se procesan directamente en cada plataforma durante el live.</p>
+          <p class="stage-note">Las donaciones y Super Chats se procesan directamente en cada plataforma durante el live.</p>
         </div>
 
+        <div class="channels reveal">
+          <p>Nos encuentras en</p>
+          <div class="marquee"><div class="marquee-track">
+            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span><span>OKX</span>
+            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span><span>OKX</span>
+          </div></div>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-
-  <!-- ── COMUNIDAD ──────────────────────────────────────────── -->
-  <!-- ── REGISTRO ─────────────────────────────────────────── -->
-  <section id="registro" class="py-24 px-6" style="background:#030810;">
-    <div class="max-w-6xl mx-auto">
-
-      <!-- Encabezado -->
-      <div class="text-center mb-14">
-        <p class="section-label">🚀 Acceso 100% Gratuito</p>
-        <h2 class="section-title">Únete a Creemos Capital</h2>
-        <div class="section-divider" style="margin:1rem auto;"></div>
-        <p class="text-slate-400 font-light mt-4 max-w-xl mx-auto">
-          Operamos y aprendemos en vivo hasta 21 horas al día. Únete en 4 pasos simples y seguros.
-        </p>
+    <!-- ── SESIONES ────────────────────────────────────────── -->
+    <section class="section" id="sesiones">
+      <div class="container">
+        <div class="head center">
+          <span class="tag reveal"><i></i>Horarios por país</span>
+          <h2 class="h2 reveal" style="--d:1">Una sesión para cada momento del mercado.</h2>
+          <p class="lead reveal" style="--d:2">Nueva York, Asia y Europa. Entra en la que mejor te venga según tu zona horaria.</p>
+        </div>
+        <div id="sesiones-grid" class="sessions"></div>
+        <div class="sessions-foot">
+          <a class="btn btn-ghost" href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener">
+            <span class="live-dot" aria-hidden="true"></span>Ir al canal para ver si estamos en vivo
+          </a>
+        </div>
       </div>
+    </section>
 
-      <!-- Layout 2 columnas: pasos izquierda · panel CTA derecha -->
-      <div id="registro-grid" style="display:grid;grid-template-columns:1fr;gap:2rem;">
-
-        <!-- Columna izquierda: pasos -->
-        <div style="display:flex;flex-direction:column;gap:1rem;">
-
-          <!-- Paso 1 -->
-          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
-            <div class="registro-step-num" style="margin:0;flex-shrink:0;">1</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
-                <span style="font-size:1.4rem;">📝</span>
-                <h3 style="margin:0;">Completa el Formulario</h3>
-              </div>
-              <p>Ingresa información verídica. <strong>La foto es obligatoria</strong> (selfie o tipo documento). Solo toma 2 minutos.</p>
-            </div>
-          </div>
-
-          <!-- Paso 2 -->
-          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
-            <div class="registro-step-num" style="margin:0;flex-shrink:0;">2</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
-                <span style="font-size:1.4rem;">📧</span>
-                <h3 style="margin:0;">Revisa tu Correo</h3>
-              </div>
-              <p>Recibirás un mensaje desde <strong>info@creemoscapital.com</strong> con tu código de verificación. Revisa también la carpeta de <strong>SPAM</strong>.</p>
-              <div style="margin-top:0.6rem;padding:0.5rem 0.75rem;background:rgba(239,68,68,0.08);border-radius:6px;border-left:2px solid #ef4444;font-size:0.78rem;color:#94a3b8;">
-                ⛔ <strong>Nunca</strong> enviamos archivos adjuntos ni links. Solo el código numérico.
-              </div>
-            </div>
-          </div>
-
-          <!-- Paso 3 -->
-          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;">
-            <div class="registro-step-num" style="margin:0;flex-shrink:0;">3</div>
-            <div>
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
-                <span style="font-size:1.4rem;">💬</span>
-                <h3 style="margin:0;">Verifica por WhatsApp</h3>
-              </div>
-              <p>Envíanos al <strong>+57 315 326 3852</strong> los siguientes datos:</p>
-              <ul style="margin-top:0.5rem;display:flex;flex-direction:column;gap:0.3rem;">
-                <li style="font-size:0.8rem;color:#64748b;">✅ Tu <strong style="color:#94a3b8;">nombre completo</strong> (igual al formulario)</li>
-                <li style="font-size:0.8rem;color:#64748b;">✅ El <strong style="color:#94a3b8;">código de verificación</strong> recibido</li>
-                <li style="font-size:0.8rem;color:#64748b;">✅ Tu <strong style="color:#94a3b8;">usuario de Telegram</strong> (ej: @miusuario)</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Paso 4 -->
-          <div class="registro-step" style="display:flex;align-items:flex-start;gap:1.25rem;text-align:left;border-color:rgba(34,197,94,0.3);">
-            <div class="registro-step-num" style="margin:0;flex-shrink:0;border-color:rgba(34,197,94,0.5);color:#22c55e;background:rgba(34,197,94,0.08);">4</div>
-            <div style="flex:1;">
-              <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;">
-                <span style="font-size:1.4rem;">🎉</span>
-                <h3 style="margin:0;color:#22c55e;">¡Acceso Aprobado! — máx. 24 hs</h3>
-              </div>
-              <p>Validamos tu información y te damos acceso a todo:</p>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;margin-top:0.6rem;">
-                <span style="font-size:0.8rem;color:#64748b;">📡 Grupo <strong style="color:#94a3b8;">Telegram</strong> exclusivo</span>
-                <span style="font-size:0.8rem;color:#64748b;">🎮 Sesiones en <strong style="color:#94a3b8;">Discord</strong></span>
-                <span style="font-size:0.8rem;color:#64748b;">🏦 <strong style="color:#94a3b8;">Brokers</strong> y exchanges asociados</span>
-                <span style="font-size:0.8rem;color:#64748b;">⚡ <strong style="color:#94a3b8;">Herramientas</strong> y contenido premium</span>
-              </div>
-            </div>
-          </div>
-
+    <!-- ── CÓMO UNIRSE ─────────────────────────────────────── -->
+    <section class="section tight-top" id="unete">
+      <div class="container">
+        <div class="head">
+          <span class="tag reveal"><i></i>Acceso 100% gratuito</span>
+          <h2 class="h2 reveal" style="--d:1">Únete a Creemos Capital en cuatro pasos.</h2>
+          <p class="lead reveal" style="--d:2">Operamos y aprendemos en vivo hasta 21 horas al día. El registro es simple y seguro.</p>
         </div>
 
-        <!-- Columna derecha: panel CTA -->
-        <div style="position:sticky;top:120px;height:fit-content;">
-          <div style="background:linear-gradient(135deg,#050e1c,#07111f);border:1px solid rgba(0,212,255,0.25);border-radius:14px;padding:2rem;display:flex;flex-direction:column;gap:1.25rem;">
+        <div class="join">
+          <div class="steps" id="steps">
+            <div class="fill" aria-hidden="true"></div>
 
-            <div style="text-align:center;">
-              <div style="font-size:2.5rem;margin-bottom:0.5rem;">🚀</div>
-              <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.2rem;font-weight:700;color:#f1f5f9;margin-bottom:0.25rem;">Empezá Ahora</h3>
-              <p style="font-size:0.8rem;color:#475569;">Gratuito · Seguro · Sin compromisos</p>
+            <div class="step reveal">
+              <div class="dot">1</div>
+              <div>
+                <h3 class="h3">Completa el formulario</h3>
+                <p>Ingresa información verídica. <strong>La foto es obligatoria</strong> (selfie o tipo documento). Solo toma 2 minutos.</p>
+              </div>
             </div>
 
-            <!-- Paso 1: Form -->
-            <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:8px;padding:1rem;">
-              <p style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#00d4ff;margin-bottom:0.6rem;font-weight:600;">① Primer paso</p>
-              <a href="https://forms.gle/gpwxCJwcXvEX2bU26"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 class="btn-primary"
-                 style="width:100%;justify-content:center;font-size:0.9rem;padding:0.85rem 1rem;">
-                <svg viewBox="0 0 24 24" fill="currentColor" style="width:16px;height:16px;"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
-                Completar Formulario 📋
+            <div class="step reveal">
+              <div class="dot">2</div>
+              <div>
+                <h3 class="h3">Revisa tu correo</h3>
+                <p>Recibirás un mensaje desde <strong>info@creemoscapital.com</strong> con tu código de verificación. Revisa también la carpeta de <strong>SPAM</strong>.</p>
+                <div class="note"><strong>Nunca</strong> enviamos archivos adjuntos ni enlaces. Solo el código numérico.</div>
+              </div>
+            </div>
+
+            <div class="step reveal">
+              <div class="dot">3</div>
+              <div>
+                <h3 class="h3">Verifica por WhatsApp</h3>
+                <p>Envíanos al <strong>+57 315 326 3852</strong> los siguientes datos:</p>
+                <ul>
+                  <li>Tu <strong>nombre completo</strong> (igual al formulario)</li>
+                  <li>El <strong>código de verificación</strong> recibido</li>
+                  <li>Tu <strong>usuario de Telegram</strong> (ej: @miusuario)</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="step reveal">
+              <div class="dot">4</div>
+              <div>
+                <h3 class="h3">¡Acceso aprobado! — máx. 24 hs</h3>
+                <p>Validamos tu información y te damos acceso a todo:</p>
+                <div class="perks">
+                  <span>Grupo Telegram exclusivo</span>
+                  <span>Sesiones en Discord</span>
+                  <span>Brokers y exchanges asociados</span>
+                  <span>Herramientas y contenido premium</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="join-cta reveal" style="--d:1">
+            <div>
+              <h3>Empieza ahora</h3>
+              <p class="muted" style="font-size:var(--fs-small);margin-top:4px">Gratuito · Seguro · Sin compromisos</p>
+            </div>
+
+            <div class="join-box">
+              <span class="kicker">① Primer paso</span>
+              <a class="btn btn-primary btn-block" href="https://forms.gle/gpwxCJwcXvEX2bU26" target="_blank" rel="noopener noreferrer">
+                Completar formulario <span class="arrow">→</span>
               </a>
             </div>
 
-            <!-- Paso 3: WhatsApp -->
-            <div style="background:rgba(37,211,102,0.05);border:1px solid rgba(37,211,102,0.15);border-radius:8px;padding:1rem;">
-              <p style="font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:#25d366;margin-bottom:0.6rem;font-weight:600;">③ Luego del correo</p>
-              <a href="https://api.whatsapp.com/send/?phone=573153263852&text=Hola%2C+quiero+completar+mi+registro+en+Creemos+Capital.+Mi+nombre+es%3A&type=phone_number&app_absent=0"
-                 target="_blank"
-                 rel="noopener noreferrer"
-                 class="btn-contacto"
-                 style="width:100%;justify-content:center;background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.35);color:#25d366;">
-                <svg style="width:18px;height:18px;" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                Enviar por WhatsApp 💬
+            <div class="join-box">
+              <span class="kicker wa">③ Luego del correo</span>
+              <a class="btn btn-wa btn-block" href="https://api.whatsapp.com/send/?phone=573153263852&text=Hola%2C+quiero+completar+mi+registro+en+Creemos+Capital.+Mi+nombre+es%3A&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                Enviar por WhatsApp
               </a>
-              <p style="font-size:0.72rem;color:#475569;margin-top:0.5rem;text-align:center;">+57 315 326 3852</p>
+              <small class="num">+57 315 326 3852</small>
             </div>
 
-            <!-- Sellos de seguridad -->
-            <div style="display:flex;flex-direction:column;gap:0.4rem;padding-top:0.25rem;border-top:1px solid rgba(0,212,255,0.08);">
-              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
-                <span>🔒</span><span>Datos protegidos · No se comparten con terceros</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
-                <span>🛡️</span><span>Comunidad verificada y libre de bots</span>
-              </div>
-              <div style="display:flex;align-items:center;gap:0.5rem;font-size:0.75rem;color:#475569;">
-                <span>⏳</span><span>Acceso aprobado en máximo 24 horas</span>
-              </div>
+            <div class="trust">
+              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>Datos protegidos · No se comparten con terceros</div>
+              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg>Comunidad verificada y libre de bots</div>
+              <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Acceso aprobado en máximo 24 horas</div>
             </div>
+          </aside>
+        </div>
+      </div>
+    </section>
 
+    <!-- ── NOTICIAS Y CALENDARIO ───────────────────────────── -->
+    <section class="section tight-top" id="noticias">
+      <div class="container">
+        <div class="head">
+          <span class="tag reveal"><i></i>Mercados</span>
+          <h2 class="h2 reveal" style="--d:1">Noticias y calendario económico.</h2>
+          <p class="lead reveal" style="--d:2">Los eventos macroeconómicos del día que mueven los mercados, antes de que abras una operación.</p>
+        </div>
+
+        <div class="reveal">
+          <div class="cal-top">
+            <h3 class="h3">Calendario económico · semana actual</h3>
+            <div class="filters" role="group" aria-label="Filtrar por impacto">
+              <button type="button" onclick="filtrarCalendario('todos')" id="btn-todos" class="cal-btn cal-btn-active">Todos</button>
+              <button type="button" onclick="filtrarCalendario('alto')" id="btn-alto" class="cal-btn"><span class="imp-alto"></span>Alto</button>
+              <button type="button" onclick="filtrarCalendario('medio')" id="btn-medio" class="cal-btn"><span class="imp-medio"></span>Medio</button>
+              <button type="button" onclick="filtrarCalendario('bajo')" id="btn-bajo" class="cal-btn"><span class="imp-bajo"></span>Bajo</button>
+            </div>
+          </div>
+          <div class="cal-wrap" id="ff-calendar-wrap">
+            <div class="cal-head" aria-hidden="true"><span>Hora</span><span>País</span><span>Evento</span><span>Previsto</span><span>Anterior</span><span>Actual</span></div>
+            <div class="cal-scroll">
+              <div id="ff-calendar-loading" class="cal-state">
+                <svg class="spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 11-6.2-8.56"/></svg>
+                Cargando eventos…
+              </div>
+              <div id="ff-calendar"></div>
+            </div>
+          </div>
+          <p class="cal-credit">Datos: <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener">Forex Factory</a></p>
+        </div>
+
+        <div class="sub-head reveal"><h3>Noticias del mercado</h3></div>
+        <div class="links">
+          <a class="link-card reveal" href="https://es.investing.com/news/forex-news" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14.5 14.5 0 010 18M12 3a14.5 14.5 0 000 18"/></svg></div>
+            <h3 class="h3">Investing.com</h3>
+            <p>Noticias Forex en español — análisis, divisas y mercados al día.</p>
+            <span class="go">Leer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="link-card reveal" style="--d:1" href="https://es.investing.com/news/stock-market-news" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></div>
+            <h3 class="h3">Mercados globales</h3>
+            <p>Acciones, índices y commodities. Noticias de bolsa en tiempo real.</p>
+            <span class="go">Leer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="link-card reveal" style="--d:2" href="https://es.investing.com/news/cryptocurrency-news" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico lime"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5c0-1 1-1.5 2.5-1.5s2.5.5 2.5 1.6c0 2.2-5 1.2-5 3.7 0 1.1 1 1.7 2.5 1.7s2.5-.6 2.5-1.7M12 6.5V8m0 8v1.5"/></svg></div>
+            <h3 class="h3">Crypto</h3>
+            <p>Noticias de criptomonedas, Bitcoin, Ethereum y altcoins en español.</p>
+            <span class="go">Leer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="link-card reveal" href="https://www.forexfactory.com/news" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></div>
+            <h3 class="h3">Forex Factory</h3>
+            <p>La referencia del trading Forex. Noticias y análisis de mercado.</p>
+            <span class="go">Leer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="link-card reveal" style="--d:1" href="https://es.investing.com/analysis/forex" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+            <h3 class="h3">Análisis técnico</h3>
+            <p>Análisis técnico de divisas y activos en español.</p>
+            <span class="go">Leer <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+          <a class="link-card reveal" style="--d:2" href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></div>
+            <h3 class="h3">Calendario FF</h3>
+            <p>Calendario económico completo de Forex Factory con filtros de impacto.</p>
+            <span class="go">Abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── EXPLORA ─────────────────────────────────────────── -->
+    <section class="section tight-top" id="explora">
+      <div class="container">
+        <div class="head center">
+          <span class="tag reveal"><i></i>Sigue aprendiendo</span>
+          <h2 class="h2 reveal" style="--d:1">Más allá del directo.</h2>
+        </div>
+        <div class="explore">
+          <a class="card reveal" href="./academy.html">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-4.5"/></svg></div>
+            <h3 class="h3">Academy</h3>
+            <p>Formación estructurada con la estrategia C4, paso a paso y a tu ritmo.</p>
+          </a>
+          <a class="card reveal" style="--d:1" href="https://academy.creemoscapital.com/cursos">
+            <span class="spot"></span>
+            <div class="ico lime"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3V9z"/><path d="M8 21h8"/></svg></div>
+            <h3 class="h3">Cursos</h3>
+            <p>Catálogo de cursos en la plataforma de Creemos Capital.</p>
+          </a>
+          <a class="card reveal" style="--d:2" href="./informe.html">
+            <span class="spot"></span>
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8l-5-5z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg></div>
+            <h3 class="h3">Informe diario</h3>
+            <p>El resumen del día: contexto, niveles y puntos a vigilar en los mercados.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── REDES Y CONTACTO ────────────────────────────────── -->
+    <section class="section tight-top" id="contacto">
+      <div class="container">
+        <div class="final reveal">
+          <h2 class="h2">Síguenos y escríbenos.</h2>
+          <p class="lead">Estamos en todas las plataformas. Escoge la tuya.</p>
+
+          <div class="socials">
+            <a class="social" href="https://www.youtube.com/@CreemosCapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>YouTube
+            </a>
+            <a class="social" href="https://www.tiktok.com/@creemoscapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.56V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>TikTok
+            </a>
+            <a class="social" href="https://www.instagram.com/creemoscapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838a4.162 4.162 0 100 8.324 4.162 4.162 0 000-8.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>Instagram
+            </a>
+            <a class="social" href="https://www.facebook.com/people/Creemos-Capital/61564167813649/" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>Facebook
+            </a>
+            <a class="social" href="https://x.com/creemoscapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>X / Twitter
+            </a>
+            <a class="social" href="https://kick.com/creemoscapital" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>Kick
+            </a>
+          </div>
+
+          <p class="contact-title">Contáctenos</p>
+          <div class="contact">
+            <a class="btn btn-wa" href="https://api.whatsapp.com/send/?phone=573153263852&text&type=phone_number&app_absent=0" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WhatsApp
+            </a>
+            <a class="btn btn-tg" href="https://t.me/creemoscapitaloficial" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>Telegram
+            </a>
+            <a class="btn btn-dark" href="mailto:info@creemoscapital.com">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email
+            </a>
           </div>
         </div>
-
       </div>
-    </div>
-  </section>
-  <!-- ── LIVE BANNER ────────────────────────────────────────── -->
-  <section id="live" class="live-banner py-6">
-    <div class="max-w-7xl mx-auto px-6">
-      <p class="text-center text-xs tracking-[0.3em] uppercase text-sky-400 mb-5">Horarios de sesiones · Por país</p>
-      <div id="sesiones-grid" class="flex flex-wrap justify-center divide-x divide-sky-900/30"></div>
-      <div class="text-center mt-4">
-        <a href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener"
-           class="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-sky-400 transition-colors">
-          <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
-          Ir al canal para ver si estamos en vivo
-        </a>
-      </div>
-    </div>
-  </section>
+    </section>
 
+  </main>
 
-  <!-- ── NOTICIAS DEL MERCADO ─────────────────────────────────── -->
-  <section id="noticias" class="py-24 px-6" style="background: #030810;">
-    <div class="max-w-7xl mx-auto">
-
-      <p class="section-label">Mercados</p>
-      <h2 class="section-title">Noticias & Calendario Económico</h2>
-      <div class="section-divider"></div>
-      <p class="text-slate-500 text-sm mt-3 mb-10">
-        Eventos macroeconómicos y noticias del día que mueven los mercados.
-      </p>
-
-      <!-- Calendario Económico — Forex Factory API (con caché en servidor) -->
-      <div class="mb-14">
-        <div class="flex items-center justify-between mb-4 flex-wrap gap-3">
-          <p class="text-xs tracking-[0.2em] uppercase text-sky-400">Calendario Económico · Semana actual</p>
-          <div class="flex gap-2">
-            <button onclick="filtrarCalendario('todos')"  id="btn-todos"  class="cal-btn cal-btn-active">Todos</button>
-            <button onclick="filtrarCalendario('alto')"   id="btn-alto"   class="cal-btn">🔴 Alto</button>
-            <button onclick="filtrarCalendario('medio')"  id="btn-medio"  class="cal-btn">🟠 Medio</button>
-            <button onclick="filtrarCalendario('bajo')"   id="btn-bajo"   class="cal-btn">🟡 Bajo</button>
-          </div>
-        </div>
-        <div id="ff-calendar-wrap" class="rounded-lg border border-sky-900/30 overflow-hidden">
-          <div id="ff-calendar-loading" class="flex items-center justify-center py-16 text-slate-500 text-sm gap-3">
-            <svg class="animate-spin w-5 h-5 text-sky-500" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
-            </svg>
-            Cargando eventos...
-          </div>
-          <div id="ff-calendar"></div>
-        </div>
-        <p class="text-slate-600 text-xs mt-2 text-right">
-          Datos: <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="text-sky-500 hover:underline">Forex Factory</a>
-        </p>
-      </div>
-
-      <!-- Noticias — Links directos en español -->
-      <div>
-        <p class="text-xs tracking-[0.2em] uppercase text-sky-400 mb-4">Noticias del Mercado</p>
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-          <a href="https://es.investing.com/news/forex-news" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9 9 0 100-18 9 9 0 000 18z"/><path stroke-linecap="round" stroke-linejoin="round" d="M3.6 9h16.8M3.6 15h16.8M12 3a14.5 14.5 0 010 18M12 3a14.5 14.5 0 000 18"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Investing.com</p>
-              <p class="noticias-card-desc">Noticias Forex en español — análisis, divisas y mercados al día.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-          <a href="https://es.investing.com/news/stock-market-news" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.28m5.94 2.28l-2.28 5.941"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Mercados Globales</p>
-              <p class="noticias-card-desc">Acciones, índices y commodities. Noticias de bolsa en tiempo real.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-          <a href="https://es.investing.com/news/cryptocurrency-news" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Crypto</p>
-              <p class="noticias-card-desc">Noticias de criptomonedas, Bitcoin, Ethereum y altcoins en español.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-          <a href="https://www.forexfactory.com/news" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Forex Factory</p>
-              <p class="noticias-card-desc">La referencia del trading Forex. Noticias y análisis de mercado.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-          <a href="https://es.investing.com/analysis/forex" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Análisis Técnico</p>
-              <p class="noticias-card-desc">Análisis técnico de divisas y activos en español.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-          <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener" class="noticias-card">
-            <div class="noticias-card-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/></svg>
-            </div>
-            <div>
-              <p class="noticias-card-title">Calendario FF</p>
-              <p class="noticias-card-desc">Calendario económico completo de Forex Factory con filtros de impacto.</p>
-            </div>
-            <svg class="noticias-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-          </a>
-
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-
-
-
-  <!-- ── REDES & CONTACTO ───────────────────────────────────── -->
-  <section class="py-20 px-6 border-t border-sky-900/30" style="background:#080e1c;">
-    <div class="max-w-4xl mx-auto text-center">
-
-      <p class="section-label">Seguinos y escribinos</p>
-      <h2 class="section-title mb-2">Nuestras Redes Sociales</h2>
-      <div class="section-divider" style="margin: 1rem auto 3rem;"></div>
-
-      <!-- Redes -->
-      <div class="flex flex-wrap justify-center gap-6 mb-12">
-
-        <a href="https://www.youtube.com/@CreemosCapital" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z"/></svg>
-          <span>YouTube</span>
-        </a>
-
-        <a href="https://www.tiktok.com/@creemoscapital" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.56V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
-          <span>TikTok</span>
-        </a>
-
-        <a href="https://www.instagram.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0 5.838a4.162 4.162 0 100 8.324 4.162 4.162 0 000-8.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          <span>Instagram</span>
-        </a>
-
-        <a href="https://www.facebook.com/people/Creemos-Capital/61564167813649/" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.269h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
-          <span>Facebook</span>
-        </a>
-
-        <a href="https://x.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          <span>X / Twitter</span>
-        </a>
-
-        <a href="https://kick.com/creemoscapital" target="_blank" rel="noopener" class="red-social">
-          <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor"><path d="M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z"/></svg>
-          <span>Kick</span>
-        </a>
-
-      </div>
-
-      <!-- Contacto -->
-      <p class="section-label mb-6">Contáctenos</p>
-      <div class="flex flex-wrap justify-center gap-4">
-
-        <a href="https://api.whatsapp.com/send/?phone=573153263852&text&type=phone_number&app_absent=0" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(37,211,102,0.12);border-color:rgba(37,211,102,0.3);color:#25d366;">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-          WhatsApp
-        </a>
-
-        <a href="https://t.me/creemoscapitaloficial" target="_blank" rel="noopener" class="btn-contacto" style="background:rgba(38,166,209,0.12);border-color:rgba(38,166,209,0.3);color:#26a6d1;">
-          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-          Telegram
-        </a>
-
-        <a href="mailto:info@creemoscapital.com" class="btn-contacto" style="background:rgba(0,212,255,0.38);border-color:rgba(0,212,255,0.3);color:#00d4ff;">
-          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
-          Email
-        </a>
-
-      </div>
-    </div>
-  </section>
-
-
-  <!-- ── FOOTER ─────────────────────────────────────────────── -->
-  <footer class="px-6 pt-10 pb-6 border-t border-sky-900/20">
-    <div class="max-w-7xl mx-auto">
-
-      <div class="flex flex-col md:flex-row justify-between items-start gap-6 mb-8">
+  <!-- ── PIE ─────────────────────────────────────────────────── -->
+  <footer>
+    <div class="container">
+      <div class="foot-grid">
         <div>
-          <p class="font-display font-bold text-xl text-white mb-1">
-            Creemos <span class="text-sky-400">Capital</span>
-          </p>
-          <p class="text-slate-600 text-xs">Trading en vivo · creemoscapital.com</p>
+          <a class="brand" href="#inicio" aria-label="Creemos Capital, inicio">
+            <img src="./img/Logo Creemos Capital Fondo Blanco (2).png" alt="">
+            <span class="brand-name">Creemos Capital<small>TRADING EN VIVO</small></span>
+          </a>
+          <p>Análisis de mercados en vivo, formación y comunidad para traders de todos los niveles.</p>
         </div>
-        <p class="text-slate-700 text-xs">© 2025 Creemos Capital. Todos los derechos reservados.</p>
+        <div>
+          <h5>Explora</h5>
+          <a href="#en-vivo">En vivo</a>
+          <a href="#sesiones">Sesiones</a>
+          <a href="#noticias">Noticias</a>
+          <a href="./informe.html">Informe diario</a>
+        </div>
+        <div>
+          <h5>Aprende</h5>
+          <a href="./academy.html">Academy</a>
+          <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
+          <a href="#unete">Únete gratis</a>
+        </div>
+        <div>
+          <h5>Comunidad</h5>
+          <a href="https://t.me/creemoscapitaloficial" target="_blank" rel="noopener">Telegram</a>
+          <a href="https://www.youtube.com/@CreemosCapital" target="_blank" rel="noopener">YouTube</a>
+          <a href="https://kick.com/creemoscapital" target="_blank" rel="noopener">Kick</a>
+          <a href="mailto:info@creemoscapital.com">info@creemoscapital.com</a>
+        </div>
       </div>
 
-      <!-- Disclaimer legal -->
-      <div class="border-t border-sky-900/20 pt-6">
-        <p class="text-slate-600 text-xs leading-relaxed mb-3">
-          <strong class="text-slate-500">⚠ Aviso Legal:</strong> El contenido de esta página web es exclusivamente con fines educativos e informativos y no debe considerarse como asesoramiento financiero, legal o fiscal. El trading y la inversión en los mercados financieros conllevan un alto nivel de riesgo, incluyendo la posibilidad de perder la totalidad del capital invertido. No es adecuado para todos los inversores, y cada persona debe evaluar su tolerancia al riesgo antes de participar en estos mercados.
-        </p>
-        <p class="text-slate-600 text-xs leading-relaxed mb-3">
-          Creemos Capital no garantiza ningún tipo de resultado o rendimiento futuro, y el desempeño pasado no es indicativo de resultados futuros. Todas las decisiones de inversión y trading son responsabilidad exclusiva del usuario.
-        </p>
-        <p class="text-slate-600 text-xs leading-relaxed mb-3">
-          Recuerda: nunca operes con dinero que no puedas permitirte perder y mantén una gestión de riesgo adecuada en cada operación. El trading no es un esquema de enriquecimiento rápido y requiere educación, disciplina y experiencia. Creemos Capital y sus representantes no se hacen responsables por pérdidas derivadas de la aplicación de la información compartida en esta transmisión.
-        </p>
-        <p class="text-slate-500 text-xs font-medium">Al continuar viendo esta transmisión, aceptas que eres el único responsable de tus decisiones financieras. ¡Opera con responsabilidad!</p>
+      <div class="risk">
+        <p><strong>⚠ Aviso legal:</strong> El contenido de esta página web es exclusivamente con fines educativos e informativos y no debe considerarse como asesoramiento financiero, legal o fiscal. El trading y la inversión en los mercados financieros conllevan un alto nivel de riesgo, incluyendo la posibilidad de perder la totalidad del capital invertido. No es adecuado para todos los inversores, y cada persona debe evaluar su tolerancia al riesgo antes de participar en estos mercados.</p>
+        <p>Creemos Capital no garantiza ningún tipo de resultado o rendimiento futuro, y el desempeño pasado no es indicativo de resultados futuros. Todas las decisiones de inversión y trading son responsabilidad exclusiva del usuario.</p>
+        <p>Recuerda: nunca operes con dinero que no puedas permitirte perder y mantén una gestión de riesgo adecuada en cada operación. El trading no es un esquema de enriquecimiento rápido y requiere educación, disciplina y experiencia. Creemos Capital y sus representantes no se hacen responsables por pérdidas derivadas de la aplicación de la información compartida en esta transmisión.</p>
+        <p><strong>Al continuar viendo esta transmisión, aceptas que eres el único responsable de tus decisiones financieras. ¡Opera con responsabilidad!</strong></p>
       </div>
-
+      <p class="copy">© 2026 Creemos Capital. Todos los derechos reservados.</p>
     </div>
   </footer>
 
-
-  <!-- ── ALERTA DE NOTICIAS DEL DÍA ────────────────────────────── -->
-  <div id="noticias-alerta-overlay" style="display:none;position:fixed;inset:0;background:rgba(2,6,15,0.88);backdrop-filter:blur(8px);z-index:100;align-items:center;justify-content:center;padding:1.25rem;animation:fadeIn 0.3s ease;">
-    <div style="width:100%;max-width:520px;max-height:85vh;display:flex;flex-direction:column;background:linear-gradient(135deg,#050e1c,#07111f);border:1px solid rgba(0,212,255,0.3);border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,212,255,0.06);animation:modalUp 0.35s ease;">
-
-      <!-- Header -->
-      <div style="display:flex;align-items:flex-start;gap:0.9rem;padding:1.5rem 1.5rem 1.1rem;">
-        <div style="position:relative;flex-shrink:0;width:44px;height:44px;">
-          <span style="position:absolute;inset:0;border-radius:50%;background:rgba(239,68,68,0.35);animation:alertaPing 1.8s ease-out infinite;"></span>
-          <span style="position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);font-size:1.3rem;">📢</span>
+  <!-- ── ALERTA DE NOTICIAS DEL DÍA ───────────────────────────── -->
+  <div id="noticias-alerta-overlay" class="alert-overlay" role="dialog" aria-modal="true" aria-labelledby="alerta-titulo">
+    <div class="alert-modal">
+      <div class="alert-head">
+        <div class="alert-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0112 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 003.4 0"/></svg></div>
+        <div>
+          <h3 id="alerta-titulo">Esto puede mover el mercado hoy</h3>
+          <p>Revisa estos eventos antes de abrir una operación.</p>
         </div>
-        <div style="flex:1;">
-          <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;color:#f1f5f9;margin:0;">Esto puede mover el mercado hoy</h3>
-          <p style="font-size:0.78rem;color:#64748b;margin-top:3px;">Revisá estos eventos antes de abrir una operación 👇</p>
-        </div>
-        <button onclick="cerrarAlertaNoticias()" style="background:none;border:none;color:#475569;cursor:pointer;font-size:1.5rem;line-height:1;padding:0.15rem;flex-shrink:0;">×</button>
-      </div>
-
-      <!-- Leyenda -->
-      <div style="display:flex;gap:1rem;padding:0 1.5rem 1rem;">
-        <span style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:#94a3b8;">
-          <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;"></span>Alto impacto
-        </span>
-        <span style="display:flex;align-items:center;gap:0.4rem;font-size:0.72rem;color:#94a3b8;">
-          <span style="width:8px;height:8px;border-radius:50%;background:#f97316;display:inline-block;"></span>Medio impacto
-        </span>
-      </div>
-
-      <div id="noticias-alerta-lista" style="overflow-y:auto;padding:0 1.25rem;display:flex;flex-direction:column;gap:0.6rem;"></div>
-
-      <!-- Footer -->
-      <div style="display:flex;gap:0.75rem;padding:1.25rem 1.5rem;margin-top:0.5rem;border-top:1px solid rgba(0,212,255,0.1);">
-        <a href="#noticias" onclick="cerrarAlertaNoticias()" class="btn-outline justify-center" style="flex:1;font-size:0.82rem;">Ver calendario completo</a>
-        <button onclick="cerrarAlertaNoticias()" class="btn-primary justify-center" style="flex:1;font-size:0.82rem;background:linear-gradient(135deg,#22c55e,#15803d);box-shadow:0 4px 20px rgba(34,197,94,0.3);">
-          ¡Entendido! 🚀
+        <button class="icon-btn alert-close" type="button" onclick="cerrarAlertaNoticias()" aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
         </button>
+      </div>
+      <div class="alert-legend">
+        <span><i class="imp-alto"></i>Alto impacto</span>
+        <span><i class="imp-medio"></i>Medio impacto</span>
+      </div>
+      <div id="noticias-alerta-lista"></div>
+      <div class="alert-foot">
+        <a href="#noticias" onclick="cerrarAlertaNoticias()" class="btn btn-ghost">Ver calendario completo</a>
+        <button type="button" onclick="cerrarAlertaNoticias()" class="btn btn-primary">Entendido</button>
       </div>
     </div>
   </div>

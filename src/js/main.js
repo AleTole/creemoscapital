@@ -14,18 +14,30 @@ function esc(str) {
 }
 
 // ── NAVBAR scroll ─────────────────────────────────────────────
-window.addEventListener('scroll', () => {
-  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
-});
-if (window.scrollY > 60) document.getElementById('navbar').classList.add('scrolled');
+const navbar = document.getElementById('navbar');
+function marcarNavbar() { navbar.classList.toggle('scrolled', window.scrollY > 10); }
+window.addEventListener('scroll', marcarNavbar, { passive: true });
+marcarNavbar();
 
 // ── MENÚ MOBILE ───────────────────────────────────────────────
-function toggleMenu() {
-  document.getElementById('mobile-menu').classList.toggle('hidden');
+function setMenu(abierto) {
+  const menu = document.getElementById('mobile-menu');
+  const btn = document.getElementById('menu');
+  menu.classList.toggle('open', abierto);
+  if (btn) btn.setAttribute('aria-expanded', String(abierto));
 }
-function closeMenu() {
-  document.getElementById('mobile-menu').classList.add('hidden');
-}
+document.getElementById('menu').addEventListener('click', () => {
+  setMenu(!document.getElementById('mobile-menu').classList.contains('open'));
+});
+document.querySelectorAll('#mobile-menu a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+// ── TEMA CLARO / OSCURO ───────────────────────────────────────
+document.getElementById('theme').addEventListener('click', () => {
+  const root = document.documentElement;
+  const siguiente = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  root.setAttribute('data-theme', siguiente);
+  try { localStorage.setItem('cc-theme', siguiente); } catch (e) {}
+});
 
 // ── SESIONES ──────────────────────────────────────────────────
 function flagImg(code) {
@@ -79,21 +91,26 @@ function renderVideos() {
 
 // ── CALENDARIO FOREX FACTORY ──────────────────────────────────
 const PAISES = {
-  USD: { nombre: 'EE.UU.',      bandera: '🇺🇸' },
-  EUR: { nombre: 'Eurozona',    bandera: '🇪🇺' },
-  GBP: { nombre: 'Reino Unido', bandera: '🇬🇧' },
-  JPY: { nombre: 'Japón',       bandera: '🇯🇵' },
-  CAD: { nombre: 'Canadá',      bandera: '🇨🇦' },
-  AUD: { nombre: 'Australia',   bandera: '🇦🇺' },
-  NZD: { nombre: 'N. Zelanda',  bandera: '🇳🇿' },
-  CHF: { nombre: 'Suiza',       bandera: '🇨🇭' },
-  CNY: { nombre: 'China',       bandera: '🇨🇳' },
-  SEK: { nombre: 'Suecia',      bandera: '🇸🇪' },
-  NOK: { nombre: 'Noruega',     bandera: '🇳🇴' },
-  MXN: { nombre: 'México',      bandera: '🇲🇽' },
-  BRL: { nombre: 'Brasil',      bandera: '🇧🇷' },
-  ALL: { nombre: 'Global',      bandera: 'gl'  },
+  USD: { nombre: 'EE.UU.',      iso: 'us' },
+  EUR: { nombre: 'Eurozona',    iso: 'eu' },
+  GBP: { nombre: 'Reino Unido', iso: 'gb' },
+  JPY: { nombre: 'Japón',       iso: 'jp' },
+  CAD: { nombre: 'Canadá',      iso: 'ca' },
+  AUD: { nombre: 'Australia',   iso: 'au' },
+  NZD: { nombre: 'N. Zelanda',  iso: 'nz' },
+  CHF: { nombre: 'Suiza',       iso: 'ch' },
+  CNY: { nombre: 'China',       iso: 'cn' },
+  SEK: { nombre: 'Suecia',      iso: 'se' },
+  NOK: { nombre: 'Noruega',     iso: 'no' },
+  MXN: { nombre: 'México',      iso: 'mx' },
+  BRL: { nombre: 'Brasil',      iso: 'br' },
+  ALL: { nombre: 'Global',      iso: null },
 };
+
+const GLOBO = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14.5 14.5 0 010 18M12 3a14.5 14.5 0 000 18"/></svg>';
+function banderaPais(pais) {
+  return pais.iso ? flagImg(pais.iso) : GLOBO;
+}
 
 const DIAS_ES = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
 const MESES_ES = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
@@ -133,7 +150,7 @@ function renderCalendario() {
   });
 
   if (filtrados.length === 0) {
-    cont.innerHTML = '<p class="text-center text-slate-600 text-sm py-10">Sin eventos para mostrar.</p>';
+    cont.innerHTML = '<div class="cal-state">Sin eventos para mostrar.</div>';
     return;
   }
 
@@ -149,14 +166,14 @@ function renderCalendario() {
     <div class="cal-day-header">${dia}</div>
     ${eventos.map(e => {
       const code   = (e.country || e.currency || '').toUpperCase().trim();
-      const pais   = PAISES[code] || { nombre: code || '—', bandera: '🌐' };
+      const pais   = PAISES[code] || { nombre: code || '—', iso: null };
       const imp    = e.impact === 'High' ? 'alto' : e.impact === 'Medium' ? 'medio' : 'bajo';
       const actual = e.actual || '';
       const cls    = actual ? claseActual(actual, e.forecast, e.impact) : 'pendiente';
       return `
       <div class="cal-row">
         <span class="cal-time">${formatoHora(e.date)}</span>
-        <span class="cal-pais" title="${pais.nombre}"><span class="cal-impacto"><span class="imp-${imp}"></span></span>${pais.bandera}</span>
+        <span class="cal-pais" title="${pais.nombre}"><span class="cal-impacto"><span class="imp-${imp}"></span></span>${banderaPais(pais)}</span>
         <span class="cal-evento">${esc(e.title)}</span>
         <span class="cal-num cal-forecast">${esc(e.forecast) || '—'}</span>
         <span class="cal-num cal-prev">${esc(e.previous) || '—'}</span>
@@ -204,14 +221,9 @@ async function cargarCalendario() {
     } catch (e) { errores.push(`${url} → ${e.message}`); continue; }
   }
   if (loading) loading.innerHTML = `
-    <div class="text-center py-10">
-      <div style="font-size:2rem;margin-bottom:0.75rem;">📅</div>
-      <p style="color:#64748b;font-size:0.9rem;margin-bottom:1.25rem;">El calendario no está disponible en este momento.</p>
-      <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener"
-         style="display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.4rem;border:1px solid rgba(0,212,255,0.35);border-radius:6px;color:#00d4ff;font-size:0.85rem;text-decoration:none;">
-        Ver calendario en Forex Factory →
-      </a>
-    </div>`;
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+    <p>El calendario no está disponible en este momento.</p>
+    <a class="btn btn-ghost btn-sm" href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener">Ver calendario en Forex Factory →</a>`;
 }
 
 // ── ALERTA DE NOTICIAS DEL DÍA ──────────────────────────────────
@@ -252,23 +264,18 @@ function mostrarAlertaNoticias() {
 
   cont.innerHTML = deHoy.map(e => {
     const code = (e.country || e.currency || '').toUpperCase().trim();
-    const pais = PAISES[code] || { nombre: code || '—', bandera: '🌐' };
+    const pais = PAISES[code] || { nombre: code || '—', iso: null };
     const activos = (ACTIVOS_POR_MONEDA[code] || 'Revisar el par correspondiente').split(',').map(a => a.trim());
-    const esAlto = e.impact === 'High';
-    const color = esAlto ? '#ef4444' : '#f97316';
-    const bg    = esAlto ? 'rgba(239,68,68,0.06)' : 'rgba(249,115,22,0.06)';
-    const border= esAlto ? 'rgba(239,68,68,0.25)' : 'rgba(249,115,22,0.25)';
+    const nivel = e.impact === 'High' ? 'alto' : 'medio';
     return `
-      <div style="background:${bg};border:1px solid ${border};border-radius:10px;padding:0.85rem 1rem;">
-        <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap;">
-          <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:${color};background:rgba(255,255,255,0.06);border:1px solid ${border};border-radius:999px;padding:0.15rem 0.55rem;">${esAlto ? 'Alto' : 'Medio'}</span>
-          <span style="font-size:0.75rem;color:#94a3b8;font-weight:600;">${formatoHora(e.date)}</span>
-          <span style="font-size:0.9rem;">${pais.bandera}</span>
+      <div class="alert-item ${nivel}">
+        <div class="alert-item-top">
+          <span class="badge ${nivel}">${nivel === 'alto' ? 'Alto' : 'Medio'}</span>
+          <span class="alert-hora">${formatoHora(e.date)}</span>
+          ${banderaPais(pais)}
         </div>
-        <div style="font-size:0.88rem;color:#f1f5f9;font-weight:600;margin-bottom:0.5rem;">${esc(e.title)}</div>
-        <div style="display:flex;flex-wrap:wrap;gap:0.35rem;">
-          ${activos.map(a => `<span style="font-size:0.68rem;color:#94a3b8;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:0.2rem 0.5rem;">${esc(a)}</span>`).join('')}
-        </div>
+        <div class="alert-titulo">${esc(e.title)}</div>
+        <div class="chips">${activos.map(a => `<span>${esc(a)}</span>`).join('')}</div>
       </div>`;
   }).join('');
 
@@ -340,12 +347,70 @@ async function cargarTickerOKX() {
   }
 }
 
+// ── ANIMACIONES (aparecer al hacer scroll, titular rotatorio, línea de pasos) ──
+const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function iniciarReveal() {
+  const items = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { items.forEach(el => el.classList.add('in')); return; }
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  items.forEach(el => io.observe(el));
+}
+
+function iniciarRotator() {
+  const palabras = document.querySelectorAll('.rotator span');
+  if (palabras.length < 2 || reducirMovimiento) return;
+  let i = 0;
+  setInterval(() => {
+    const actual = palabras[i];
+    i = (i + 1) % palabras.length;
+    const siguiente = palabras[i];
+    actual.classList.remove('on'); actual.classList.add('out');
+    siguiente.classList.remove('out'); siguiente.classList.add('on');
+    setTimeout(() => { actual.classList.remove('out'); }, 750);
+  }, 2600);
+}
+
+function iniciarPasos() {
+  const cont = document.getElementById('steps');
+  if (!cont) return;
+  const pasos = cont.querySelectorAll('.step');
+  function actualizar() {
+    const r = cont.getBoundingClientRect();
+    const centro = window.innerHeight * 0.55;
+    const p = Math.min(1, Math.max(0, (centro - r.top) / r.height));
+    cont.style.setProperty('--p', p.toFixed(3));
+    pasos.forEach(el => {
+      const b = el.getBoundingClientRect();
+      el.classList.toggle('lit', b.top + 30 < centro);
+    });
+  }
+  window.addEventListener('scroll', actualizar, { passive: true });
+  window.addEventListener('resize', actualizar);
+  actualizar();
+}
+
+function iniciarSpotlight() {
+  document.querySelectorAll('.card, .link-card').forEach(el => {
+    el.addEventListener('pointermove', e => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+}
+
 // ── INIT ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  document.body.classList.remove('no-js');
   renderSesiones();
   renderVideos();
   cargarCalendario();
   cargarTickerOKX();
-
-  // Spotify iframe carga con src fijo (no requiere Observer)
+  iniciarReveal();
+  iniciarRotator();
+  iniciarPasos();
+  iniciarSpotlight();
 });
