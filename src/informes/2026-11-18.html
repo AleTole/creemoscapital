@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Informe Multi-Activo - 18 Nov 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy:  { 900: '#050d1a', 800: '#0a1628', 700: '#0f2040', 600: '#153060' },
+          sky:   { 400: '#00d4ff', 500: '#00b8e0', 600: '#0099cc' },
+          gold:  { 400: '#fbbf24', 500: '#f59e0b' },
+          long:  '#22c55e',
+          short: '#ef4444',
+        },
+        fontFamily: {
+          sans:    ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+<style>
+  :root{
+    --bg:#051828; --panel:#050e1c; --border:rgba(0,212,255,0.38);
+    --gold:#00d4ff; --green:#22c55e; --red:#ef4444;
+    --text:#e2e8f0; --muted:#64748b;
+  }
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;margin:0;padding:24px;}
+  .wrap{max-width:740px;margin:0 auto;}
+  h1{color:var(--gold);font-size:22px;margin-bottom:2px;}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:14px;}
+  .brand{display:grid;grid-template-columns:auto 1fr;column-gap:14px;row-gap:4px;align-items:center;margin-bottom:14px;}
+  .brand>div{display:contents;}
+  .brand img{grid-row:1 / span 2;width:88px;height:88px;border-radius:12px;border:1px solid var(--border);}
+  .brand h1{margin:0;grid-column:2;align-self:end;}
+  .brand .sub{margin:0;grid-column:2;align-self:start;}
+  @media (min-width:1000px){.wrap{max-width:900px;} body{padding:32px;}}
+  @media (max-width:520px){
+    body{padding:14px;}
+    .brand{row-gap:8px;}
+    .brand img{grid-row:1;width:56px;height:56px;}
+    .brand h1{font-size:18px;align-self:center;}
+    .brand .sub{grid-column:1 / -1;}
+  }
+  .cat-label{color:var(--gold);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin:14px 0 6px 0;font-weight:700;}
+  .tabs{display:flex;gap:6px;margin-bottom:4px;flex-wrap:wrap;}
+  .tab-btn{flex:1;min-width:56px;background:var(--panel);border:1px solid var(--border);color:var(--muted);padding:9px 3px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;text-align:center;transition:.15s;}
+  .tab-btn.active{color:var(--bg);background:var(--gold);border-color:var(--gold);}
+  .panel{display:none;}
+  .panel.active{display:block;}
+  .allpanels{margin-top:16px;}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+  .card h2{font-size:14px;color:var(--gold);margin:0 0 8px 0;text-transform:uppercase;letter-spacing:.5px;}
+  .price{font-size:28px;font-weight:700;color:var(--green);}
+  .price.down{color:var(--red);}
+  ul{margin:6px 0 0 0;padding-left:18px;font-size:14px;line-height:1.5;}
+  .zone{border-radius:8px;padding:10px 12px;margin-bottom:8px;font-size:13px;}
+  .zone-supply{background:rgba(240,98,95,.1);border:1px solid rgba(240,98,95,.35);}
+  .zone-demand{background:rgba(62,207,142,.1);border:1px solid rgba(62,207,142,.35);}
+  .zone b{display:block;font-size:14px;margin-bottom:2px;}
+  .risk h2{color:var(--red);}
+  .tag-r{color:var(--red);}
+  .tag-g{color:var(--green);}
+  .intraday{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .lvl{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;}
+  .lvl b{display:block;font-size:14px;}
+  .pivot-wrap{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:10px;}
+  .pivot-pp{background:rgba(232,184,75,.1);border:1px solid rgba(232,184,75,.45);border-radius:10px;padding:10px 20px;text-align:center;}
+  .pivot-pp span{display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
+  .pivot-pp b{font-size:22px;color:var(--gold);}
+  .pivot-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;}
+  .note{background:rgba(255,255,255,.03);border:1px dashed var(--border);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--muted);margin:10px 0 0 0;}
+  .foot{color:var(--muted);font-size:11px;text-align:center;margin-top:18px;}
+
+  /* ---- Integracion con creemoscapital.com (navbar/ticker/footer) ---- */
+  #navbar {
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(5,13,26,0.97);
+    box-shadow: 0 1px 20px rgba(0,0,0,0.5);
+  }
+  .nav-link {
+    font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: rgba(226,232,240,0.7); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-link:hover, .nav-link.active { color: #00d4ff; }
+  .nav-cta {
+    display: inline-flex; align-items: center; justify-content: center; text-align: center;
+    padding: 0.5rem 1.25rem; background: linear-gradient(135deg,#22c55e,#15803d);
+    color: #04160c !important; font-weight: 700; font-size: 0.8rem; text-transform: uppercase;
+    letter-spacing: 0.04em; border-radius: 999px; text-decoration: none;
+    box-shadow: 0 0 16px rgba(34,197,94,0.45); transition: transform 0.2s, box-shadow 0.2s;
+    animation: ctaPulse 2s ease-in-out infinite;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 0 24px rgba(34,197,94,0.65); }
+  @keyframes ctaPulse {
+    0%, 100% { box-shadow: 0 0 16px rgba(34,197,94,0.45); }
+    50%      { box-shadow: 0 0 28px rgba(34,197,94,0.9); }
+  }
+  .nav-academy {
+    display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 1rem;
+    background: linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
+    border: 1px solid rgba(0,212,255,0.55); border-radius: 999px; color: #00d4ff !important;
+    font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    text-decoration: none; box-shadow: 0 0 14px rgba(0,212,255,0.3);
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+  .nav-academy:hover { transform: translateY(-1px); border-color: #00d4ff; box-shadow: 0 0 22px rgba(0,212,255,0.55); }
+
+  @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  #okx-ticker-items:hover { animation-play-state: paused; }
+  .okx-item  { display:inline-flex;align-items:center;gap:0.45rem;padding:0 1.1rem; }
+  .okx-name  { font-size:0.72rem;letter-spacing:0.06em;color:#64748b;font-weight:500; }
+  .okx-price { font-size:0.8rem;font-family:'Space Grotesk',sans-serif;font-weight:600;color:#e2e8f0; }
+  .okx-pct   { font-size:0.72rem;font-weight:600; }
+  .okx-pos   { color:#22c55e; }
+  .okx-neg   { color:#ef4444; }
+  .okx-sep   { color:#1e3a5f;font-size:1rem;padding:0 0.25rem; }
+
+  body {
+    padding-top: 28px; padding-bottom: 28px; font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+    background:
+      radial-gradient(ellipse at 15% 0%, rgba(0,212,255,0.14) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 10%, rgba(99,102,241,0.12) 0%, transparent 50%),
+      var(--bg);
+    background-attachment: fixed;
+  }
+  h1, .cat-label, .card h2 { font-family: 'DM Sans', 'Inter', sans-serif; }
+
+  /* ---- Titulo = fecha ---- */
+  .brand h1{
+    background:linear-gradient(135deg,#f1f5f9,#b9e8ff 60%,var(--gold));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    font-size:clamp(1.7rem,3vw,2.3rem); font-weight:700; letter-spacing:-0.01em;
+  }
+  .brand .ic-year{
+    font-size:0.62em; font-weight:600; letter-spacing:0;
+    background:none; -webkit-text-fill-color:#94a3b8; color:#94a3b8;
+  }
+  .brand .sub{
+    font-size:0.92rem; font-weight:600; color:#cbd5e1; margin-top:10px;
+    line-height:1.6; max-width:900px;
+    border-left:3px solid rgba(0,212,255,0.5); padding-left:12px;
+  }
+
+  /* ---- Layout: sidebar de categorias (acordeon) + contenido ---- */
+  .wrap{ max-width:740px; }
+  .ic-layout{ display:block; }
+  .ic-content{ min-width:0; }
+
+  .ic-cat-tabs{
+    display:flex; flex-direction:column; gap:4px; margin-bottom:20px;
+    background:linear-gradient(160deg,#061325,var(--panel) 55%);
+    border:1px solid var(--border); border-radius:16px; padding:10px;
+  }
+  .ic-cat-item{ border-radius:10px; }
+  .ic-cat-btn{
+    position:relative; width:100%; display:flex; align-items:center; justify-content:space-between; gap:8px;
+    text-align:left; border-radius:10px; border:1px solid transparent;
+    background:transparent; color:#94a3b8; font-size:0.8rem; font-weight:700;
+    letter-spacing:0.03em; text-transform:uppercase; cursor:pointer; padding:0.7rem 0.9rem;
+    transition:background .18s,color .18s,border-color .18s;
+  }
+  .ic-cat-btn:hover{ background:rgba(0,212,255,0.08); color:#e2e8f0; }
+  .ic-cat-item.open .ic-cat-btn{
+    background:linear-gradient(135deg, rgba(0,212,255,0.18), rgba(99,102,241,0.18));
+    color:var(--gold); border-color:rgba(0,212,255,0.45);
+  }
+  .ic-cat-chevron{ font-size:0.7rem; opacity:0.55; transition:transform .2s; flex-shrink:0; }
+  .ic-cat-item.open .ic-cat-chevron{ transform:rotate(90deg); }
+  .ic-cat-name{ display:block; }
+  .ic-cat-assets-preview{
+    display:block; font-size:0.65rem; font-weight:500; letter-spacing:0.01em;
+    text-transform:none; color:#64748b; margin-top:2px;
+  }
+  .ic-cat-item.open .ic-cat-assets-preview{ display:none; }
+
+  .ic-cat-assets-list{ display:none; flex-direction:column; gap:2px; padding:4px 4px 8px 14px; }
+  .ic-cat-item.open .ic-cat-assets-list{ display:flex; }
+  .ic-cat-assets-list .tab-btn{
+    text-align:left; border-radius:8px; background:transparent; border:1px solid transparent;
+    color:#94a3b8; cursor:pointer; padding:0.45rem 0.75rem;
+  }
+  .ic-cat-assets-list .tab-btn:hover{ background:rgba(0,212,255,0.08); transform:none; }
+  .ic-cat-assets-list .tab-btn.active{
+    background:linear-gradient(135deg,var(--gold),#0099cc);
+    box-shadow:0 0 12px rgba(0,212,255,0.35); transform:none;
+  }
+  .ic-asset-code{
+    display:block; font-size:0.78rem; font-weight:700; letter-spacing:0.02em;
+    text-transform:uppercase; color:inherit;
+  }
+  .ic-asset-name{
+    display:block; font-size:0.64rem; font-weight:500; color:#64748b; margin-top:1px;
+  }
+  .ic-cat-assets-list .tab-btn.active .ic-asset-name{ color:rgba(4,18,28,0.65); }
+
+  .ic-cat-group{ display:none; }
+  .ic-cat-group.active{ display:block; }
+
+  /* ---- Panel de un activo: grilla compacta, 2 filas de 3 cards ---- */
+  .panel.active{ display:flex; flex-direction:column; gap:12px; }
+  .card{ margin-bottom:0 !important; padding:13px 15px !important; }
+  .card h2{ font-size:12px !important; margin-bottom:6px !important; }
+  .price{ font-size:22px !important; }
+  .pivot-pp b{ font-size:17px !important; }
+  .lvl{ padding:7px 9px !important; }
+  .lvl b{ font-size:13px !important; }
+  .zone{ padding:7px 10px !important; margin-bottom:6px !important; font-size:12px !important; }
+  .card ul{ font-size:12.5px !important; line-height:1.45 !important; }
+  .card .sub{ font-size:12px !important; border:none !important; padding-left:0 !important; font-weight:400 !important; color:#94a3b8 !important; }
+
+  /* ---- Pivote compacto en una fila ---- */
+  .pivot-wrap{ flex-direction:column !important; align-items:stretch !important; gap:8px !important; }
+  .pivot-pp{ flex-shrink:0; display:flex; flex-direction:row; align-items:center; justify-content:center; gap:10px; padding:6px 12px !important; }
+  .pivot-grid{ grid-template-columns:repeat(4,1fr) !important; width:100%; gap:6px !important; }
+
+  /* Sidebar fijo pegado a la ventana + contenido centrado, en pantallas grandes */
+  @media (min-width:900px){
+    body{ padding-left:276px; }
+    .wrap{ max-width:none; margin:0; }
+    .ic-content{ max-width:1320px; margin:0 auto; padding-left:8px; }
+
+    .ic-cat-tabs{
+      position:fixed; left:0; top:110px; bottom:0; width:258px; z-index:20;
+      margin-bottom:0; overflow-y:auto; border-radius:0;
+      border-right:1px solid var(--border);
+      padding:20px 12px; box-shadow:6px 0 30px rgba(0,0,0,0.35);
+    }
+    .ic-cat-item.open .ic-cat-btn::before{
+      content:''; position:absolute; left:-10px; top:50%; transform:translateY(-50%);
+      width:4px; height:60%; border-radius:4px;
+      background:linear-gradient(180deg,var(--gold),#6366f1);
+    }
+
+    /* 3 columnas -> 6 cards caen en 2 filas parejas, en vez de 1 columna larga */
+    .panel.active{
+      display:grid; grid-template-columns:repeat(3,1fr); grid-auto-rows:min-content; gap:12px;
+    }
+    .ic-panel-left, .ic-panel-right{ display:contents; }
+  }
+  @media (min-width:1500px){
+    .ic-content{ max-width:1500px; }
+  }
+
+  /* ---- Cards con borde degradado estilo Academy ---- */
+  .card{ position:relative; overflow:hidden; transition:border-color .2s, box-shadow .2s; }
+  .card::before{
+    content:''; position:absolute; inset:-1px; border-radius:10px; padding:1px;
+    background:linear-gradient(135deg, rgba(0,212,255,0.35), rgba(99,102,241,0.25), rgba(0,212,255,0.35));
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    opacity:0; transition:opacity .25s; pointer-events:none;
+  }
+  .card:hover::before{ opacity:1; }
+  .card:hover{border-color:rgba(0,212,255,0.55);box-shadow:0 6px 22px rgba(0,184,224,0.12);}
+
+  .brand{grid-template-columns:1fr !important;}
+  .brand h1, .brand .sub{grid-column:1 !important;}
+
+  @media (max-width:480px){
+    body{padding:14px;padding-top:14px;}
+    h1{font-size:19px;}
+    .sub{font-size:13px !important;}
+    .price{font-size:24px;}
+    .cat-label{font-size:10px;}
+    .card{padding:13px 14px;}
+    .card h2{font-size:12px;}
+    .pivot-wrap{ flex-direction:column !important; }
+    .pivot-grid{ grid-template-columns:1fr 1fr !important; }
+    .pivot-pp{padding:8px 14px;}
+    .pivot-pp b{font-size:19px;}
+    .intraday, .pivot-grid{gap:6px !important;}
+    .lvl{padding:7px 8px;font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">
+    <div>
+    <h1>Miércoles 18 de noviembre<span class="ic-year"> 2026</span></h1>
+    <div class="sub">Martes 17 nov: cuarta caída seguida del S&amp;P y el Nasdaq (primera racha así desde sept.) antes de Nvidia: S&amp;P -1.02% (7,340.53; el más bajo desde julio), Dow -1.64% (50,759.42; -849 pts), Nasdaq -0.74% (24,328.38); todos los sectores a la baja (software, aerolíneas y bancos los peores) · Ventas minoristas oct. +0.2% m/m (esperado +0.1%; sept. revisado a +0.8%); producción industrial débil, precios de importación al alza; confianza de constructores en mínimo desde 2012 · Fed: ~95% de probabilidad de hike de 25 pb en dic. (mínimos del FOMC hoy miércoles); 10Y ~5.10% (llegó a 5.15%) · Nvidia (-1.7% el martes, ~$153.6; Huang dijo que volvería como CEO si el consejo quiere) presentó resultados tras el cierre: aún sin datos al generar este informe; Anthropic debuta en bolsa el jueves (hasta ~$1.4 billones) · Oro ~$3,870 y plata ~$47.7 (mín. anuales); petróleo rebota: WTI ~$87.3 y Brent ~$93.1 (+0.8%) pese a las advertencias de exceso de oferta (Goldman, IEA) · Europa cae con fuerza (DAX ~-1.8%, FTSE ~-1.4% estimados), Corea -2.6%, Nikkei a la baja por chips · DXY ~103.6, EUR/USD ~1.1010, GBP/USD ~1.3185, USD/JPY ~159.5 · BTC ~$63.7K y ETH ~$1,780 (7 salidas seguidas de ETF hasta el 13 nov.) · Hoy miércoles 18 nov: FOMC Minutes, EIA, CPI del Reino Unido y reacción a Nvidia.</div>
+    </div>
+  </div>
+
+                                <div class="ic-layout">
+<nav class="ic-cat-tabs">
+<div class="ic-cat-item open" data-cat="metales">
+  <button class="ic-cat-btn" data-cat="metales">
+    <span><span class="ic-cat-name">Metales</span><span class="ic-cat-assets-preview">Oro, Plata</span></span>
+    <span class="ic-cat-chevron">&#9656;</span>
+  </button>
+  <div class="ic-cat-assets-list">
+    <div class="tab-btn active" data-tab="xau"><span class="ic-asset-code">XAU</span><span class="ic-asset-name">Oro</span></div>
+    <div class="tab-btn" data-tab="xag"><span class="ic-asset-code">XAG</span><span class="ic-asset-name">Plata</span></div>
+  </div>
+</div>
+<div class="ic-cat-item" data-cat="cripto">
+  <button class="ic-cat-btn" data-cat="cripto">
+    <span><span class="ic-cat-name">Cripto</span><span class="ic-cat-assets-preview">Bitcoin, Ethereum</span></span>
+    <span class="ic-cat-chevron">&#9656;</span>
+  </button>
+  <div class="ic-cat-assets-list">
+    <div class="tab-btn" data-tab="btc"><span class="ic-asset-code">BTC</span><span class="ic-asset-name">Bitcoin</span></div>
+    <div class="tab-btn" data-tab="eth"><span class="ic-asset-code">ETH</span><span class="ic-asset-name">Ethereum</span></div>
+  </div>
+</div>
+<div class="ic-cat-item" data-cat="energia">
+  <button class="ic-cat-btn" data-cat="energia">
+    <span><span class="ic-cat-name">Energía</span><span class="ic-cat-assets-preview">Petroleo WTI, Petroleo Brent, Gas Natural</span></span>
+    <span class="ic-cat-chevron">&#9656;</span>
+  </button>
+  <div class="ic-cat-assets-list">
+    <div class="tab-btn" data-tab="wti"><span class="ic-asset-code">WTI</span><span class="ic-asset-name">Petroleo WTI</span></div>
+    <div class="tab-btn" data-tab="brent"><span class="ic-asset-code">BRENT</span><span class="ic-asset-name">Petroleo Brent</span></div>
+    <div class="tab-btn" data-tab="natgas"><span class="ic-asset-code">NATGAS</span><span class="ic-asset-name">Gas Natural</span></div>
+  </div>
+</div>
+<div class="ic-cat-item" data-cat="indices">
+  <button class="ic-cat-btn" data-cat="indices">
+    <span><span class="ic-cat-name">Índices</span><span class="ic-cat-assets-preview">Dow Jones, S&P 500, Nasdaq 100, DAX Alemania, FTSE 100, Nikkei 225</span></span>
+    <span class="ic-cat-chevron">&#9656;</span>
+  </button>
+  <div class="ic-cat-assets-list">
+    <div class="tab-btn" data-tab="us30"><span class="ic-asset-code">US30</span><span class="ic-asset-name">Dow Jones</span></div>
+    <div class="tab-btn" data-tab="sp500"><span class="ic-asset-code">SP500</span><span class="ic-asset-name">S&P 500</span></div>
+    <div class="tab-btn" data-tab="us100"><span class="ic-asset-code">US100</span><span class="ic-asset-name">Nasdaq 100</span></div>
+    <div class="tab-btn" data-tab="dax"><span class="ic-asset-code">DAX</span><span class="ic-asset-name">DAX Alemania</span></div>
+    <div class="tab-btn" data-tab="uk100"><span class="ic-asset-code">UK100</span><span class="ic-asset-name">FTSE 100</span></div>
+    <div class="tab-btn" data-tab="japan225"><span class="ic-asset-code">JAPAN225</span><span class="ic-asset-name">Nikkei 225</span></div>
+  </div>
+</div>
+<div class="ic-cat-item" data-cat="divisas">
+  <button class="ic-cat-btn" data-cat="divisas">
+    <span><span class="ic-cat-name">Divisas</span><span class="ic-cat-assets-preview">Indice Dolar, Euro/Dolar, Libra/Dolar, Dolar/Yen</span></span>
+    <span class="ic-cat-chevron">&#9656;</span>
+  </button>
+  <div class="ic-cat-assets-list">
+    <div class="tab-btn" data-tab="dxy"><span class="ic-asset-code">DXY</span><span class="ic-asset-name">Indice Dolar</span></div>
+    <div class="tab-btn" data-tab="eurusd"><span class="ic-asset-code">EURUSD</span><span class="ic-asset-name">Euro/Dolar</span></div>
+    <div class="tab-btn" data-tab="gbpusd"><span class="ic-asset-code">GBPUSD</span><span class="ic-asset-name">Libra/Dolar</span></div>
+    <div class="tab-btn" data-tab="usdjpy"><span class="ic-asset-code">USDJPY</span><span class="ic-asset-name">Dolar/Yen</span></div>
+  </div>
+</div>
+</nav>
+<div class="ic-content">
+<div class="ic-cat-group active" data-cat="metales">
+  <div class="allpanels">
+<!-- XAU -->
+  <div class="panel active" id="xau">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">~$3,870</div>
+      <div class="sub">~+0.4% (~$3,870; lunes ~$3,853): rebota levemente desde el mínimo de más de un año ($3,835) mientras el dólar frena; yields ~5.1% y ~95% de hike en dic. limitan el rebote. Cierre y rango aprox. (fuentes: $3,868-3,880).</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$3,867</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$3,927</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$3,898</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$3,838</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$3,807</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$3,930</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$3,895</b>R1 / máx. del martes</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$3,815</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$3,775</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$3,890-3,930</b>Oferta inmediata (cierre del viernes y máx. del martes).</div>
+      <div class="zone zone-supply"><b class="tag-r">$3,960-4,000</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">$3,800-3,840</b>Soporte inmediato (mín. de más de un año).</div>
+      <div class="zone zone-demand"><b class="tag-g">$3,700-3,800</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $3,890 y cerca de mínimos anuales; rebotes a $3,890-3,930 son de venta; &lt; $3,815 abre $3,775/$3,700.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $3,930 neutraliza; &lt; $3,775 abre $3,700.</li><li><span class="tag-r">Riesgo:</span> FOMC Minutes hoy, yields, dólar; resultados de Nvidia y Anthropic pueden mover el riesgo; rebote técnico.</li></ul></div>
+</div>
+</div>
+<!-- XAG -->
+  <div class="panel" id="xag">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">~$47.70</div>
+      <div class="sub">~+1.0% (~$47.7; lunes ~$47.6): estabiliza cerca de los mínimos anuales ($47.06 del lunes) con el dólar en máximos. Cierre estimado (fuente: $47.72 +1.55%); rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$47.70</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$49.10</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$48.40</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$47.00</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$46.30</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$49.20</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$48.40</b>R1 / máx. del martes</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$46.30</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$44.90</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$48.40-49.50</b>Oferta (cierre del viernes y número redondo).</div>
+      <div class="zone zone-demand"><b class="tag-g">$46.50-47.20</b>Soporte inmediato (mín. anual).</div>
+      <div class="zone zone-demand"><b class="tag-g">$44.50-46.50</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $48.4; rebotes a $48.4-49.2 son de venta; &lt; $46.3 abre $44.9.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $49.20 neutraliza; &lt; $44.90 abre $43.</li><li><span class="tag-r">Riesgo:</span> Beta 2x del oro, dólar/yields, FOMC Minutes hoy; cierre estimado: valida en tu plataforma.</li></ul></div>
+</div>
+</div>
+  </div>
+</div>
+
+<div class="ic-cat-group" data-cat="cripto">
+  <div class="allpanels">
+<!-- BTC -->
+  <div class="panel" id="btc">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~$63,700</div>
+      <div class="sub">~$63,700 (lunes ~$64,000; -0.5%): cede de nuevo bajo $65K con los yields sobre 5% y la caída tecnológica; sigue sobre el mín. del fin de semana (~$62K). Cierre y rango aprox. (vela del martes).</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$63,900</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$66,000</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$64,900</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$62,800</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$61,800</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$66,000</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$65,100</b>R1 / máx. del martes</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$62,000</b>S1 / mín. del fin de semana</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$60,700</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$65,100-67,800</b>Oferta (máx. del martes y SMA 200 semanas perdida).</div>
+      <div class="zone zone-supply"><b class="tag-r">$70,000-72,600</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">$62,000-63,000</b>Soporte inmediato (mín. del fin de semana).</div>
+      <div class="zone zone-demand"><b class="tag-g">$58,000-62,000</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $65K; rebotes a $65-67.8K son de venta; &lt; $62K abre $60K/$58K; sobreventa extrema.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $67,800 neutraliza; &lt; $60,000 abre $58,000.</li><li><span class="tag-r">Riesgo:</span> Nvidia (reacción hoy), Anthropic (jueves), FOMC Minutes, flujos de ETF, liquidaciones.</li></ul></div>
+</div>
+</div>
+<!-- ETH -->
+  <div class="panel" id="eth">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~$1,780</div>
+      <div class="sub">~$1,780 est. (lunes ~$1,800): sigue bajo $1,850 y sobre el mín. del fin de semana ($1,711). Cierre y rango estimados (sin dato confiable): valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$1,785</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$1,870</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$1,825</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$1,740</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$1,700</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$1,870</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$1,830</b>R1 / máx. del martes</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$1,730</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$1,690</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$1,830-2,000</b>Oferta (máx. del martes y ex-soporte $2,000).</div>
+      <div class="zone zone-demand"><b class="tag-g">$1,700-1,750</b>Soporte inmediato (mín. del fin de semana).</div>
+      <div class="zone zone-demand"><b class="tag-g">$1,550-1,700</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo $1,850; rebotes a $1,830-1,870 son de venta; &lt; $1,711 abre $1,650/$1,550.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $2,000 neutraliza; &lt; $1,700 abre $1,550.</li><li><span class="tag-r">Riesgo:</span> Salidas de ETF, Nvidia, FOMC Minutes, liquidaciones; cierre estimado.</li></ul></div>
+</div>
+</div>
+  </div>
+</div>
+
+<div class="ic-cat-group" data-cat="energia">
+  <div class="allpanels">
+<!-- WTI -->
+  <div class="panel" id="wti">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">~$87.30</div>
+      <div class="sub">~$87.30 (dic.; +1.8%; lunes $85.72): rebota con titulares de Irán/Ormuz pese a las advertencias de exceso de oferta (Goldman, IEA). Cierre y rango aprox. (fuentes: $86.4 intradía en Yahoo, $87.30 en otra); valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$86.83</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$89.43</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$88.37</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$85.77</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$84.23</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$89.40</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$88.35</b>R1 / cierre del viernes</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$84.70</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$82.90</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$88.30-89.40</b>Oferta (cierre del viernes y R1).</div>
+      <div class="zone zone-demand"><b class="tag-g">$85.30-86.00</b>Soporte inmediato (mín. del lunes y martes).</div>
+      <div class="zone zone-demand"><b class="tag-g">$82.00-85.30</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — rebota hacia $87-88; rebotes a $88.3-89.4 son de venta; &lt; $85.3 abre $84.7/$82.9.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $89.40 neutraliza; &lt; $82.90 abre $81.</li><li><span class="tag-r">Riesgo:</span> Irán/Ormuz, EIA hoy, exceso de oferta (IEA/Goldman), dólar; cierre estimado.</li></ul></div>
+</div>
+</div>
+<!-- BRENT -->
+  <div class="panel" id="brent">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">$93.14</div>
+      <div class="sub">$93.14 (+0.8%; lunes $92.44): rebota tras la caída del lunes pese a la advertencia de exceso de oferta de Goldman (escenario alcista $96, bajista $88); sigue bajo $95. Rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$92.71</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$94.91</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$94.03</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$91.83</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$90.51</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$95.30</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$94.20</b>R1 / ex-soporte</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$90.30</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$87.50</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$94.20-96.00</b>Oferta (cierre del viernes y R1).</div>
+      <div class="zone zone-demand"><b class="tag-g">$90.00-91.50</b>Soporte inmediato (número redondo $90).</div>
+      <div class="zone zone-demand"><b class="tag-g">$87.00-90.00</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-bajista — rebota hacia $93-94; rebotes a $94.2-96 son de venta; &lt; $90 abre $88/$87.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; $96 neutraliza; &lt; $87 abre $85.</li><li><span class="tag-r">Riesgo:</span> Irán/Ormuz, EIA hoy, OPEC+, exceso de oferta; dólar; rebote técnico.</li></ul></div>
+</div>
+</div>
+<!-- NATGAS -->
+  <div class="panel" id="natgas">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~$2.980</div>
+      <div class="sub">~$2.98 (dic.; estimado, sin settle confirmado del martes; lunes ~$2.99): en rango estrecho alrededor de $3.00. Cierre y rango estimados: valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>$2.987</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>$3.107</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>$3.043</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>$2.923</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>$2.867</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>$3.100</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>$3.040</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>$2.920</b>S1</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>$2.860</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">$3.040-3.130</b>Oferta.</div>
+      <div class="zone zone-demand"><b class="tag-g">$2.900-2.950</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">$2.800-2.900</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral — en torno a $3.00; &gt; $3.04 apunta a $3.12; &lt; $2.92 abre $2.86.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; $2.92 neutraliza; &gt; $3.13 abre $3.25.</li><li><span class="tag-r">Riesgo:</span> Meteorología, GNL/Irán, informe del EIA (jueves); dato estimado.</li></ul></div>
+</div>
+</div>
+  </div>
+</div>
+
+<div class="ic-cat-group" data-cat="indices">
+  <div class="allpanels">
+<!-- US30 -->
+  <div class="panel" id="us30">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">50,759</div>
+      <div class="sub">-1.64% (cierre 50,759.42; lunes 51,608.17; -849 pts): cierra bajo 51,285 y rompe soporte; JPMorgan y los bancos, software y aerolíneas pesan; ~95% de hike en dic. Rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>50,970</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>51,820</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>51,290</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>50,440</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>50,120</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>51,500</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>51,100</b>R1 / ex-soporte</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>50,300</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>49,900</b>S2 / número redondo</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">51,285-51,600</b>Oferta (soporte roto y cierre del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">50,300-50,650</b>Soporte inmediato (mín. del martes).</div>
+      <div class="zone zone-demand"><b class="tag-g">49,500-50,300</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — rompe 51,285; rebotes a 51,100-51,600 son de venta; &lt; 50,650 abre 50,000/49,500.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 51,600 neutraliza; &lt; 49,500 abre 49,000.</li><li><span class="tag-r">Riesgo:</span> Nvidia (reacción hoy), FOMC Minutes, Anthropic (jueves), yields; rebote técnico en sobreventa.</li></ul></div>
+</div>
+</div>
+<!-- SP500 -->
+  <div class="panel" id="sp500">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">7,341</div>
+      <div class="sub">-1.02% (cierre 7,340.53; lunes 7,416.59; -76 pts): cuarto cierre bajista seguido y el más bajo desde julio; todos los sectores a la baja (software, aerolíneas y bancos los peores); VIX ~26. Rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>7,359</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>7,474</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>7,407</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>7,292</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>7,244</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>7,440</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>7,385</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>7,265</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>7,190</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">7,385-7,440</b>Oferta (mín. del viernes y gap del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">7,265-7,330</b>Soporte inmediato (mín. del martes).</div>
+      <div class="zone zone-demand"><b class="tag-g">7,150-7,265</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — pierde 7,400; rebotes a 7,385-7,440 son de venta; &lt; 7,310 abre 7,265/7,190.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 7,440 neutraliza; &lt; 7,190 abre 7,100.</li><li><span class="tag-r">Riesgo:</span> Nvidia (resultados tras el cierre: gap en cualquier dirección), FOMC Minutes, Anthropic (jueves), VIX; rebote violento tras 4 caídas.</li></ul></div>
+</div>
+</div>
+<!-- US100 -->
+  <div class="panel" id="us100">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~27,050</div>
+      <div class="sub">~-0.7% (~27,050 est.; lunes ~27,250 est.; Nasdaq Comp. -0.74% a 24,328.38): el sector tecnológico sigue bajo presión antes de Nvidia. Cierre estimado desde el Nasdaq (sin dato oficial del NDX); rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>27,050</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>27,650</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>27,350</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>26,750</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>26,450</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>27,560</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>27,300</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>26,800</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>26,550</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">27,300-27,700</b>Oferta (gap del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">26,750-27,000</b>Soporte inmediato (mín. del martes).</div>
+      <div class="zone zone-demand"><b class="tag-g">26,400-26,750</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — pierde 27,300; rebotes a 27,300-27,560 son de venta; &lt; 26,800 abre 26,550/26,400.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 27,560 neutraliza; &lt; 26,400 abre 26,000.</li><li><span class="tag-r">Riesgo:</span> Nvidia (resultados tras el cierre), Anthropic (jueves), yields; cierre estimado: valida en tu plataforma.</li></ul></div>
+</div>
+</div>
+<!-- DAX -->
+  <div class="panel" id="dax">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~26,160</div>
+      <div class="sub">~-1.8% (~26,160 est.; lunes 26,630): rompe 26,500 y 26,350 con la tecnología y la ola vendedora de Europa; Corea -2.6%. Cierre deducido del -1.78% de media sesión; rango estimado: valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>26,303</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>26,853</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>26,507</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>25,957</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>25,753</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>26,690</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>26,425</b>R1 / ex-soporte</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>25,895</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>25,630</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">26,350-26,650</b>Oferta (soportes rotos y cierre del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">25,900-26,100</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">25,500-25,900</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — rompe 26,350; rebotes a 26,350-26,650 son de venta; &lt; 26,100 abre 25,900/25,500.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 26,650 neutraliza; &lt; 25,500 abre 25,000.</li><li><span class="tag-r">Riesgo:</span> Nvidia (hoy), FOMC Minutes, Fed/yields, Irán/petróleo; cierre y rango estimados.</li></ul></div>
+</div>
+</div>
+<!-- UK100 -->
+  <div class="panel" id="uk100">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~10,746</div>
+      <div class="sub">~-1.35% (~10,746 est.; lunes 10,893): venta generalizada europea, sin refugio en energéticas ni mineras; el CPI del Reino Unido sale hoy. Cierre deducido del -1.35% de una fuente; rango estimado: valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>10,785</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>10,955</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>10,851</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>10,681</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>10,615</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>10,890</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>10,815</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>10,670</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>10,595</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">10,815-10,900</b>Oferta (soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">10,670-10,720</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">10,500-10,670</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — pierde 10,830; rebotes a 10,815-10,900 son de venta; &lt; 10,670 abre 10,595/10,500.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 10,900 neutraliza; &lt; 10,500 abre 10,400.</li><li><span class="tag-r">Riesgo:</span> CPI UK hoy (BoE), Nvidia, oro/petróleo, Fed/yields; cierre y rango estimados.</li></ul></div>
+</div>
+</div>
+<!-- JAPAN225 -->
+  <div class="panel" id="japan225">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~59,900</div>
+      <div class="sub">~-1.3% (~59,900 est.; lunes ~60,700 est.): cae con Kioxia, Advantest y SoftBank en una sesión de venta de chips (Kospi -2.6%). Cierre y rango estimados (sin dato confiable): valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>60,067</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>61,167</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>60,533</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>59,433</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>58,967</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>60,650</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>60,280</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>59,500</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>59,100</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">60,300-60,900</b>Oferta (soporte roto y cierre del lunes).</div>
+      <div class="zone zone-demand"><b class="tag-g">59,340-59,700</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">58,500-59,340</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — pierde 60,350; rebotes a 60,300-60,650 son de venta; &lt; 59,500 abre 59,340/58,500.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 60,650 neutraliza; &lt; 58,500 abre 57,500.</li><li><span class="tag-r">Riesgo:</span> Nvidia (reacción), yen en 160 (intervención del MoF), yields; cierre y rango estimados.</li></ul></div>
+</div>
+</div>
+  </div>
+</div>
+
+<div class="ic-cat-group" data-cat="divisas">
+  <div class="allpanels">
+<!-- DXY -->
+  <div class="panel" id="dxy">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">~103.62</div>
+      <div class="sub">~103.62 (+0.1%; lunes ~103.50): máximo de más de un año (103.66 en Asia) con yields sobre 5% y ~95% de hike en dic.; sigue sin romper 104. Cierre y rango aprox.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>103.59</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>103.94</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>103.78</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>103.43</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>103.24</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>103.95</b>R2</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>103.78</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>103.45</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>103.28</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">103.70-104.00</b>Oferta (máx. de más de un año).</div>
+      <div class="zone zone-supply"><b class="tag-r">104.60-104.75</b>Oferta mayor.</div>
+      <div class="zone zone-demand"><b class="tag-g">103.30-103.50</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">102.60-103.30</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Alcista — en máximos de más de un año; &gt; 103.78 apunta a 104; &lt; 103.45 neutraliza; sobreextendido.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; 103.30 neutraliza; &gt; 104.70 abre 105.</li><li><span class="tag-r">Riesgo:</span> FOMC Minutes hoy, toma de ganancias; intervención del MoF; CPI UK (libra).</li></ul></div>
+</div>
+</div>
+<!-- EURUSD -->
+  <div class="panel" id="eurusd">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price">~1.1010</div>
+      <div class="sub">~+0.1% (~1.1010 est.; lunes ~1.1020): recupera 1.1000 tras tocar mínimos de ~6 meses; sigue bajo 1.1050. Cierre y rango estimados: valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>1.1010</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>1.1060</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>1.1035</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>1.0985</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>1.0960</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>1.1060</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>1.1035</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>1.0985</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>1.0960</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">1.1035-1.1075</b>Oferta (soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">1.0975-1.1000</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">1.0900-1.0975</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo 1.1050; rebotes a 1.1035-1.1075 son de venta; &lt; 1.0985 abre 1.0960/1.0900.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 1.1075 neutraliza; &lt; 1.0950 abre 1.0900.</li><li><span class="tag-r">Riesgo:</span> FOMC Minutes hoy, Fed/yields, BCE; sobreventa → rebote técnico.</li></ul></div>
+</div>
+</div>
+<!-- GBPUSD -->
+  <div class="panel" id="gbpusd">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~1.3185</div>
+      <div class="sub">~-0.04% (~1.3185 est.; lunes ~1.3190): lateral bajo 1.3250 con el dólar fuerte; el CPI del Reino Unido sale hoy y define a la BoE. Cierre y rango estimados: valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>1.3185</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>1.3255</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>1.3220</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>1.3150</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>1.3115</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>1.3255</b>R2 / ex-soporte</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>1.3220</b>R1</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>1.3115</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>1.3080</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">1.3215-1.3260</b>Oferta (soporte roto).</div>
+      <div class="zone zone-demand"><b class="tag-g">1.3115-1.3160</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">1.3050-1.3115</b>Demanda mayor.</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Bajista — bajo 1.3230; rebotes a 1.3215-1.3260 son de venta; &lt; 1.3115 abre 1.3080/1.3050.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &gt; 1.3260 neutraliza; &lt; 1.3050 abre 1.3000.</li><li><span class="tag-r">Riesgo:</span> CPI UK hoy (BoE), FOMC Minutes, Fed/yields; sobreventa → rebote técnico.</li></ul></div>
+</div>
+</div>
+<!-- USDJPY -->
+  <div class="panel" id="usdjpy">
+<div class="ic-panel-left">
+<div class="card">
+      <h2>Precio actual</h2>
+      <div class="price down">~159.50</div>
+      <div class="sub">~159.50 est. (lunes ~159.60): sin romper 160 con el 10Y ~5.10%; riesgo de intervención del MoF en 160-162. Cierre y rango estimados (sin dato confiable): valida en tu plataforma.</div>
+    </div>
+<div class="card">
+      <h2>Punto de pivote (aprox.)</h2>
+      <div class="pivot-wrap">
+        <div class="pivot-pp"><span>PP</span><b>159.53</b></div>
+        <div class="pivot-grid">
+          <div class="lvl"><span class="tag-r">R2</span><b>160.23</b></div>
+          <div class="lvl"><span class="tag-r">R1</span><b>159.87</b></div>
+          <div class="lvl"><span class="tag-g">S1</span><b>159.17</b></div>
+          <div class="lvl"><span class="tag-g">S2</span><b>158.83</b></div>
+        </div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Soportes/resistencias intradía</h2>
+      <div class="intraday">
+        <div class="lvl"><span class="tag-r">R2</span><b>160.40</b>R2 / zona de intervención</div>
+        <div class="lvl"><span class="tag-r">R1</span><b>159.95</b>R1 / 160.00</div>
+        <div class="lvl"><span class="tag-g">S1</span><b>159.00</b>S1 / soporte</div>
+        <div class="lvl"><span class="tag-g">S2</span><b>158.60</b>S2</div>
+      </div>
+    </div>
+<div class="card">
+      <h2>Zonas de oferta / demanda</h2>
+      <div class="zone zone-supply"><b class="tag-r">159.90-160.90</b>Oferta (160.00-160.50, zona de intervención del MoF).</div>
+      <div class="zone zone-demand"><b class="tag-g">159.00-159.40</b>Soporte inmediato.</div>
+      <div class="zone zone-demand"><b class="tag-g">158.40-159.00</b>Demanda mayor (media 200d).</div>
+    </div>
+</div>
+<div class="ic-panel-right">
+<div class="card"><h2>Sesgo</h2><ul><li>Neutral-alcista — bajo 160; &gt; 160.50 apunta a 162; &lt; 159.00 neutraliza. Riesgo de intervención del MoF cerca de 160-162.</li></ul></div>
+<div class="card risk"><h2>Riesgo</h2><ul><li><span class="tag-r">Invalidación:</span> Cierre &lt; 159.00 neutraliza; &gt; 162.50 abre 164.</li><li><span class="tag-r">Riesgo:</span> Intervención del MoF/BoJ, yields, FOMC Minutes hoy; movimiento brusco si interviene (-2 a -4 yenes).</li></ul></div>
+</div>
+</div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<div class="foot">Informe generado con datos de mercado en vivo · Solo referencia, no es consejo financiero.</div>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.tab-btn');
+  const panels = document.querySelectorAll('.panel');
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+</script>
+
+<script src="./js/data.js" defer></script>
+<script src="./js/main.js" defer></script>
+
+<script>
+  document.querySelectorAll('.ic-cat-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.ic-cat-item');
+      var cat = btn.dataset.cat;
+
+      document.querySelectorAll('.ic-cat-item').forEach(function (it) { it.classList.remove('open'); });
+      document.querySelectorAll('.ic-cat-group').forEach(function (g) { g.classList.remove('active'); });
+
+      item.classList.add('open');
+      var group = document.querySelector('.ic-cat-group[data-cat="' + cat + '"]');
+      if (!group) return;
+      group.classList.add('active');
+
+      if (!group.querySelector('.panel.active')) {
+        var firstTab = item.querySelector('.tab-btn');
+        if (firstTab) {
+          document.querySelectorAll('.tab-btn').forEach(function (b) { b.classList.remove('active'); });
+          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+          firstTab.classList.add('active');
+          var firstPanel = document.getElementById(firstTab.dataset.tab);
+          if (firstPanel) firstPanel.classList.add('active');
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
