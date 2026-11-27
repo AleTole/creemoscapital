@@ -156,7 +156,7 @@ NAVBAR_HTML = """<header class="nav" id="navbar">
     </a>
     <nav class="nav-links" aria-label="Principal">
       <a href="./index.html#mercados">Mercados</a>
-      <a href="./index.html#serie">Reto Bitget</a>
+      <a href="./index.html#serie">Reto <img class="bg-ico" src="./img/bitget.webp" alt="" width="18" height="18">Bitget</a>
       <a href="./index.html#unete">&Uacute;nete</a>
       <a href="./index.html#noticias">Noticias</a>
       <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
@@ -186,7 +186,7 @@ NAVBAR_HTML = """<header class="nav" id="navbar">
 </header>
 <div class="mobile-menu" id="mobile-menu">
   <a href="./index.html#mercados">Mercados</a>
-  <a href="./index.html#serie">Reto Bitget</a>
+  <a href="./index.html#serie">Reto <img class="bg-ico" src="./img/bitget.webp" alt="" width="18" height="18">Bitget</a>
   <a href="./index.html#unete">&Uacute;nete</a>
   <a href="./index.html#noticias">Noticias</a>
   <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
@@ -209,7 +209,7 @@ FOOTER_HTML = """<footer>
       <div>
         <h5>Explora</h5>
         <a href="./index.html#mercados">Mercados</a>
-        <a href="./index.html#serie">Reto Bitget</a>
+        <a href="./index.html#serie">Reto <img class="bg-ico" src="./img/bitget.webp" alt="" width="18" height="18">Bitget</a>
         <a href="./index.html#noticias">Noticias</a>
         <a href="./informe.html">Informe diario</a>
       </div>

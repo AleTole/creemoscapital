@@ -33,8 +33,8 @@
   --section: clamp(72px, 8vw, 128px);
   --r: 16px; --r-lg: 24px;
   --ease: cubic-bezier(.16, 1, .3, 1);
-  --nav-h: 72px;
-  --ticker-h: 46px;
+  --nav-h: 80px;
+  --ticker-h: 52px;
   --top: calc(var(--nav-h) + var(--ticker-h));
 }
 
@@ -88,19 +88,21 @@ button { font: inherit; color: inherit; }
 /* Navegación */
 .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background-color .3s, border-color .3s; border-bottom: 1px solid transparent; }
 .nav.scrolled { background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); border-bottom-color: var(--line); }
-.nav .container { display: flex; align-items: center; gap: 16px; height: var(--nav-h); }
+.nav .container { display: flex; align-items: center; gap: 12px; height: var(--nav-h); max-width: 1400px; }
 main { padding-top: var(--top); }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.02em; }
-.brand img { width: 44px; height: 44px; object-fit: contain; flex: none; }
-.brand-name { line-height: 1.1; font-size: 15px; white-space: nowrap; }
-.brand-name small { display: block; font-size: 11px; font-weight: 500; letter-spacing: .14em; color: var(--blue-text); margin-top: 1px; }
+.brand img { width: 52px; height: 52px; object-fit: contain; flex: none; }
+.brand-name { line-height: 1.1; font-size: 16px; white-space: nowrap; }
+.brand-name small { display: block; font-size: 11.5px; font-weight: 500; letter-spacing: .14em; color: var(--blue-text); margin-top: 1px; }
 .nav-links { display: flex; gap: 4px; margin-left: auto; }
-.nav-links a { white-space: nowrap; padding: 8px 11px; border-radius: 999px; font-size: 14px; color: var(--muted); transition: color .2s, background-color .2s; }
+.nav-links a { white-space: nowrap; padding: 10px 11px; border-radius: 999px; font-size: 15.5px; color: var(--muted); transition: color .2s, background-color .2s; }
 .nav-links a:hover { color: var(--text); background: var(--surface-2); }
 .nav-links a[aria-current="page"] { color: var(--text); background: var(--surface-2); }
 .nav-links a.pill { color: var(--blue-text); background: var(--blue-soft); font-weight: 500; }
 .nav-links a.pill:hover { background: color-mix(in srgb, var(--blue) 20%, transparent); }
 .nav-actions { display: flex; align-items: center; gap: 8px; }
+.nav-actions .btn-sm { height: 46px; padding: 0 18px; font-size: 15.5px; }
+.nav-actions .icon-btn { width: 46px; height: 46px; }
 .icon-btn { width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--line-2); background: transparent; display: grid; place-items: center; cursor: pointer; transition: background-color .2s; }
 .icon-btn:hover { background: var(--surface-2); }
 .icon-btn svg { width: 18px; height: 18px; }
@@ -109,7 +111,7 @@ main { padding-top: var(--top); }
 :root[data-theme="dark"] .theme-ico-moon { display: none; }
 .menu-btn { display: none !important; }
 .mobile-menu { display: none; }
-@media (max-width: 960px) {
+@media (max-width: 1270px) {
   .nav-links { display: none; }
   .nav-actions { margin-left: auto; }
   .menu-btn { display: grid !important; }
@@ -118,24 +120,25 @@ main { padding-top: var(--top); }
   .mobile-menu a:not(.btn) { display: block; padding: 14px 0; font-size: 18px; font-weight: 500; border-bottom: 1px solid var(--line); }
   .mobile-menu .btn { width: 100%; margin-top: 16px; }
 }
-@media (max-width: 480px) { .nav-actions .btn-primary { display: none; } .brand-name small { display: none; } }
+@media (max-width: 640px) { :root { --nav-h: 68px; --ticker-h: 46px; } .brand img { width: 44px; height: 44px; } .brand-name { font-size: 16px; } .nav-actions .icon-btn { width: 42px; height: 42px; } .tk-price { font-size: 14px; } .tk-name, .tk-pct { font-size: 12.5px; } }
+@media (max-width: 480px) { .nav:has(.live-pill:not([hidden])) .brand-name { display: none; } .nav-actions .btn-primary { display: none; } .brand-name small { display: none; } }
 
 /* Ticker de precios (Bitget): forma parte del header fijo, se mueve con el menú */
 .ticker { display: flex; align-items: stretch; height: var(--ticker-h); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg-2) 92%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); overflow: hidden; }
 .nav:not(.scrolled) .ticker { border-top-color: transparent; }
 .ticker-badge { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 16px; border-right: 1px solid var(--line); background: var(--surface); }
-.ticker-badge span { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); line-height: 1; }
-.ticker-badge b { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: -.01em; line-height: 1; }
-.ticker-badge img { width: 16px; height: 16px; border-radius: 4px; }
+.ticker-badge span { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); line-height: 1; }
+.ticker-badge b { display: inline-flex; align-items: center; gap: 6px; font-size: 15px; font-weight: 700; letter-spacing: -.01em; line-height: 1; }
+.ticker-badge img { width: 19px; height: 19px; border-radius: 4px; }
 .ticker-view { flex: 1; overflow: hidden; display: flex; align-items: center; mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
 #ticker-items { display: inline-flex; align-items: center; white-space: nowrap; animation: tickerScroll 70s linear infinite; }
 .ticker:hover #ticker-items { animation-play-state: paused; }
 @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .ticker-empty { color: var(--faint); font-size: var(--fs-xs); padding: 0 24px; }
 .tk-item { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 16px; }
-.tk-name { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
-.tk-price { font: 500 13px "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--text); }
-.tk-pct { font: 500 12px "Geist Mono", ui-monospace, monospace; }
+.tk-name { font-size: 13.5px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+.tk-price { font: 500 15px "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--text); }
+.tk-pct { font: 500 13.5px "Geist Mono", ui-monospace, monospace; }
 .tk-pos { color: var(--up); }
 .tk-neg { color: var(--down); }
 .tk-sep { color: var(--line-2); }
@@ -395,3 +398,7 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--line); }
   .academy-copy .perks, .academy-ctas { justify-content: center; }
 }
 @media (max-width: 520px) { .academy-ctas { width: 100%; flex-direction: column; } .academy-ctas .btn { width: 100%; } }
+
+/* Logo de Bitget junto a todo lo que viene de Bitget */
+.bg-ico { display: inline-block; width: 1.15em; height: 1.15em; border-radius: .26em; vertical-align: -.22em; margin: 0 .2em 0 .1em; flex: none; }
+.nav-links a .bg-ico, .mobile-menu a .bg-ico { width: 1.05em; height: 1.05em; }

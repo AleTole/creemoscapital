@@ -348,7 +348,7 @@
         player.textContent = '';              // se descarga el reproductor al terminar el directo
       }
     }
-    document.title = live ? '🔴 En vivo · ' + TITULO : TITULO;
+    document.title = live ? '🔴 Sesión en vivo · ' + TITULO : TITULO;
   }
   async function revisarDirecto() {
     if (/[?&]demo-live\b/.test(location.search)) return aplicarDirecto(true);   // para probar el aviso
@@ -364,6 +364,11 @@
   const ID_VIDEO = /^[\w-]{11}$/;
   let reproduciendo = null;
 
+  function logoBitget() {
+    const i = el('img', 'bg-ico');
+    i.src = './img/bitget.webp'; i.alt = ''; i.width = 16; i.height = 16;
+    return i;
+  }
   function iconoPlay() {
     const ns = 'http://www.w3.org/2000/svg';
     const svg = document.createElementNS(ns, 'svg');
@@ -383,7 +388,9 @@
     const play = el('span', 'play'); play.appendChild(iconoPlay());
     b.append(img, el('span', 'day', `Día ${v.dia}`));
     if (esUltimo) b.appendChild(el('span', 'new', 'Último'));
-    b.append(play, el('span', 'cap', `Día ${v.dia} de ${total} operando con Bitget`));
+    const pie = el('span', 'cap', `Día ${v.dia} de ${total} operando con Bitget`);
+    pie.appendChild(logoBitget());
+    b.append(play, pie);
     b.addEventListener('click', () => reproducir(b, v, esUltimo, total));
     return b;
   }
@@ -454,7 +461,10 @@
     a.href = n.enlace; a.target = '_blank'; a.rel = 'noopener noreferrer';
     const meta = el('div', 'news-meta');
     const clase = ['bitget', 'okx'].includes(String(n.fuente).toLowerCase()) ? ' ' + String(n.fuente).toLowerCase() : '';
-    meta.append(el('span', 'news-src' + clase, n.fuente), el('span', '', hace(n.fecha)));
+    const origen = el('span', 'news-src' + clase);
+    if (clase === ' bitget') origen.appendChild(logoBitget());     // lo que llega de Bitget lleva su logo
+    origen.appendChild(document.createTextNode(n.fuente));
+    meta.append(origen, el('span', '', hace(n.fecha)));
     a.append(meta, el('h4', '', n.titulo), el('span', 'go', 'Leer →'));
     return a;
   }
