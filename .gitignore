@@ -40,3 +40,6 @@ recursos/
 
 # La plataforma (academy) tendrá su propio repositorio privado
 academy/
+
+# Datos que se regeneran solos cada 30 minutos (no se versionan; la serie de videos SI)
+src/data/noticias.json

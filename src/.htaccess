@@ -17,6 +17,11 @@ Options -Indexes
   Require all denied
 </FilesMatch>
 
+# Archivo de control del despliegue automático (también dentro de data/)
+<FilesMatch "^\.ftp-deploy">
+  Require all denied
+</FilesMatch>
+
 # Carpetas y archivos ocultos (.cache, .private, .git…) cerrados; .well-known sigue abierto (lo usan los certificados)
 <IfModule mod_alias.c>
   RedirectMatch 404 ^/\.(?!well-known)
