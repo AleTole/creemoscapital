@@ -64,6 +64,11 @@ def preparar(destino: Path, oficial: bool = False) -> None:
         shutil.copy(RAIZ / elegido.stdout.strip(), destino / "informe.html")
         ejecutar(RAIZ / "scripts" / "recolor_informe.py", destino / "informe.html")
 
+    # 3b) huella en los enlaces de JS y CSS: ningun navegador usa una copia vieja guardada
+    sys.path.insert(0, str(RAIZ / "scripts"))
+    from versionar import versionar_carpeta
+    versionar_carpeta(destino)
+
     if oficial:
         return                                  # la pagina oficial NO se oculta a buscadores
 

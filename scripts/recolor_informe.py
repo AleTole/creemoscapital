@@ -16,9 +16,12 @@ sistema que la portada: css/evolution.css, claro y oscuro):
 Uso: python recolor_informe.py <archivo.html>
 Modifica el archivo in-place.
 """
+import hashlib
+import os
 import re
 import sys
 import unicodedata
+from pathlib import Path
 
 # Variables propias del informe -> tokens del sistema de diseno.
 # --bg / --text / --muted NO se redefinen: ya existen en evolution.css con
@@ -482,19 +485,85 @@ def inject_navbar_footer(html: str) -> str:
     return html
 
 
+def localizar_src():
+    """Carpeta con css/ y js/ del sitio, para calcular la huella de cada archivo.
+    Orden: variable CC_SRC_DIR, <carpeta del script>/repo/src (VPS), <carpeta del script>/../src (proyecto)."""
+    aqui = Path(__file__).resolve().parent
+    for c in (os.environ.get("CC_SRC_DIR"), aqui / "repo" / "src", aqui.parent / "src"):
+        if c and (Path(c) / "js" / "main.js").is_file():
+            return Path(c)
+    return None
+
+
+ENLACE_LOCAL = re.compile(r'((?:src|href)=")\./((?:js|css)/[\w.-]+\.(?:js|css))(?:\?v=[\w.-]+)?(")')
+
+
+def versionar_assets(html: str, src_dir) -> str:
+    """Anade ?v=<huella> a cada ./js/*.js y ./css/*.css del HTML.
+    Asi, cuando un archivo cambia, el enlace cambia y NINGUN navegador usa una copia vieja guardada
+    (el hosting hace que el navegador guarde JS y CSS 7 dias). Si no se encuentra el archivo, se deja igual."""
+    if not src_dir:
+        return html
+
+    def poner(m):
+        ruta = Path(src_dir) / m.group(2)
+        if not ruta.is_file():
+            return m.group(0)
+        huella = hashlib.sha1(ruta.read_bytes()).hexdigest()[:8]
+        return f"{m.group(1)}./{m.group(2)}?v={huella}{m.group(3)}"
+
+    return ENLACE_LOCAL.sub(poner, html)
+
+
+def limpiar_entrada(html: str) -> str:
+    """Quita del informe TODO lo que es 'decorado del sitio' (menu, ticker, pie, scripts del sitio, CSS y fuentes de
+    integracion), venga de donde venga. Asi el resultado es siempre el mismo aunque el companero parta de:
+      - el informe 'crudo' de siempre,
+      - un informe.html ya procesado con el diseno VIEJO (Tailwind, OKX), o
+      - un informe.html ya procesado con el diseno NUEVO.
+    El contenido (cabecera, activos, paneles, su script de pestanas) no se toca."""
+    # CSS de integracion (el viejo y el nuevo): desde su comentario hasta el cierre del <style>
+    html = re.sub(r"/\* ---- Integracion con creemoscapital\.com[^*]*\*/.*?(?=</style>)", "", html, flags=re.S)
+    # cabecera <head>: Tailwind, fuentes, hoja del sitio y script de tema
+    html = re.sub(r'<script src="https://cdn\.tailwindcss\.com"></script>\s*<script>\s*tailwind\.config.*?</script>\s*', "", html, flags=re.S)
+    html = re.sub(r'<link rel="preconnect"[^>]*>\s*', "", html)
+    html = re.sub(r'<link href="https://fonts\.googleapis\.com/css2[^>]*>\s*', "", html)
+    html = re.sub(r'<link rel="stylesheet" href="\./css/evolution\.css[^"]*">\s*', "", html)
+    html = re.sub(r"<script>\s*\(function \(\) \{\s*var s = null; try \{ s = localStorage\.getItem\('cc-theme'\).*?</script>\s*", "", html, flags=re.S)
+    # menu, ticker viejo, menu movil, pie
+    html = re.sub(r"<header\b.*?</header>\s*", "", html, flags=re.S)
+    html = re.sub(r'<div class="mobile-menu" id="mobile-menu">.*?</div>\s*', "", html, flags=re.S)
+    for bloque in split_top_level_divs(html, '<div style="position:fixed;top:64px'):   # ticker del diseno viejo
+        html = html.replace(bloque, "")
+    html = re.sub(r"<footer\b.*?</footer>\s*", "", html, flags=re.S)
+    # scripts del sitio y el de categorias (se vuelven a poner una sola vez); el script de pestañas del informe se conserva
+    html = re.sub(r'<script src="\./js/(?:data|main)\.js[^"]*"[^>]*></script>\s*', "", html)
+    html = re.sub(r"<script>\s*document\.querySelectorAll\('\.ic-cat-btn'\).*?</script>\s*", "", html, flags=re.S)
+    # la etiqueta "Informe diario" que pone el propio proceso
+    html = html.replace('<span class="tag"><i></i>Informe diario</span>\n    ', "")
+    html = html.replace('<span class="tag"><i></i>Informe diario</span>', "")
+    return html
+
+
 def adapt(html: str) -> str:
+    html = limpiar_entrada(html)
     html = recolor(html)
     html = ensure_viewport(html)
     html = replace_embedded_logo(html)
     html = strip_brand_logo_img(html)
     html = rename_report_brand(html)
     html = fix_title(html)
+    etiqueta = '<span class="tag"><i></i>Informe diario</span>'
+    if etiqueta not in html:                    # (si fix_title no la puso porque el titulo ya venia con la fecha)
+        html = re.sub(r"(<h1>[^<]*<span class=\"ic-year\">)", etiqueta + r"\n    \1", html, count=1)
     html = mark_document(html)
     html = ensure_head_assets(html)
     html = inject_css(html)
-    html = restructure_panel_cards(html)
+    if "ic-panel-left" not in html:             # si ya viene reorganizado (informe ya procesado) no se repite
+        html = restructure_panel_cards(html)
     html = group_by_category(html)
     html = inject_navbar_footer(html)
+    html = versionar_assets(html, localizar_src())
     return html
 
 

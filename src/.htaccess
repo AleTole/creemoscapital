@@ -22,6 +22,14 @@ Options -Indexes
   Require all denied
 </FilesMatch>
 
+# Caché: el HTML y los datos se revalidan siempre (cambian a menudo, y los datos se actualizan solos cada pocos minutos).
+# El JS y el CSS pueden guardarse mucho tiempo porque sus enlaces llevan ?v=huella y cambian cuando el archivo cambia.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
 # Carpetas y archivos ocultos (.cache, .private, .git…) cerrados; .well-known sigue abierto (lo usan los certificados)
 <IfModule mod_alias.c>
   RedirectMatch 404 ^/\.(?!well-known)
