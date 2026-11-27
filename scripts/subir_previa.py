@@ -13,6 +13,8 @@ Uso (PowerShell, desde la carpeta del proyecto):
     python scripts/subir_previa.py --oficial  -> sube a la PAGINA OFICIAL (https://creemoscapital.com/):
                                                  guarda antes una copia de lo que reemplaza y pide escribir OFICIAL
     python scripts/subir_previa.py --oficial --probar -> muestra que subiria a la oficial, sin conectarse
+    python scripts/subir_previa.py --limpiar-informes -> borra del servidor la carpeta informes/ (los originales ya no se publican;
+                                                 viven en GitHub). Antes comprueba que no se pierda nada y pide escribir BORRAR
 
 Servidor y usuario se leen de deploy.py (ya los tienes ahi). La contrasena: variable FTP_PASS o se pide al ejecutar.
 """
@@ -145,7 +147,56 @@ def respaldar(ftp: ftplib.FTP, archivos, carpeta: Path) -> int:
     return n
 
 
+def limpiar_informes_en(ftp, locales, confirmar, carpeta_copia: Path) -> str:
+    """Borra del servidor la carpeta informes/ (los originales ya no se publican; viven en GitHub).
+    Seguridad: lo que NO este en GitHub (locales) se guarda primero en tu PC. Devuelve un resumen."""
+    try:
+        crudos = ftp.nlst("informes")
+    except ftplib.error_perm:
+        return "No hay carpeta informes/ en el servidor: nada que borrar."
+    remotos = sorted({n.replace("\\", "/").rstrip("/").split("/")[-1] for n in crudos} - {".", "..", ""})
+    solo_servidor = [n for n in remotos if n not in locales]
+    print(f"\nEn el servidor, informes/ tiene {len(remotos)} archivos:")
+    print(f"  - {len(remotos) - len(solo_servidor)} ya estan en GitHub (se pueden borrar sin perder nada)")
+    print(f"  - {len(solo_servidor)} NO estan en GitHub" + (": " + ", ".join(solo_servidor) if solo_servidor else ""))
+    if solo_servidor:
+        carpeta_copia.mkdir(parents=True, exist_ok=True)
+        for n in solo_servidor:
+            with open(carpeta_copia / n, "wb") as f:
+                ftp.retrbinary(f"RETR informes/{n}", f.write)
+        print(f"  Guardados en tu PC antes de borrar: {carpeta_copia}")
+    if not confirmar(len(remotos)):
+        return "Cancelado. No se borro nada."
+    borrados = 0
+    for n in remotos:
+        try:
+            ftp.delete(f"informes/{n}")
+            borrados += 1
+        except ftplib.error_perm as e:
+            print(f"  no se pudo borrar {n}: {e}")
+    try:
+        ftp.rmd("informes")
+        carpeta = "carpeta informes/ eliminada"
+    except ftplib.error_perm:
+        carpeta = "la carpeta informes/ quedo (no estaba vacia o no hay permiso)"
+    return f"Listo: {borrados} archivos borrados; {carpeta}."
+
+
+def limpiar_informes():
+    host, usuario = leer_constante("FTP_HOST"), leer_constante("FTP_USER")
+    locales = {p.name for p in (SRC / "informes").glob("*.html")}
+    clave = os.environ.get("FTP_PASS") or getpass.getpass("Contrasena de FTP de Hostinger (no se muestra): ")
+    ftp = conectar_verificado(host)
+    ftp.login(usuario, clave)
+    ftp.prot_p()
+    pregunta = lambda n: input(f"\n Se va a BORRAR la carpeta informes/ del servidor ({n} archivos). Escribe BORRAR para continuar: ").strip() == "BORRAR"
+    print(limpiar_informes_en(ftp, locales, pregunta, RAIZ / ("respaldo-informes-" + datetime.now().strftime("%Y%m%d-%H%M"))))
+    ftp.quit()
+
+
 def main():
+    if "--limpiar-informes" in sys.argv:
+        return limpiar_informes()
     if "--login" in sys.argv:
         return solo_comprobar_acceso()
     solo_probar = "--probar" in sys.argv

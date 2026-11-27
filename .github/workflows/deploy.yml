@@ -21,3 +21,4 @@ jobs:
           exclude: |
             **/.cache/**
             **/deploy.zip
+            **/informes/**
