@@ -1,0 +1,57 @@
+name: Vista previa (para aprobación)
+
+# Publica la rama v2-evolution en una carpeta aparte del hosting, para que el equipo
+# la vea y la apruebe ANTES de lanzarla como página oficial:
+#   https://creemoscapital.com/previa-v2-q8x4/
+# No toca la página oficial (otra carpeta, otro archivo de estado de FTP).
+# Se oculta a buscadores. Se actualiza sola con cada cambio de la rama.
+
+on:
+  push:
+    branches: [v2-evolution]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: vista-previa
+  cancel-in-progress: true
+
+jobs:
+  previa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Generar datos (noticias, calendario y serie de videos)
+        run: python3 scripts/actualizar_datos.py
+
+      - name: Informe más reciente con el diseño nuevo
+        run: |
+          ultimo=$(ls src/informes/*.html | sort | tail -n 1)
+          cp "$ultimo" src/informe.html
+          python3 scripts/recolor_informe.py src/informe.html
+
+      - name: Marcar como vista previa y ocultar a buscadores
+        run: |
+          printf 'User-agent: *\nDisallow: /\n' > src/robots.txt
+          printf '\n<IfModule mod_headers.c>\n  Header always set X-Robots-Tag "noindex, nofollow, noarchive"\n</IfModule>\n' >> src/.htaccess
+          for f in src/*.html; do
+            sed -i 's#<head>#<head>\n  <meta name="robots" content="noindex, nofollow">#' "$f"
+          done
+          rm -rf src/informes     # los informes originales no hacen falta en la vista previa
+
+      - name: Subir a la carpeta de vista previa por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./src/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}previa-v2-q8x4/
+          state-name: .ftp-deploy-sync-state-previa.json
+          exclude: |
+            **/.cache/**
+            **/deploy.zip
