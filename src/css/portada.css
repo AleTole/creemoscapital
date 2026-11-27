@@ -9,13 +9,7 @@
 .live-pill:hover { background: color-mix(in srgb, var(--down) 22%, transparent); }
 @keyframes blink { 50% { opacity: .45; } }
 .live-pill .ts { display: none; }
-.live-block { margin-bottom: clamp(28px, 4vw, 48px); }
-.live-banner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px 16px; margin: 0 auto 16px; padding: 10px 10px 10px 18px; border-radius: 999px; background: color-mix(in srgb, var(--down) 10%, var(--surface)); border: 1px solid color-mix(in srgb, var(--down) 34%, transparent); max-width: max-content; }
-.live-banner strong { color: var(--down); letter-spacing: .06em; text-transform: uppercase; font-size: 14px; animation: blink 1.6s ease-in-out infinite; }
-.live-banner .muted { font-size: var(--fs-small); }
-.live-block .window { max-width: 980px; margin: 0 auto; }
 @media (max-width: 640px) {
-  .live-banner { border-radius: 20px; justify-content: flex-start; padding: 12px 14px; }
   .live-pill { padding: 0 10px; }
   .live-pill .t { display: none; }
   .live-pill .ts { display: inline; }
@@ -115,7 +109,7 @@
 .more-links a:hover { background: var(--surface-2); transform: translateY(-1px); }
 @media (max-width: 960px) { .news-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 600px) { .news-grid { grid-template-columns: minmax(0, 1fr); } }
-@media (prefers-reduced-motion: reduce) { .live-pill, .live-banner strong { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .live-pill, .lf-title, .live-float { animation: none; } }
 
 /* ───────── Hero en dos columnas: texto a la izquierda, gráfico de mercados al costado ───────── */
 .hero { padding-top: clamp(24px, 3vw, 44px); }
@@ -178,3 +172,29 @@
 .news-src { gap: 5px; }
 .news-src img { width: 14px; height: 14px; border-radius: 4px; }
 .short .cap .bg-ico { width: 1.1em; height: 1.1em; vertical-align: -.2em; margin: 0 0 0 .2em; }
+
+/* ───────── Ventana flotante de la sesión en vivo (solo existe mientras estamos en directo) ───────── */
+.live-float { position: fixed; right: 20px; bottom: 20px; z-index: 60; width: 340px; max-width: calc(100vw - 24px); border-radius: 18px; background: var(--surface); border: 1px solid color-mix(in srgb, var(--down) 42%, var(--line-2)); box-shadow: 0 18px 50px -12px rgba(0, 0, 0, .55), 0 0 0 4px color-mix(in srgb, var(--down) 10%, transparent); overflow: hidden; animation: lfIn .45s var(--ease); }
+.live-float.big { width: min(580px, calc(100vw - 24px)); }
+@keyframes lfIn { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+.lf-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 7px 7px 7px 14px; cursor: grab; user-select: none; -webkit-user-select: none; touch-action: none; background: color-mix(in srgb, var(--down) 11%, var(--surface)); }
+.live-float.drag .lf-bar { cursor: grabbing; }
+.live-float.drag { transition: none; box-shadow: 0 26px 60px -12px rgba(0, 0, 0, .65), 0 0 0 4px color-mix(in srgb, var(--down) 16%, transparent); }
+.lf-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: var(--down); white-space: nowrap; animation: blink 1.6s ease-in-out infinite; }
+.lf-actions { display: flex; gap: 2px; }
+.lf-btn { width: 30px; height: 30px; border-radius: 50%; border: 0; background: transparent; color: var(--muted); display: grid; place-items: center; cursor: pointer; transition: background-color .2s, color .2s; }
+.lf-btn:hover { background: var(--surface-2); color: var(--text); }
+.lf-btn svg { width: 16px; height: 16px; }
+.lf-player { aspect-ratio: 16 / 9; background: #000; }
+.lf-player iframe { width: 100%; height: 100%; border: 0; display: block; }
+.lf-foot { display: flex; gap: 8px; padding: 10px; border-top: 1px solid var(--line); }
+.lf-foot .btn { flex: 1; height: 34px; font-size: 13px; padding: 0 12px; gap: 6px; }
+.lf-foot .btn svg { width: 15px; height: 15px; }
+.live-float.min { width: auto; }
+.live-float.min .lf-body, .live-float.min .lf-size { display: none; }
+.live-float.min .lf-bar { cursor: pointer; padding-right: 7px; }
+@media (max-width: 640px) {
+  .live-float, .live-float.big { right: 12px; bottom: 12px; width: min(330px, calc(100vw - 24px)); }
+  .live-float.min { width: auto; }
+  .lf-size { display: none; }
+}

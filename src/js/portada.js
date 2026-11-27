@@ -329,14 +329,75 @@
   const TITULO = document.title;
   let enVivo = null;
 
-  function aplicarDirecto(live) {
-    if (live === enVivo) return;
-    enVivo = live;
-    const bloque = $('#live-block'), pastilla = $('#nav-live'), player = $('#live-player');
-    if (bloque) bloque.hidden = !live;
-    if (pastilla) pastilla.hidden = !live;
-    if (player) {
-      if (live && !player.firstChild) {
+  // Ventana flotante: se queda en pantalla al hacer scroll, se puede mover, agrandar, minimizar a una pestañita y cerrar.
+  // El estado (abierta / minimizada / cerrada, tamaño y posición) se recuerda durante la visita.
+  const SS = { estado: 'cc-live-estado', grande: 'cc-live-grande', pos: 'cc-live-pos' };
+  const leer = k => { try { return sessionStorage.getItem(k); } catch (_) { return null; } };
+  const guardar = (k, v) => { try { if (v == null) sessionStorage.removeItem(k); else sessionStorage.setItem(k, v); } catch (_) { /* sin almacenamiento */ } };
+  let flotante = null;
+
+  function botonFlotante(clase, etiqueta, trazo) {
+    const b = el('button', 'lf-btn ' + clase);
+    b.type = 'button'; b.title = etiqueta; b.setAttribute('aria-label', etiqueta);
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    ['viewBox:0 0 24 24', 'fill:none', 'stroke:currentColor', 'stroke-width:2', 'stroke-linecap:round', 'stroke-linejoin:round']
+      .forEach(a => { const [k, v] = a.split(':'); svg.setAttribute(k, v); });
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', trazo);
+    svg.appendChild(path); b.appendChild(svg);
+    return b;
+  }
+  function enlaceFlotante(clase, texto, href, trazo) {
+    const a = el('a', 'btn btn-sm ' + clase);
+    a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    const ns = 'http://www.w3.org/2000/svg';
+    const svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24'); svg.setAttribute('fill', 'currentColor');
+    const p = document.createElementNS(ns, 'path'); p.setAttribute('d', trazo);
+    svg.appendChild(p);
+    a.append(svg, document.createTextNode(texto));
+    return a;
+  }
+
+  function abrirFlotante() {
+    if (flotante) return flotante;
+    const w = el('aside', 'live-float');
+    w.setAttribute('aria-label', 'Sesión en vivo');
+
+    const barra = el('div', 'lf-bar');
+    const titulo = el('span', 'lf-title');
+    titulo.append(el('span', 'live-dot'), document.createTextNode('Sesión en vivo'));
+    const bGrande = botonFlotante('lf-size', 'Agrandar', 'M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7');
+    const bMin = botonFlotante('lf-min', 'Minimizar', 'M5 12h14');
+    const bCerrar = botonFlotante('lf-close', 'Cerrar', 'M6 6l12 12M18 6L6 18');
+    const acciones = el('div', 'lf-actions');
+    acciones.append(bGrande, bMin, bCerrar);
+    barra.append(titulo, acciones);
+
+    const cuerpo = el('div', 'lf-body');
+    const player = el('div', 'lf-player');
+    const pie = el('div', 'lf-foot');
+    pie.append(
+      enlaceFlotante('btn-kick', 'Kick', 'https://kick.com/creemoscapital', 'M3 2h4v7.5L12.5 2H18l-7 9 7 11h-5.5L7 13.5V22H3z'),
+      enlaceFlotante('btn-yt', 'YouTube', 'https://www.youtube.com/@creemoscapital/live', 'M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2C0 8.1 0 12 0 12s0 3.9.5 5.8a3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1C24 15.9 24 12 24 12s0-3.9-.5-5.8zM9.7 15.5V8.5l6.3 3.5-6.3 3.5z')
+    );
+    pie.firstChild.title = 'Donar en Kick';
+    pie.lastChild.title = 'Super Chat en YouTube';
+    cuerpo.append(player, pie);
+    w.append(barra, cuerpo);
+    document.body.appendChild(w);
+    flotante = w;
+
+    // ── estado: abierta o minimizada ──
+    function poner(minimizada) {
+      w.classList.toggle('min', minimizada);
+      bMin.title = minimizada ? 'Restaurar' : 'Minimizar';
+      bMin.setAttribute('aria-label', bMin.title);
+      bMin.firstChild.firstChild.setAttribute('d', minimizada ? 'M4 4h16v16H4z' : 'M5 12h14');
+      if (minimizada) {
+        player.textContent = '';                         // minimizada = el video se detiene y no gasta datos
+      } else if (!player.firstChild) {
         const f = document.createElement('iframe');
         f.src = 'https://player.kick.com/creemoscapital';
         f.title = 'Directo de Creemos Capital en Kick';
@@ -344,11 +405,85 @@
         f.allowFullscreen = true;
         f.setAttribute('scrolling', 'no');
         player.appendChild(f);
-      } else if (!live) {
-        player.textContent = '';              // se descarga el reproductor al terminar el directo
       }
+      guardar(SS.estado, minimizada ? 'min' : 'open');
+      encuadrar();
     }
+    const guardado = leer(SS.estado);
+    poner(guardado ? guardado === 'min' : window.innerWidth <= 640);     // en móvil empieza como pestañita
+
+    bMin.addEventListener('click', () => poner(!w.classList.contains('min')));
+    bGrande.addEventListener('click', () => {
+      const grande = w.classList.toggle('big');
+      guardar(SS.grande, grande ? '1' : null);
+      encuadrar();
+    });
+    bCerrar.addEventListener('click', () => { guardar(SS.estado, 'closed'); cerrarFlotante(); });
+    if (leer(SS.grande) === '1') w.classList.add('big');
+
+    // ── mover arrastrando la barra ──
+    function colocar(x, y) {
+      const r = w.getBoundingClientRect();
+      x = Math.max(8, Math.min(window.innerWidth - r.width - 8, x));
+      y = Math.max(8, Math.min(window.innerHeight - r.height - 8, y));
+      w.style.left = x + 'px'; w.style.top = y + 'px'; w.style.right = 'auto'; w.style.bottom = 'auto';
+      return { x, y };
+    }
+    function encuadrar() {                               // mantiene la ventana dentro de la pantalla
+      if (w.style.left) { requestAnimationFrame(() => colocar(parseFloat(w.style.left), parseFloat(w.style.top))); }
+    }
+    try {
+      const p = JSON.parse(leer(SS.pos) || 'null');
+      if (p && isFinite(p.x) && isFinite(p.y)) requestAnimationFrame(() => colocar(p.x, p.y));
+    } catch (_) { /* posición por defecto */ }
+    window.addEventListener('resize', encuadrar);
+
+    let dx = 0, dy = 0, arrastrando = false, movido = false, x0 = 0, y0 = 0;
+    barra.addEventListener('pointerdown', e => {
+      if (e.button !== 0 || e.target.closest('.lf-actions')) return;
+      const r = w.getBoundingClientRect();
+      dx = e.clientX - r.left; dy = e.clientY - r.top; x0 = e.clientX; y0 = e.clientY;
+      arrastrando = true; movido = false;
+      barra.setPointerCapture(e.pointerId);
+    });
+    barra.addEventListener('pointermove', e => {
+      if (!arrastrando) return;
+      if (!movido && Math.hypot(e.clientX - x0, e.clientY - y0) < 4) return;
+      movido = true; w.classList.add('drag');
+      colocar(e.clientX - dx, e.clientY - dy);
+    });
+    const soltar = () => {
+      if (!arrastrando) return;
+      arrastrando = false; w.classList.remove('drag');
+      if (movido) guardar(SS.pos, JSON.stringify({ x: parseFloat(w.style.left), y: parseFloat(w.style.top) }));
+      else if (w.classList.contains('min')) poner(false);        // un toque en la pestañita la abre
+    };
+    barra.addEventListener('pointerup', soltar);
+    barra.addEventListener('pointercancel', soltar);
+    return w;
+  }
+  function cerrarFlotante() {
+    if (flotante) { flotante.remove(); flotante = null; }    // al quitarla se descarga el reproductor
+  }
+
+  function aplicarDirecto(live) {
+    if (live === enVivo) return;
+    enVivo = live;
+    const pastilla = $('#nav-live');
+    if (pastilla) pastilla.hidden = !live;
+    if (live) { if (leer(SS.estado) !== 'closed') abrirFlotante(); }
+    else { cerrarFlotante(); guardar(SS.estado, null); }
     document.title = live ? '🔴 Sesión en vivo · ' + TITULO : TITULO;
+  }
+  function reabrirDirecto(e) {                               // la pastilla del menú la vuelve a abrir si se cerró o minimizó
+    if (!enVivo) return;
+    e.preventDefault();
+    if (flotante) {                                           // ya existe: solo se restaura si estaba minimizada
+      if (flotante.classList.contains('min')) flotante.querySelector('.lf-min').click();
+      return;
+    }
+    guardar(SS.estado, 'open');
+    abrirFlotante();
   }
   async function revisarDirecto() {
     if (/[?&]demo-live\b/.test(location.search)) return aplicarDirecto(true);   // para probar el aviso
@@ -503,6 +638,8 @@
   // ───────────────────────── Inicio ─────────────────────────
   function iniciar() {
     iniciarTerminal();
+    const pastilla = $('#nav-live');
+    if (pastilla) pastilla.addEventListener('click', reabrirDirecto);
     revisarDirecto();
     setInterval(revisarDirecto, 60000);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) revisarDirecto(); });

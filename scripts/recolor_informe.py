@@ -134,6 +134,7 @@ EXTRA_CSS = """
     .informe .wrap { padding-left: calc(272px + var(--gutter)); }
     .ic-cat-tabs { position: fixed; left: 0; top: var(--top); bottom: 0; width: 256px; z-index: 20; margin: 0; overflow-y: auto; border-radius: 0; border-width: 0 1px 0 0; background: var(--bg-2); padding: 20px 12px; }
     .ic-content { max-width: 1320px; margin: 0 auto; }
+    .informe footer { margin-left: 256px; }   /* el menú lateral fijo ya no tapa la primera columna del pie */
     .panel.active { display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: min-content; gap: 12px; }
     .ic-panel-left, .ic-panel-right { display: contents; }
   }
