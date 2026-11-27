@@ -195,6 +195,7 @@ function filtrarCalendario(filtro) {
 }
 
 async function cargarCalendario() {
+  if (!document.getElementById('ff-calendar')) return;   // solo la portada tiene calendario
   const loading = document.getElementById('ff-calendar-loading');
   const FF_URL  = 'https://nfs.faireconomy.media/ff_calendar_thisweek.json?timezone=America%2FBogota';
   const PROXIES = [
