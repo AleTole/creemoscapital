@@ -34,10 +34,12 @@
   --r: 16px; --r-lg: 24px;
   --ease: cubic-bezier(.16, 1, .3, 1);
   --nav-h: 72px;
+  --ticker-h: 46px;
+  --top: calc(var(--nav-h) + var(--ticker-h));
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--nav-h) + 12px); }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; scroll-padding-top: calc(var(--top) + 12px); }
 body { margin: 0; background: var(--bg); color: var(--text); font: 400 var(--fs-body)/1.6 "Geist", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; overflow-x: hidden; transition: background-color .4s var(--ease), color .4s var(--ease); }
 h1, h2, h3, h4, p, ul { margin: 0; }
 ul { padding: 0; list-style: none; }
@@ -87,6 +89,7 @@ button { font: inherit; color: inherit; }
 .nav { position: fixed; inset: 0 0 auto; z-index: 50; transition: background-color .3s, border-color .3s; border-bottom: 1px solid transparent; }
 .nav.scrolled { background: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); border-bottom-color: var(--line); }
 .nav .container { display: flex; align-items: center; gap: 24px; height: var(--nav-h); }
+main { padding-top: var(--top); }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -.02em; }
 .brand img { width: 44px; height: 44px; object-fit: contain; flex: none; }
 .brand-name { line-height: 1.1; font-size: 15px; }
@@ -109,35 +112,35 @@ button { font: inherit; color: inherit; }
   .nav-links { display: none; }
   .nav-actions { margin-left: auto; }
   .menu-btn { display: grid !important; }
-  .mobile-menu { display: block; position: fixed; inset: var(--nav-h) 0 auto; z-index: 49; background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px var(--gutter) 24px; transform: translateY(-12px); opacity: 0; pointer-events: none; transition: opacity .3s var(--ease), transform .3s var(--ease); }
+  .mobile-menu { display: block; position: fixed; inset: var(--top) 0 auto; z-index: 49; background: var(--bg); border-bottom: 1px solid var(--line); padding: 8px var(--gutter) 24px; transform: translateY(-12px); opacity: 0; pointer-events: none; transition: opacity .3s var(--ease), transform .3s var(--ease); }
   .mobile-menu.open { opacity: 1; transform: none; pointer-events: auto; }
   .mobile-menu a:not(.btn) { display: block; padding: 14px 0; font-size: 18px; font-weight: 500; border-bottom: 1px solid var(--line); }
   .mobile-menu .btn { width: 100%; margin-top: 16px; }
 }
 @media (max-width: 480px) { .nav-actions .btn-primary { display: none; } .brand-name small { display: none; } }
 
-/* Ticker OKX */
-.ticker { margin-top: var(--nav-h); display: flex; align-items: stretch; height: 46px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-2); overflow: hidden; }
-.ticker-badge { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 0 16px; border-right: 1px solid var(--line); background: var(--surface); }
+/* Ticker de precios (Bitget): forma parte del header fijo, se mueve con el menú */
+.ticker { display: flex; align-items: stretch; height: var(--ticker-h); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg-2) 92%, transparent); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); overflow: hidden; }
+.nav:not(.scrolled) .ticker { border-top-color: transparent; }
+.ticker-badge { flex: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; padding: 0 16px; border-right: 1px solid var(--line); background: var(--surface); }
 .ticker-badge span { font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); line-height: 1; }
-.ticker-badge img { height: 16px; width: auto; }
-/* El logo de OKX es blanco: en modo claro se invierte para que se vea */
-:root:not([data-theme="dark"]) .ticker-badge img { filter: invert(1); }
+.ticker-badge b { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; letter-spacing: -.01em; line-height: 1; }
+.ticker-badge img { width: 16px; height: 16px; border-radius: 4px; }
 .ticker-view { flex: 1; overflow: hidden; display: flex; align-items: center; mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent); }
-#okx-ticker-items { display: inline-flex; align-items: center; white-space: nowrap; animation: tickerScroll 60s linear infinite; }
-.ticker:hover #okx-ticker-items { animation-play-state: paused; }
+#ticker-items { display: inline-flex; align-items: center; white-space: nowrap; animation: tickerScroll 70s linear infinite; }
+.ticker:hover #ticker-items { animation-play-state: paused; }
 @keyframes tickerScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .ticker-empty { color: var(--faint); font-size: var(--fs-xs); padding: 0 24px; }
-.okx-item { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 16px; }
-.okx-name { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
-.okx-price { font: 500 13px "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--text); }
-.okx-pct { font: 500 12px "Geist Mono", ui-monospace, monospace; }
-.okx-pos { color: var(--up); }
-.okx-neg { color: var(--down); }
-.okx-sep { color: var(--line-2); }
+.tk-item { display: inline-flex; align-items: baseline; gap: 8px; padding: 0 16px; }
+.tk-name { font-size: 12px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+.tk-price { font: 500 13px "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; color: var(--text); }
+.tk-pct { font: 500 12px "Geist Mono", ui-monospace, monospace; }
+.tk-pos { color: var(--up); }
+.tk-neg { color: var(--down); }
+.tk-sep { color: var(--line-2); }
 
 /* Hero */
-.hero { position: relative; padding: clamp(48px, 7vw, 96px) 0 clamp(48px, 6vw, 88px); overflow: hidden; isolation: isolate; }
+.hero { position: relative; padding: clamp(40px, 6vw, 88px) 0 clamp(48px, 6vw, 88px); overflow: hidden; isolation: isolate; }
 .hero-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .hero-bg .orb { position: absolute; width: 900px; height: 900px; left: 50%; top: -480px; margin-left: -450px; border-radius: 50%; background: radial-gradient(circle, var(--glow), transparent 62%); animation: breathe 9s ease-in-out infinite; }
 .hero-bg .orb.two { width: 520px; height: 520px; top: 120px; left: 85%; margin-left: -260px; background: radial-gradient(circle, rgba(163, 230, 53, .14), transparent 65%); animation-delay: -4s; }
@@ -195,21 +198,6 @@ button { font: inherit; color: inherit; }
 .ico { width: 44px; height: 44px; border-radius: 14px; background: var(--blue-soft); color: var(--blue-text); display: grid; place-items: center; flex: none; }
 .ico svg { width: 22px; height: 22px; }
 .ico.lime { background: var(--lime-soft); color: var(--lime-text); }
-
-/* Sesiones */
-.sessions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.sesion-card { border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); padding: clamp(20px, 2.4vw, 28px); transition: transform .5s var(--ease), border-color .3s; }
-.sesion-card:hover { transform: translateY(-4px); border-color: var(--line-2); }
-.sesion-header { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
-.sesion-nombre { font-size: var(--fs-h3); font-weight: 600; letter-spacing: -.02em; }
-.sesion-horarios { display: flex; flex-direction: column; }
-.sesion-tz { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 0; border-bottom: 1px dashed var(--line); }
-.sesion-tz:last-child { border-bottom: 0; padding-bottom: 0; }
-.sesion-tz-flags { display: flex; align-items: center; gap: 4px; }
-.sesion-tz-flags img, .sesion-header img { border-radius: 3px; box-shadow: 0 0 0 1px var(--line-2); }
-.sesion-tz-hora { font: 500 14px "Geist Mono", ui-monospace, monospace; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.sessions-foot { display: flex; justify-content: center; margin-top: 28px; }
-@media (max-width: 960px) { .sessions { grid-template-columns: minmax(0, 1fr); } }
 
 /* Pasos (cómo unirse) */
 .join { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: start; }
@@ -380,6 +368,6 @@ footer { padding: 56px 0 40px; border-top: 1px solid var(--line); }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .reveal { transform: none; filter: none; }
-  .marquee-track, #okx-ticker-items { animation-duration: 120s; }
+  .marquee-track, #ticker-items { animation-duration: 140s; }
   .hero-bg .orb, .tag i::after, .live-dot::after, .alert-ico::after { animation: none; }
 }

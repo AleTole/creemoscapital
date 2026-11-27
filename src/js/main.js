@@ -15,7 +15,7 @@ function esc(str) {
 
 // ── NAVBAR scroll ─────────────────────────────────────────────
 const navbar = document.getElementById('navbar');
-function marcarNavbar() { navbar.classList.toggle('scrolled', window.scrollY > 10); }
+function marcarNavbar() { if (navbar) navbar.classList.toggle('scrolled', window.scrollY > 10); }
 window.addEventListener('scroll', marcarNavbar, { passive: true });
 marcarNavbar();
 
@@ -23,16 +23,19 @@ marcarNavbar();
 function setMenu(abierto) {
   const menu = document.getElementById('mobile-menu');
   const btn = document.getElementById('menu');
+  if (!menu) return;
   menu.classList.toggle('open', abierto);
   if (btn) btn.setAttribute('aria-expanded', String(abierto));
 }
-document.getElementById('menu').addEventListener('click', () => {
+const btnMenu = document.getElementById('menu');
+if (btnMenu) btnMenu.addEventListener('click', () => {
   setMenu(!document.getElementById('mobile-menu').classList.contains('open'));
 });
 document.querySelectorAll('#mobile-menu a').forEach(a => a.addEventListener('click', () => setMenu(false)));
 
 // ── TEMA CLARO / OSCURO ───────────────────────────────────────
-document.getElementById('theme').addEventListener('click', () => {
+const btnTema = document.getElementById('theme');
+if (btnTema) btnTema.addEventListener('click', () => {
   const root = document.documentElement;
   const siguiente = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
   root.setAttribute('data-theme', siguiente);
@@ -288,8 +291,9 @@ function cerrarAlertaNoticias() {
   if (overlay) overlay.style.display = 'none';
 }
 
-// ── OKX TICKER ────────────────────────────────────────────────
-const OKX_PARES = ['BTC-USDT','ETH-USDT','SOL-USDT','XRP-USDT','BNB-USDT','DOGE-USDT','ADA-USDT','AVAX-USDT','LINK-USDT','TON-USDT'];
+// ── TICKER BITGET ─────────────────────────────────────────────
+// API pública de Bitget (sin clave, con CORS abierto). Bitget Token (BGB) primero.
+const TICKER_PARES = ['BGB','BTC','ETH','SOL','XRP','BNB','DOGE','ADA','AVAX','LINK','TRX'];
 
 function fmtPrecio(n) {
   if (n >= 1000) return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -297,53 +301,46 @@ function fmtPrecio(n) {
   return n.toFixed(5);
 }
 
-function renderTickerOKX(data) {
-  const cont = document.getElementById('okx-ticker-items');
+function renderTicker(data) {
+  const cont = document.getElementById('ticker-items');
   if (!cont) return;
   const mapa = {};
-  data.forEach(t => { mapa[t.instId] = t; });
+  data.forEach(t => { mapa[t.symbol] = t; });
 
-  const html = OKX_PARES.map(par => {
-    const t = mapa[par];
+  const html = TICKER_PARES.map(base => {
+    const t = mapa[base + 'USDT'];
     if (!t) return '';
-    const precio = parseFloat(t.last);
-    const open   = parseFloat(t.sodUtc8);
-    const pct    = open > 0 ? ((precio - open) / open * 100) : 0;
-    const pos    = pct >= 0;
-    const base   = par.split('-')[0];
-    return `<div class="okx-item">
-      <span class="okx-name">${base}</span>
-      <span class="okx-price">$${fmtPrecio(precio)}</span>
-      <span class="okx-pct ${pos ? 'okx-pos' : 'okx-neg'}">${pos ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%</span>
+    const precio = parseFloat(t.lastPr);
+    const pct    = parseFloat(t.change24h) * 100;   // Bitget entrega el cambio 24h como fracción
+    if (isNaN(precio) || isNaN(pct)) return '';
+    const pos = pct >= 0;
+    return `<div class="tk-item">
+      <span class="tk-name">${base}</span>
+      <span class="tk-price">$${fmtPrecio(precio)}</span>
+      <span class="tk-pct ${pos ? 'tk-pos' : 'tk-neg'}">${pos ? '▲' : '▼'} ${Math.abs(pct).toFixed(2)}%</span>
     </div>`;
-  }).join('<span class="okx-sep">·</span>');
+  }).filter(Boolean).join('<span class="tk-sep">·</span>');
 
+  if (!html) return;
   // Duplicar para scroll infinito
-  cont.innerHTML = html + '<span class="okx-sep" style="padding:0 2rem;"></span>' + html;
+  cont.innerHTML = html + '<span class="tk-sep" style="padding:0 2rem;"></span>' + html;
 }
 
-async function cargarTickerOKX() {
-  const OKX_API = 'https://www.okx.com/api/v5/market/tickers?instType=SPOT';
-  const urls = [
-    OKX_API,
-    `https://corsproxy.io/?${encodeURIComponent(OKX_API)}`,
-  ];
-  for (const url of urls) {
-    try {
-      const res  = await fetch(url, { cache: 'no-store' });
-      const json = await res.json();
-      if (json.code === '0' && Array.isArray(json.data)) {
-        renderTickerOKX(json.data);
-        setInterval(async () => {
-          try {
-            const r = await fetch(url, { cache: 'no-store' });
-            const j = await r.json();
-            if (j.code === '0') renderTickerOKX(j.data);
-          } catch(_) {}
-        }, 15000);
-        return;
-      }
-    } catch(_) { continue; }
+async function cargarTicker() {
+  if (!document.getElementById('ticker-items')) return;
+  const URL_API = 'https://api.bitget.com/api/v2/spot/market/tickers';
+  async function leer() {
+    const res  = await fetch(URL_API, { cache: 'no-store' });
+    const json = await res.json();
+    if (json.code !== '00000' || !Array.isArray(json.data)) throw new Error('respuesta inesperada');
+    renderTicker(json.data);
+  }
+  try {
+    await leer();
+    setInterval(() => { leer().catch(() => {}); }, 15000);
+  } catch (_) {
+    const cont = document.getElementById('ticker-items');
+    if (cont) cont.innerHTML = '<span class="ticker-empty">Precios no disponibles por ahora.</span>';
   }
 }
 
@@ -408,7 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSesiones();
   renderVideos();
   cargarCalendario();
-  cargarTickerOKX();
+  cargarTicker();
   iniciarReveal();
   iniciarRotator();
   iniciarPasos();

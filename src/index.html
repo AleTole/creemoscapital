@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Creemos Capital — Trading en Vivo</title>
   <meta name="description" content="Aprende trading con análisis en vivo. Sesiones NY, Crypto, Asia y Europa todas las noches desde las 21hs.">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://www.okx.com https://www.youtube.com; media-src 'none';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://www.youtube-nocookie.com https://www.youtube.com/iframe_api; frame-src https://player.kick.com https://www.youtube.com https://www.youtube-nocookie.com https://open.spotify.com; img-src 'self' data: https://flagcdn.com https://img.youtube.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://nfs.faireconomy.media https://api.allorigins.win https://corsproxy.io https://api.bitget.com https://www.youtube.com; media-src 'none';">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
 
@@ -33,7 +33,6 @@
       </a>
       <nav class="nav-links" aria-label="Principal">
         <a href="#en-vivo">En vivo</a>
-        <a href="#sesiones">Sesiones</a>
         <a href="#unete">Únete</a>
         <a href="#noticias">Noticias</a>
         <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
@@ -51,27 +50,24 @@
         </button>
       </div>
     </div>
+    <div class="ticker" aria-label="Precios en tiempo real de Bitget">
+      <a class="ticker-badge" href="https://partner.bitget.com/bg/E1X2FN" target="_blank" rel="noopener noreferrer" aria-label="Bitget">
+        <span>Powered by</span>
+        <b><img src="./img/bitget.webp" alt="" width="16" height="16">Bitget</b>
+      </a>
+      <div class="ticker-view">
+        <div id="ticker-items"><span class="ticker-empty">Cargando precios en tiempo real…</span></div>
+      </div>
+    </div>
   </header>
   <div class="mobile-menu" id="mobile-menu">
     <a href="#en-vivo">En vivo</a>
-    <a href="#sesiones">Sesiones</a>
     <a href="#unete">Únete</a>
     <a href="#noticias">Noticias</a>
     <a href="https://academy.creemoscapital.com/cursos">Cursos</a>
     <a href="./informe.html">Informe</a>
     <a href="./academy.html">Academy</a>
     <a class="btn btn-primary" href="#unete">Únete a la comunidad</a>
-  </div>
-
-  <!-- ── TICKER OKX ──────────────────────────────────────────── -->
-  <div class="ticker" aria-label="Precios en tiempo real de OKX">
-    <a class="ticker-badge" href="https://www.okx.com/join/CREEMOS" target="_blank" rel="noopener noreferrer">
-      <span>Powered by</span>
-      <img src="./img/OKX-250x141.png" alt="OKX">
-    </a>
-    <div class="ticker-view">
-      <div id="okx-ticker-items"><span class="ticker-empty">Cargando precios en tiempo real…</span></div>
-    </div>
   </div>
 
   <main>
@@ -120,26 +116,9 @@
         <div class="channels reveal">
           <p>Nos encuentras en</p>
           <div class="marquee"><div class="marquee-track">
-            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span><span>OKX</span>
-            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span><span>OKX</span>
+            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span>
+            <span>YouTube</span><span>Kick</span><span>Telegram</span><span>Discord</span><span>TikTok</span><span>Instagram</span>
           </div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── SESIONES ────────────────────────────────────────── -->
-    <section class="section" id="sesiones">
-      <div class="container">
-        <div class="head center">
-          <span class="tag reveal"><i></i>Horarios por país</span>
-          <h2 class="h2 reveal" style="--d:1">Una sesión para cada momento del mercado.</h2>
-          <p class="lead reveal" style="--d:2">Nueva York, Asia y Europa. Entra en la que mejor te venga según tu zona horaria.</p>
-        </div>
-        <div id="sesiones-grid" class="sessions"></div>
-        <div class="sessions-foot">
-          <a class="btn btn-ghost" href="https://www.youtube.com/@creemoscapital/live" target="_blank" rel="noopener">
-            <span class="live-dot" aria-hidden="true"></span>Ir al canal para ver si estamos en vivo
-          </a>
         </div>
       </div>
     </section>
@@ -404,8 +383,7 @@
         <div>
           <h5>Explora</h5>
           <a href="#en-vivo">En vivo</a>
-          <a href="#sesiones">Sesiones</a>
-          <a href="#noticias">Noticias</a>
+            <a href="#noticias">Noticias</a>
           <a href="./informe.html">Informe diario</a>
         </div>
         <div>
