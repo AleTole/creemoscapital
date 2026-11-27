@@ -53,10 +53,9 @@ def preparar(destino: Path, oficial: bool = False) -> None:
     # 1) datos al dia (noticias, calendario, serie de videos)
     ejecutar(RAIZ / "scripts" / "actualizar_datos.py")
 
-    # 2) copia limpia de src (sin cache ni paquetes). La vista previa tampoco lleva los informes originales;
-    #    la pagina oficial si (es el archivo de informes, igual que en el despliegue de siempre).
-    excluir = [".cache", "deploy.zip", ".ftp-deploy*"] + ([] if oficial else ["informes"])
-    shutil.copytree(SRC, destino, ignore=shutil.ignore_patterns(*excluir))
+    # 2) copia limpia de src (sin cache ni paquetes). Los informes ORIGINALES (src/informes/) no se publican: la pagina solo
+    #    necesita informe.html (el mas reciente, ya con el diseno del sitio) y los originales viven en GitHub.
+    shutil.copytree(SRC, destino, ignore=shutil.ignore_patterns(".cache", "deploy.zip", ".ftp-deploy*", "informes"))
 
     # 3) informe mas reciente con el diseno nuevo (valida el formato; si falla, se corta aqui)
     elegido = subprocess.run([sys.executable, str(RAIZ / "scripts" / "elegir_informe.py")], cwd=RAIZ, capture_output=True, text=True)
