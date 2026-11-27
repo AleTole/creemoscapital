@@ -15,6 +15,7 @@ Uso:  python scripts/actualizar_datos.py
 """
 import html
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -24,7 +25,8 @@ from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 RAIZ = Path(__file__).resolve().parent.parent
-DATOS = RAIZ / "src" / "data"
+# En el VPS (publicar_datos.py) la carpeta de trabajo se indica con CC_DATOS_DIR; por defecto es src/data del proyecto.
+DATOS = Path(os.environ["CC_DATOS_DIR"]) if os.environ.get("CC_DATOS_DIR") else RAIZ / "src" / "data"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; CreemosCapitalBot/1.0)", "Accept-Language": "es-ES,es;q=0.9,en;q=0.5"}
 
 CANAL_ID = "UCnRW1Op2WPvanUHkv5fW40Q"          # @CreemosCapital
